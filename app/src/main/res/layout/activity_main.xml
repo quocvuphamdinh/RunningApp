@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/runner" />
+
+    <TextView
+        android:id="@+id/textViewRunningapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageViewLogo"
+        android:fontFamily="@font/secular_one_regular"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Running App"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:id="@+id/buttonSignupWelcome"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
+        android:background="@drawable/custom_button"
+        android:text="Create Account"
+        android:layout_marginHorizontal="50dp"
+        android:layout_below="@id/textViewRunningapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@null"
+        android:id="@+id/buttonSignInWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonSignupWelcome"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/custom_button"
+        android:text="Sign in"
+        android:textColor="@color/white" />
+    <TextView
+        android:fontFamily="@font/secular_one_regular"
+        android:textColor="@color/grey_100"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:text="''One run can change your day, many runs can change your life.''"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

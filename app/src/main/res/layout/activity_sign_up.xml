@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".activity.SignUpActivity"
+        android:orientation="vertical">
+
+        <TextView
+
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="Let's start with some facts about you"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="LOGIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/editTextUsernameSignUp"
+            android:textColorHint="@color/grey_100"
+            android:padding="10dp"
+            android:hint="Username"
+            android:background="@drawable/custom_edit_text"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:inputType="textPassword"
+                android:id="@+id/editTextPasswordSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_edit_text"
+                android:hint="Password"
+                android:padding="10dp"
+                android:textColorHint="@color/grey_100" />
+            <TextView
+                android:id="@+id/textViewShowHidePasswordSignUp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="end"
+                android:text="SHOW"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:inputType="textPassword"
+                android:id="@+id/editTextPasswordSignUp2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_edit_text"
+                android:hint="Repeat password"
+                android:padding="10dp"
+                android:textColorHint="@color/grey_100" />
+            <TextView
+                android:id="@+id/textViewShowHidePasswordSignUp2"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="end"
+                android:text="SHOW"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="PERSONAL DATA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:textColorHint="@color/grey_100"
+            android:padding="10dp"
+            android:hint="Fullname"
+            android:background="@drawable/custom_edit_text"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/spinnerGioiTinh"
+                android:layout_width="match_parent"
+                android:background="@drawable/custom_edit_text"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_arrow_down"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:weightSum="10"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:inputType="number"
+                android:drawableEnd="@drawable/ic_height"
+                android:layout_weight="5"
+                android:textColorHint="@color/grey_100"
+                android:padding="10dp"
+                android:hint="Height"
+                android:background="@drawable/custom_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:inputType="number"
+                android:drawableEnd="@drawable/ic_weight"
+                android:layout_marginStart="5dp"
+                android:layout_weight="5"
+                android:textColorHint="@color/grey_100"
+                android:padding="10dp"
+                android:hint="Weight"
+                android:background="@drawable/custom_edit_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            app:backgroundTint="@null"
+            android:textColor="@color/white"
+            android:text="Create Account"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/custom_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:text="Already have an Account? "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/textViewGoBackWelcomeScreen"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:text="Go back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
