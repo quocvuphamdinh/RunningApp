@@ -10,4 +10,8 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/oswald" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/bebas_neue" />
 </font-family>

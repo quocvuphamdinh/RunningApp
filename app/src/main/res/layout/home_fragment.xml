@@ -1,228 +1,446 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+<com.google.android.material.appbar.AppBarLayout
+    app:elevation="0dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:id="@+id/appBarHome"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.Toolbar
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-        <com.google.android.material.appbar.AppBarLayout
-            app:elevation="0dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:id="@+id/appBarHome"
+        android:layout_height="?attr/actionBarSize">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="350dp"
+            android:layout_height="match_parent">
+            <TextView
+                android:fontFamily="@font/oswald"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:text="Running app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="Developed by Vũ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/imageViewSetMyGoal"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_goal"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+    </androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.Toolbar
-                android:background="@color/white"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_centerHorizontal="true"
+                    android:progress="90"
+                    style="@style/CirclularDeterminateOnly"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.495"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:textSize="25sp"
+                    android:fontFamily="@font/oswald"
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distance"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintHorizontal_bias="0.506"
+                    app:layout_constraintStart_toStartOf="@+id/progressBar"
+                    app:layout_constraintTop_toTopOf="@+id/progressBar"
+                    app:layout_constraintVertical_bias="0.342" />
+
+                <TextView
+                    android:id="@+id/textViewNumberDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="40sp"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintHorizontal_bias="0.466"
+                    app:layout_constraintStart_toStartOf="@+id/progressBar"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintVertical_bias="0.09" />
+
+                <TextView
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginBottom="115dp"
+                    android:text="km"
+                    android:textColor="@color/black"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintHorizontal_bias="0.043"
+                    app:layout_constraintStart_toEndOf="@+id/textViewNumberDistance"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/textViewWeeklyGoal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly goal 5 km"
+                    android:textColor="@color/grey_300"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintStart_toStartOf="@+id/progressBar"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewNumberDistance"
+                    app:layout_constraintVertical_bias="0.122" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
+                android:paddingHorizontal="16dp"
+                android:text="Your progress today"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:weightSum="10"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewCaloriesBurned"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/grey_90"
+                    app:cardCornerRadius="10dp"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_marginStart="20dp"
+                            android:scaleType="centerCrop"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/fire"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+                        <LinearLayout
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="20dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:id="@+id/textViewCaloriedBurnHomeFragment"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="105"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:text="Kcl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewRunInTimeMillies"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/grey_90"
+                    app:cardCornerRadius="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:layout_marginStart="20dp"
+                            android:scaleType="centerCrop"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_clock"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+                        <LinearLayout
+                            android:gravity="center_vertical"
+                            android:layout_marginStart="20dp"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:id="@+id/textViewRunInTimeMilliesHomeFragment"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="30"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:text="Millies"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="10"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:text="Today's training"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textViewMoreTodayTraining"
+                    android:paddingTop="5dp"
+                    android:gravity="end"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@color/yellow"
+                    android:text="More"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:padding="10dp"
+                android:orientation="horizontal"
+                android:id="@+id/recyclerViewActivityHomeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:weightSum="10"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/oswald"
+                    android:text="Recent activities"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/textViewMoreRecentTraining"
+                    android:paddingTop="5dp"
+                    android:gravity="end"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="@color/yellow"
+                    android:text="More"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRecentActiviesHomeFragment"
+                android:padding="10dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/oswald"
+                android:text="Best records"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:weightSum="10"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/grey_90"
+                    app:cardCornerRadius="2dp"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp">
+                    <LinearLayout
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="RtlSymmetry">
+                        <ImageView
+                            android:layout_marginStart="20dp"
+                            android:scaleType="centerCrop"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_road"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+                        <TextView
+                            android:layout_marginStart="20dp"
+                            android:textSize="16sp"
+                            android:textColor="@color/yellow"
+                            android:textStyle="bold|italic"
+                            android:text="-- km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textColor="@color/black"
+                            android:layout_marginStart="20dp"
+                            android:text="Longest distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/grey_90"
+                    app:cardCornerRadius="2dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp">
+                    <LinearLayout
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="RtlSymmetry">
+                        <ImageView
+                            android:layout_marginStart="20dp"
+                            android:scaleType="centerCrop"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_clock_2"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"/>
+                        <TextView
+                            android:layout_marginStart="20dp"
+                            android:textSize="16sp"
+                            android:textColor="@color/yellow"
+                            android:textStyle="bold|italic"
+                            android:text="00:00"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textColor="@color/black"
+                            android:layout_marginStart="20dp"
+                            android:text="Longest duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_marginBottom="200dp"
+                android:layout_marginHorizontal="15dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="2dp"
+                app:cardBackgroundColor="@color/grey_90"
+                android:layout_width="match_parent"
+                android:layout_height="90dp">
                 <LinearLayout
+                    android:padding="20dp"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <TextView
                         android:fontFamily="@font/oswald"
-                        android:textStyle="bold"
+                        android:drawableStart="@drawable/ic_star"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:text="Running app"
-                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:text="Best calories burned"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                     <TextView
-                        android:textStyle="italic"
-                        android:textColor="@color/black"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="10dp"
+                        android:textColor="@color/yellow"
                         android:textSize="16sp"
-                        android:text="Developed by Vũ"
-                        android:layout_width="wrap_content"
+                        android:text="-- Kcal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout_home"
-            android:layout_marginTop="50dp"
-            android:layout_below="@id/appBarHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_centerHorizontal="true"
-                android:progress="100"
-                style="@style/CirclularDeterminateOnly"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:textSize="25sp"
-                android:fontFamily="@font/oswald"
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Distance"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                app:layout_constraintHorizontal_bias="0.506"
-                app:layout_constraintStart_toStartOf="@+id/progressBar"
-                app:layout_constraintTop_toTopOf="@+id/progressBar"
-                app:layout_constraintVertical_bias="0.342" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.0"
-                android:textColor="@color/black"
-                android:textSize="40sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                app:layout_constraintHorizontal_bias="0.466"
-                app:layout_constraintStart_toStartOf="@+id/progressBar"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:layout_constraintVertical_bias="0.09" />
-
-            <TextView
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginBottom="115dp"
-                android:text="km"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                app:layout_constraintHorizontal_bias="0.043"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Weekly goal 5 km"
-                android:textColor="@color/grey_300"
-                android:textSize="13sp"
-                app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-                app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                app:layout_constraintStart_toStartOf="@+id/progressBar"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:layout_constraintVertical_bias="0.122" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/txtToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/constraint_layout_home"
-            android:fontFamily="@font/oswald"
-            android:paddingHorizontal="16dp"
-            android:text="Your progress today"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:weightSum="10"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"
-            android:orientation="horizontal"
-            android:layout_below="@id/txtToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.cardview.widget.CardView
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/grey_90"
-                app:cardCornerRadius="10dp"
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:layout_height="50dp">
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_marginStart="20dp"
-                        android:scaleType="centerCrop"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/fire"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
-                    <LinearLayout
-                        android:gravity="center_vertical"
-                        android:layout_marginStart="20dp"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:id="@+id/textViewCaloriedBurnHomeFragment"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:text="105"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <TextView
-                            android:text="Kcl"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/grey_90"
-                app:cardCornerRadius="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:layout_height="50dp">
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_marginStart="20dp"
-                        android:scaleType="centerCrop"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_clock"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"/>
-                    <LinearLayout
-                        android:gravity="center_vertical"
-                        android:layout_marginStart="20dp"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:id="@+id/textViewRunInTimeMilliesHomeFragment"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:text="30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                        <TextView
-                            android:text="millies"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-    </RelativeLayout>
-</ScrollView>
+    </ScrollView>
+
+</LinearLayout>

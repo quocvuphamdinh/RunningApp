@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <FrameLayout
+        android:id="@+id/frame_layout_recentActivities"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/activity_background"/>
+        <TextView
+            android:id="@+id/textViewNameRecentActivitiesItem"
+            android:paddingBottom="2dp"
+            android:paddingHorizontal="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/grey_300"
+            android:paddingTop="15dp"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textViewDateRecentActivitiesItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@id/frame_layout_recentActivities"
+        android:fontFamily="@font/oswald"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewDistanceRecentActivitiesItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewDateRecentActivitiesItem"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/frame_layout_recentActivities"
+        android:fontFamily="@font/oswald"
+        android:text="0.00 km"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="italic|bold" />
+    <LinearLayout
+        android:weightSum="12"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textViewDistanceRecentActivitiesItem"
+        android:layout_toEndOf="@id/frame_layout_recentActivities"
+        android:orientation="horizontal"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewTimeInMillies"
+            android:textColor="@color/grey_300"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:text="00:00"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/textViewAvgSpeed"
+            android:textColor="@color/grey_300"
+            android:gravity="center"
+            android:layout_weight="6"
+            android:text="0:00 min/km"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/textViewCaloriesBurned"
+            android:textColor="@color/grey_300"
+            android:gravity="center"
+            android:layout_weight="3"
+            android:text="0 Kcal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</RelativeLayout>
