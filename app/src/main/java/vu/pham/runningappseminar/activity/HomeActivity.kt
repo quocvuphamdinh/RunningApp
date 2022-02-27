@@ -11,9 +11,7 @@ import com.google.android.material.navigation.NavigationView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.fragment.ActivityFragment
 import vu.pham.runningappseminar.fragment.HomeFragment
-
-
-
+import vu.pham.runningappseminar.fragment.ProfileFragment
 
 
 class HomeActivity : AppCompatActivity() {
@@ -55,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }else if(id == R.id.nav_profile){
                     if(currentFragment!=PROFILE_FRAGMENT){
-
+                        replaceFragment(ProfileFragment())
                         currentFragment = PROFILE_FRAGMENT
                     }
                 }
