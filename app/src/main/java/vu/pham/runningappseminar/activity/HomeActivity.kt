@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.fragment.ActivityFragment
+import vu.pham.runningappseminar.fragment.AnalysisFragment
 import vu.pham.runningappseminar.fragment.HomeFragment
 import vu.pham.runningappseminar.fragment.ProfileFragment
 
@@ -48,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }else if(id==R.id.nav_analysis){
                     if(currentFragment!=ANALYSIS_FRAGMENT){
-
+                        replaceFragment(AnalysisFragment())
                         currentFragment = ANALYSIS_FRAGMENT
                     }
                 }else if(id == R.id.nav_profile){

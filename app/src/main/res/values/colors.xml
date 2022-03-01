@@ -16,4 +16,8 @@
     <color name="startColor">#bdc3c7</color>
     <color name="centerColor">#404753</color>
     <color name="endColor">#2c3e50</color>
+    <color name="startColor2">#2d2926ff</color>
+    <color name="endColor2">#e94b3cff</color>
+    <color name="startColor3">#B78628</color>
+    <color name="endColor3">#D4AF37</color>
 </resources>
