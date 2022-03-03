@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import com.google.android.material.button.MaterialButton
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_TRACKING_ACTIVITY
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnCreateAccount:MaterialButton
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         goToSignInScreen()
         goToSignUpScreen()
     }
+
 
     private fun goToSignUpScreen() {
         btnCreateAccount.setOnClickListener {
