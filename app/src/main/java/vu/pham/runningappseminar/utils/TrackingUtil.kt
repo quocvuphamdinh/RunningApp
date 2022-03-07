@@ -4,6 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.os.Build
 import pub.devrel.easypermissions.EasyPermissions
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 object TrackingUtil {
 
@@ -31,5 +34,21 @@ object TrackingUtil {
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             )
         }
+    }
+
+    fun getFormattedTimer(ms: Long, includeMillis:Boolean = false) : String{
+        var milliseconds =ms
+        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
+        milliseconds -= TimeUnit.HOURS.toMillis(hours)
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
+        milliseconds -=TimeUnit.MINUTES.toMillis(minutes)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
+        val f: NumberFormat = DecimalFormat("00")
+        if(!includeMillis){
+            return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}"
+        }
+        milliseconds -= TimeUnit.SECONDS.toMillis(seconds)
+        milliseconds /=10
+        return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}:${f.format(milliseconds)}"
     }
 }

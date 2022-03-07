@@ -6,22 +6,38 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewTreeLifecycleOwner
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.button.MaterialButton
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
+import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_START_OR_RESUME_SERVICE
+import vu.pham.runningappseminar.utils.Constants.MAP_ZOOM
+import vu.pham.runningappseminar.utils.Constants.POLYLINE_COLOR
+import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
 import vu.pham.runningappseminar.utils.TrackingUtil
 
 class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var btnRun:MaterialButton
     private lateinit var imgClose:ImageView
     private lateinit var mapView: MapView
+    private lateinit var txtTimeRun:TextView
     private var googleMap: GoogleMap?=null
+    private var currentTimeInMillies=0L
+
+
+    private var isTracking = false
+    private var pathPoints = mutableListOf<Polyline>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
@@ -30,19 +46,89 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mapView.onCreate(savedInstanceState)
         requestGPS()
         initGoogleMap()
+        subscribeToObservers()
         clickRun()
         clickToClose()
     }
 
+    // đăng ký observers để lắng nghe sự thay đổi về data
+    private fun subscribeToObservers(){
+        TrackingService.isTracking.observe(this, Observer {
+            updateTracking(it)
+        })
+        TrackingService.pathPoints.observe(this, Observer {
+            pathPoints = it
+            addLatestPolyline()
+            moveCameraToUser()
+        })
+        TrackingService.timeRunInMillis.observe(this, Observer {
+            currentTimeInMillies = it
+            val formattedTimer = TrackingUtil.getFormattedTimer(currentTimeInMillies, true)
+            txtTimeRun.text = formattedTimer
+        })
+    }
+
+    private fun toggleRun(){
+        if (isTracking){
+            //nếu đang tracking mà bất nút run thì sẽ pause service lại
+            sendCommandToService(ACTION_PAUSE_SERVICE)
+        }else{
+            // còn nếu ko tracking mà bất nút run thì sẽ start hoặc resume service
+            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+        }
+    }
+
+    private fun updateTracking(isTracking:Boolean){
+        this.isTracking = isTracking
+        if (!isTracking){
+            btnRun.text = "START"
+        }else{
+            btnRun.text = "STOP"
+        }
+    }
+    private fun moveCameraToUser(){
+        if(pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()){
+            googleMap?.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(pathPoints.last().last(), MAP_ZOOM))
+        }
+    }
+
+    //function này để vẽ lại tất cả các đường(Polyline) khi người dùng thoát tạm thời app
+    private fun addAllPolylines(){
+        for (polyline in pathPoints){
+            val polylineOptions = PolylineOptions()
+                .color(POLYLINE_COLOR)
+                .width(POLYLINE_WIDTH)
+                .addAll(polyline)
+            googleMap?.addPolyline(polylineOptions)
+        }
+    }
+
+    // pathpoint gồm những đường(Polyline) được kết nối với nhau bằng những tọa độ(LatLng)
+    //function thêm các đường Polyline vào pathpoint
+    private fun addLatestPolyline(){
+        // nếu đường pathPoints ko rỗng và đường polyline ở trong pathpoints có ít nhất 2 item trở lên
+        if(pathPoints.isNotEmpty() && pathPoints.last().size > 1) {
+            val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2]// lấy tọa độ kế cuối trong ds
+            val lastLatLng = pathPoints.last().last()// lấy tọa độ cuối cùng
+            val polylineOption = PolylineOptions()
+                .color(POLYLINE_COLOR) // thêm màu cho đường polyline
+                .width(POLYLINE_WIDTH) // độ rộng cho đường polyline
+                .add(preLastLatLng)
+                .add(lastLatLng)//kết nối
+            googleMap?.addPolyline(polylineOption)
+        }
+    }
     private fun clickRun() {
         btnRun.setOnClickListener {
-            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+            toggleRun()
         }
     }
 
     private fun initGoogleMap() {
         mapView.getMapAsync {
             googleMap = it
+            addAllPolylines()
         }
     }
 
@@ -146,5 +232,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         imgClose = findViewById(R.id.imageViewCloseRunningActivity)
         mapView = findViewById(R.id.mapView)
         btnRun = findViewById(R.id.buttonRun)
+        txtTimeRun = findViewById(R.id.textViewTimeCountRun)
     }
 }
