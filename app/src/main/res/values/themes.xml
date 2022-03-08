@@ -13,13 +13,31 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="CirclularDeterminateOnly">
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/circle_progress_run</item>
     </style>
+
     <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="android:textColorPrimary">@color/yellow</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="colorBackgroundFloating">@color/endColor</item>
+        <item name="android:colorBackgroundFloating" tools:targetApi="23">
+            @color/endColor</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/endColor3</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/endColor3</item>
     </style>
 </resources>

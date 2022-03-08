@@ -47,8 +47,12 @@ typealias Polylines = MutableList<Polyline>
 
 class TrackingService : LifecycleService() {
 
-    var isFirstRun = true
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var isFirstRun = true
+    private var stopService = false
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var currentNotificationBuilder: NotificationCompat.Builder
+    private lateinit var notificationBuilder: NotificationCompat.Builder
 
     private var timeRunInSecond = MutableLiveData<Long>()
     private var isTimerEnabled = false
@@ -63,6 +67,40 @@ class TrackingService : LifecycleService() {
         val pathPoints = MutableLiveData<Polylines>() // ds các đường Polyline
     }
 
+    //cập nhật timer value cho notification
+    private fun updateNotificationUpdateState(isTracking: Boolean){
+        val notificationActionText = if(isTracking) "Pause" else "Resume"
+        //khi click vào pause hoặc resume
+        val pendingIntent = if(isTracking){
+            //nếu đang chạy mà bấm thì pause
+            val pauseIntent = Intent(this, TrackingService::class.java).apply {
+                action = ACTION_PAUSE_SERVICE
+            }
+            PendingIntent.getService(this, 1, pauseIntent, FLAG_UPDATE_CURRENT)
+        }else{
+            //nếu ko chạy mà bấm thì resume
+            val resumeIntent = Intent(this, TrackingService::class.java).apply {
+                action = ACTION_START_OR_RESUME_SERVICE
+            }
+            PendingIntent.getService(this, 2, resumeIntent, FLAG_UPDATE_CURRENT)
+        }
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        // xóa các noti cũ để update cái mới
+        currentNotificationBuilder.javaClass.getDeclaredField("mActions").apply {
+            isAccessible = true // cho phép thay đổi
+            set(currentNotificationBuilder, ArrayList<NotificationCompat.Action>()) // set giá trị mới, để arraylist rỗng vào để xóa cái cũ
+        }
+
+        if(!stopService){
+            //thêm nút và sự kiện start và pause
+            currentNotificationBuilder = notificationBuilder
+                .addAction(R.drawable.ic_pause, notificationActionText, pendingIntent)
+            //tiến hành update noti
+            notificationManager.notify(NOTIFICATION_ID, currentNotificationBuilder.build())
+        }
+    }
     private fun startTimer(){
         addEmptyPolyline()
         isTracking.postValue(true)
@@ -91,10 +129,19 @@ class TrackingService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        initialValue()//khởi tạo position
+        initialValue()//khởi tạo
+        notificationBuilder = NotificationCompat.Builder(this@TrackingService, NOTIFICATION_CHANNEL_ID)
+            .setAutoCancel(false)//tránh người dùng click vào bị mất notification
+            .setOngoing(true) // tránh người dùng vuốt để xóa notification
+            .setSmallIcon(R.drawable.runner)
+            .setContentTitle("Running App của Vũ")
+            .setContentText("00:00:00")
+            .setContentIntent(getRunningActivityPendingIntent()) // click vào sẽ nhảy vào run activity
+        currentNotificationBuilder = notificationBuilder
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         isTracking.observe(this, Observer {
             updateLocationTracking(it) // observer quan sát mỗi khi isTracking thay đổi giá trị thì update
+            updateNotificationUpdateState(it)
         })
     }
     private fun initialValue(){
@@ -102,6 +149,15 @@ class TrackingService : LifecycleService() {
         pathPoints.postValue(mutableListOf()) // khởi tạo list rỗng
         timeRunInSecond.postValue(0L)
         timeRunInMillis.postValue(0L)
+    }
+
+    private fun stopService(){
+        stopService = true
+        isFirstRun = true
+        pauseService()
+        initialValue()
+        stopForeground(true) // gỡ noti
+        stopSelf() //kill service
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -122,6 +178,7 @@ class TrackingService : LifecycleService() {
                 }
                 ACTION_STOP_SERVICE -> {
                     Log.d("serviceVu", "Stop service")
+                    stopService()
                 }
             }
         }
@@ -186,15 +243,18 @@ class TrackingService : LifecycleService() {
             createNotificationChannel(notificationManager)
         }
 
-        val notificationBuilder = NotificationCompat.Builder(this@TrackingService, NOTIFICATION_CHANNEL_ID)
-            .setAutoCancel(false)//tránh người dùng click vào bị mất notification
-            .setOngoing(true) // tránh người dùng vuốt để xóa notification
-            .setSmallIcon(R.drawable.runner)
-            .setContentTitle("Running App của Vũ")
-            .setContentText("00:00:00")
-            .setContentIntent(getRunningActivityPendingIntent()) // click vào sẽ nhảy vào run activity
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+
+        //lắng nghe sự thay đổi timer ở dịnh dạng giây để cập nhật
+        timeRunInSecond.observe(this, Observer {
+           if(!stopService){
+               val notification = currentNotificationBuilder
+                   .setContentText(TrackingUtil.getFormattedTimer(it*1000L, false))
+               //tiến hành update noti
+               notificationManager.notify(NOTIFICATION_ID, notification.build())
+           }
+        })
     }
 
     private fun getRunningActivityPendingIntent():PendingIntent{

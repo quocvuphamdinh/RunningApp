@@ -1,10 +1,14 @@
 package vu.pham.runningappseminar.activity
 
 import android.Manifest
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -14,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
@@ -22,6 +27,7 @@ import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_START_OR_RESUME_SERVICE
+import vu.pham.runningappseminar.utils.Constants.ACTION_STOP_SERVICE
 import vu.pham.runningappseminar.utils.Constants.MAP_ZOOM
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_COLOR
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
@@ -49,6 +55,30 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         subscribeToObservers()
         clickRun()
         clickToClose()
+    }
+
+    //show Alertdialog thông báo khi người dùng hủy running
+    private fun showCancelRunningDialog(){
+        val dialog = MaterialAlertDialogBuilder(this@RunActivity, R.style.AlertDialogTheme)
+        dialog.setTitle("Cancel the Run ?")
+        dialog.setMessage("Are you sure to cancel this run and the data will be deleted ?")
+        dialog.setIcon(R.drawable.ic_warning)
+        dialog.setPositiveButton("Yes", object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                stopRun()
+            }
+        })
+        dialog.setNegativeButton("No", object : DialogInterface.OnClickListener{
+            override fun onClick(dialog: DialogInterface?, which: Int) {
+                dialog?.cancel()
+            }
+        })
+        dialog.show()
+    }
+
+    private fun stopRun() {
+        sendCommandToService(ACTION_STOP_SERVICE)
+        finish()
     }
 
     // đăng ký observers để lắng nghe sự thay đổi về data
@@ -199,7 +229,11 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun clickToClose() {
         imgClose.setOnClickListener {
-            finish()
+            if(currentTimeInMillies > 0){
+                showCancelRunningDialog()
+            }else{
+                finish()
+            }
         }
     }
 
