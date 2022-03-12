@@ -17,4 +17,5 @@ object Constants {
     const val POLYLINE_WIDTH = 8f// độ dài
     const val MAP_ZOOM = 18f // độ zoom của camera khi trỏ tới user
     const val TIMER_UPDATE_INTERVAL = 50L
+    const val DATABASE_NAME = "Running App Seminar Vu"
 }

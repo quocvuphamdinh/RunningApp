@@ -191,118 +191,155 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
-                android:layout_marginBottom="100dp"
-                android:paddingVertical="20dp"
+                android:id="@+id/cardView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/cardView1"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:elevation="0dp"
+                android:paddingVertical="20dp"
                 app:cardBackgroundColor="@color/grey_90"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:paddingVertical="10dp"
-                        android:textStyle="bold"
-                        android:textSize="16sp"
-                        android:textColor="@color/black"
-                        android:paddingHorizontal="20dp"
-                        android:text="My progress"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp"
+                        android:text="My progress"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
                     <TextView
-                        android:textColor="@color/yellow"
-                        android:textStyle="bold|italic"
-                        android:textSize="30sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
                         android:text="0"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="@color/yellow"
+                        android:textSize="30sp"
+                        android:textStyle="bold|italic" />
+
                     <TextView
-                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
                         android:text="TOTAL KM"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="@color/black" />
+
                     <LinearLayout
-                        android:paddingBottom="10dp"
-                        android:weightSum="9"
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp"
+                        android:weightSum="9">
+
                         <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_weight="3.5"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3.5"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:textColor="@color/yellow"
-                                android:textStyle="bold|italic"
-                                android:textSize="25sp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="0.00"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/yellow"
+                                android:textSize="25sp"
+                                android:textStyle="bold|italic" />
+
                             <TextView
-                                android:textSize="12sp"
-                                android:textColor="@color/black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="TOTAL HOURS"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/black"
+                                android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_weight="3"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:textColor="@color/yellow"
-                                android:textStyle="bold|italic"
-                                android:textSize="25sp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="0"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/yellow"
+                                android:textSize="25sp"
+                                android:textStyle="bold|italic" />
+
                             <TextView
-                                android:textSize="12sp"
-                                android:textColor="@color/black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="TOTAL KCAL"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/black"
+                                android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_weight="3"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:textColor="@color/yellow"
-                                android:textStyle="bold|italic"
-                                android:textSize="25sp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="0"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/yellow"
+                                android:textSize="25sp"
+                                android:textStyle="bold|italic" />
+
                             <TextView
-                                android:textSize="12sp"
-                                android:textColor="@color/black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
                                 android:text="AVG SPEED"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"/>
+                                android:textColor="@color/black"
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewHistoryRun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardView2"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:elevation="0dp"
+                android:paddingVertical="20dp"
+                app:cardBackgroundColor="@color/grey_90"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp">
+                <TextView
+                    android:drawableEnd="@drawable/ic_history"
+                    android:textColor="@color/black"
+                    android:padding="10dp"
+                    android:textSize="20sp"
+                    android:text="See your run history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
     </ScrollView>

@@ -2,8 +2,10 @@ package vu.pham.runningappseminar.utils
 
 import android.Manifest
 import android.content.Context
+import android.location.Location
 import android.os.Build
 import pub.devrel.easypermissions.EasyPermissions
+import vu.pham.runningappseminar.services.Polyline
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
@@ -34,6 +36,22 @@ object TrackingUtil {
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             )
         }
+    }
+
+    fun calculatePolylineLength(polyline: Polyline):Float{
+        var distance = 0F
+        for (i in 0..polyline.size - 2){
+            val pos1 = polyline[i]
+            val pos2 = polyline[i + 1]
+
+            val result = FloatArray(1)
+            Location.distanceBetween(pos1.latitude, pos1.longitude,
+            pos2.latitude, pos2.longitude,
+            result)
+
+            distance +=result[0]
+        }
+        return distance
     }
 
     fun getFormattedTimer(ms: Long, includeMillis:Boolean = false) : String{

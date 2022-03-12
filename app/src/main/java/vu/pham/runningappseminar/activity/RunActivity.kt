@@ -1,8 +1,6 @@
 package vu.pham.runningappseminar.activity
 
 import android.Manifest
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
@@ -11,17 +9,24 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewTreeLifecycleOwner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.database.Run
+import vu.pham.runningappseminar.database.RunningDatabase
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
@@ -31,19 +36,30 @@ import vu.pham.runningappseminar.utils.Constants.ACTION_STOP_SERVICE
 import vu.pham.runningappseminar.utils.Constants.MAP_ZOOM
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_COLOR
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
+import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.viewmodels.MainViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import java.util.*
+import kotlin.math.round
 
 class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+    private lateinit var txtStopRun:TextView
     private lateinit var btnRun:MaterialButton
     private lateinit var imgClose:ImageView
     private lateinit var mapView: MapView
     private lateinit var txtTimeRun:TextView
     private var googleMap: GoogleMap?=null
     private var currentTimeInMillies=0L
-
+    private var weight = 70f
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
+
+    private val viewModel :MainViewModel by viewModels{
+        MainViewModelFactory((application as RunApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
@@ -54,7 +70,15 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initGoogleMap()
         subscribeToObservers()
         clickRun()
+        clickStopRun()
         clickToClose()
+    }
+
+    private fun clickStopRun() {
+        txtStopRun.setOnClickListener {
+            zoomToSeeWholeTrack()
+            saveRunToDatabase()
+        }
     }
 
     //show Alertdialog thông báo khi người dùng hủy running
@@ -95,6 +119,11 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             currentTimeInMillies = it
             val formattedTimer = TrackingUtil.getFormattedTimer(currentTimeInMillies, true)
             txtTimeRun.text = formattedTimer
+            if(currentTimeInMillies > 0L){
+                txtStopRun.visibility = View.VISIBLE
+            }else{
+                txtStopRun.visibility = View.INVISIBLE
+            }
         })
     }
 
@@ -113,7 +142,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (!isTracking){
             btnRun.text = "START"
         }else{
-            btnRun.text = "STOP"
+            btnRun.text = "RESUME"
         }
     }
     private fun moveCameraToUser(){
@@ -121,6 +150,43 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             googleMap?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(pathPoints.last().last(), MAP_ZOOM))
         }
+    }
+
+    private fun zoomToSeeWholeTrack(){
+        val bounds = LatLngBounds.Builder()
+        for (polyline in pathPoints){
+            for (position in polyline){
+                bounds.include(position)
+            }
+        }
+
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngBounds(
+            bounds.build(),
+            mapView.width,
+            mapView.height,
+            (mapView.height * 0.05f).toInt()
+        ))
+    }
+
+    private fun saveRunToDatabase(){
+        var distanceInMeters = 0
+        for(polyline in pathPoints){
+            distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+        }
+        // distanceInMeters / 1000f : chia để lấy km
+        //currentTimeInMillies / 1000f : lấy second
+        // currentTimeInMillies / 1000f / 60 : lấy minute
+        // currentTimeInMillies / 1000f / 60 / 60 : lấy hour
+        // vận tốc bằng quãng đường chia cho chiều cao
+        val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
+        val dateTimestamp = Calendar.getInstance().timeInMillis
+        val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+        val run = Run(dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned)
+
+        viewModel.insertRun(run)
+
+        Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
+        stopRun()
     }
 
     //function này để vẽ lại tất cả các đường(Polyline) khi người dùng thoát tạm thời app
@@ -267,5 +333,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mapView = findViewById(R.id.mapView)
         btnRun = findViewById(R.id.buttonRun)
         txtTimeRun = findViewById(R.id.textViewTimeCountRun)
+        txtStopRun = findViewById(R.id.textViewStopRun)
     }
 }

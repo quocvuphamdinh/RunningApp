@@ -27,15 +27,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    android:drawableStart="@drawable/ic_gps"
+                    android:visibility="invisible"
+                    android:id="@+id/textViewStopRun"
+                    android:drawableStart="@drawable/ic_stop"
                     android:paddingStart="15dp"
                     android:gravity="center_vertical"
                     android:layout_weight="9"
                     android:fontFamily="@font/oswald"
                     android:textStyle="bold"
-                    android:textColor="@color/yellow"
+                    android:textColor="@color/red"
                     android:textSize="18sp"
-                    android:text="GPS"
+                    android:text="Stop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
                 <ImageView
