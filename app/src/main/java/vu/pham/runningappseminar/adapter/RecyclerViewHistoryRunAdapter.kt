@@ -61,10 +61,10 @@ class RecyclerViewHistoryRunAdapter : RecyclerView.Adapter<RecyclerViewHistoryRu
         calendar.timeInMillis = run.timestamp
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         holder.textViewTimeStampHistoryRun.text =dateFormat.format(calendar.time)
-        holder.textViewAverageSpeedInKMHHistoryRun.text = "${run.averageSpeedInKilometersPerHour}km/h"
-        holder.textViewDistanceHistoryRun.text ="${run.distanceInKilometers / 1000f}km"
+        holder.textViewAverageSpeedInKMHHistoryRun.text = "${run.averageSpeedInKilometersPerHour} km/h"
+        holder.textViewDistanceHistoryRun.text ="${run.distanceInKilometers / 1000f} km"
         holder.textViewTimeInMillisHistoryRun.text = TrackingUtil.getFormattedTimer(run.timeInMillis)
-        holder.textViewCaloriesBurnedHistoryRun.text = "${run.caloriesBurned}kcal"
+        holder.textViewCaloriesBurnedHistoryRun.text = "${run.caloriesBurned} kcal"
         val dateFormat2 = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
         holder.textViewRunAtTimeHistoryRun.text = dateFormat2.format(calendar.time)
     }

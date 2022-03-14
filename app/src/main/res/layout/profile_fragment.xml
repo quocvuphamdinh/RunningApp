@@ -222,6 +222,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textViewTotalDistanceProfile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="20dp"
@@ -251,6 +252,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/textViewTotalHoursProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
@@ -275,6 +277,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/textViewTotalCaloriesBurnedProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
@@ -299,6 +302,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/textViewTotalAvgSpeedProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:paddingHorizontal="20dp"
@@ -326,7 +330,7 @@
                 android:layout_below="@id/cardView2"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="100dp"
                 android:elevation="0dp"
                 android:paddingVertical="20dp"
                 app:cardBackgroundColor="@color/grey_90"

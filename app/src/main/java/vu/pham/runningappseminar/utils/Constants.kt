@@ -18,4 +18,5 @@ object Constants {
     const val MAP_ZOOM = 18f // độ zoom của camera khi trỏ tới user
     const val TIMER_UPDATE_INTERVAL = 50L
     const val DATABASE_NAME = "Running App Seminar Vu"
+    const val INTENT_SET_MYGOAL="my_goal"
 }

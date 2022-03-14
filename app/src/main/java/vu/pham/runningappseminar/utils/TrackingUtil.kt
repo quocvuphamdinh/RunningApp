@@ -69,4 +69,26 @@ object TrackingUtil {
         milliseconds /=10
         return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}:${f.format(milliseconds)}"
     }
+
+    fun getFormattedTimer2(ms: Long, option:Int = 0) : String{
+        var milliseconds =ms
+        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
+        milliseconds -= TimeUnit.HOURS.toMillis(hours)
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds)
+        milliseconds -=TimeUnit.MINUTES.toMillis(minutes)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
+        val f: NumberFormat = DecimalFormat("00")
+        milliseconds -= TimeUnit.SECONDS.toMillis(seconds)
+        milliseconds /=10
+        if(option==1){
+            return f.format(hours)
+        }else if(option==2){
+            return f.format(minutes)
+        }else if(option==3){
+            return f.format(seconds)
+        }else if(option==4){
+            return f.format(milliseconds)
+        }
+        return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}:${f.format(milliseconds)}"
+    }
 }

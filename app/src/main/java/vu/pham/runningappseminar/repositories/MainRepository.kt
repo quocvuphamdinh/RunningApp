@@ -30,4 +30,22 @@ class MainRepository(private val runDAO: RunDAO) {
     fun getTotalCaloriesBurned() = runDAO.getTotalCaloriesBurned()
 
     fun getTotalDistance() = runDAO.getTotalDistance()
+
+    fun getTotalDitanceWeekly() = runDAO.getTotalDitanceWeekly()
+
+    fun getTotalCaloriesBurnedToDay() = runDAO.getTotalCaloriesBurnedToDay()
+
+    fun getTotalTimeInMillisToday() = runDAO.getTotalTimeInMillisToday()
+
+    fun getTotalAvgSpeedInKMHToday() = runDAO.getTotalAvgSpeedInKMHToday()
+
+    fun getCountRunToday() = runDAO.getCountRunToday()
+
+    fun getMaxDistance() = runDAO.getMaxDistance()
+
+    fun getMaxTimeInMillies() = runDAO.getMaxTimeInMillies()
+
+    fun getMaxCaloriesBurned() = runDAO.getMaxCaloriesBurned()
+
+    fun getMaxAvgSpeedInKMH() = runDAO.getMaxAvgSpeedInKMH()
 }
