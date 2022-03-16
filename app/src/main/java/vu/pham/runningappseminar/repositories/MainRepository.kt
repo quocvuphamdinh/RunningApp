@@ -1,9 +1,23 @@
 package vu.pham.runningappseminar.repositories
 
+import androidx.lifecycle.LiveData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import vu.pham.runningappseminar.database.FirebaseRun
+import vu.pham.runningappseminar.database.RetrofitBuilder
 import vu.pham.runningappseminar.database.Run
 import vu.pham.runningappseminar.database.RunDAO
+import vu.pham.runningappseminar.model.User
 
-class MainRepository(private val runDAO: RunDAO) {
+class MainRepository(private val runDAO: RunDAO, private val firebaseRun:FirebaseRun) {
+
+    suspend fun insertUser(user: User){
+        firebaseRun.insertUser(user.getUsername(), user.getPassword(), user)
+    }
+
+    fun getUser(username:String, password:String) = firebaseRun.getUser(username, password)
+
 
     suspend fun insertRun(run: Run){
         runDAO.insertRun(run)

@@ -1,25 +1,39 @@
 package vu.pham.runningappseminar.model
 
 class User() {
-    private var id:Long=0L
+    //private var id:Long=0L
     private var username:String=""
     private var password:String=""
     private var fullname:String=""
     private var avartar:String=""
+    private var sex:String=""
+    private var weight:Int=0
+    private var height:Int=0
 
-    constructor(username: String, password: String, fullname: String, avartar: String) : this() {
+    constructor(username: String, password: String, fullname: String, sex :String, weight:Int, height:Int) : this() {
         this.username = username
         this.password = password
         this.fullname = fullname
-        this.avartar = avartar
+        this.sex = sex
+        this.weight = weight
+        this.height = height
     }
 
-    fun getId():Long{
-        return id
+    fun getSex():String{
+        return sex
     }
-    fun setId(id:Long){
-        this.id = id
+    fun getWeight():Int{
+        return weight
     }
+    fun getHeight():Int{
+        return height
+    }
+//    fun getId():Long{
+//        return id
+//    }
+//    fun setId(id:Long){
+//        this.id = id
+//    }
     fun getUsername():String{
         return username
     }

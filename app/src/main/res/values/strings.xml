@@ -35,4 +35,12 @@
         <item>Duration</item>
         <item>Calories Burned</item>
     </string-array>
+
+    <string-array name="spinner_sort_type">
+        <item>Date</item>
+        <item>Running Time</item>
+        <item>Calories Burned</item>
+        <item>Distance</item>
+        <item>Average Speed</item>
+    </string-array>
 </resources>

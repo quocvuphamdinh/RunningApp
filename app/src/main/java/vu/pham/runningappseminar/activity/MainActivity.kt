@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private fun goToSignUpScreen() {
         btnCreateAccount.setOnClickListener {
             val intent = Intent(this@MainActivity, SignUpActivity::class.java)
+            this.finish()
             startActivity(intent)
         }
     }
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun goToSignInScreen() {
         btnSignIn.setOnClickListener {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            this.finish()
             startActivity(intent)
         }
     }

@@ -103,6 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <EditText
+            android:id="@+id/editTextFullNameSignup"
             android:textColorHint="@color/grey_100"
             android:padding="10dp"
             android:hint="Fullname"
@@ -137,6 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
+                android:id="@+id/editTextHeightSignup"
                 android:inputType="number"
                 android:drawableEnd="@drawable/ic_height"
                 android:layout_weight="5"
@@ -147,6 +149,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
             <EditText
+                android:id="@+id/editTextWeightSignup"
                 android:inputType="number"
                 android:drawableEnd="@drawable/ic_weight"
                 android:layout_marginStart="5dp"
@@ -160,6 +163,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSignUp"
             app:backgroundTint="@null"
             android:textColor="@color/white"
             android:text="Create Account"
