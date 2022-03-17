@@ -1,14 +1,18 @@
 package vu.pham.runningappseminar.viewmodels
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import vu.pham.runningappseminar.database.Run
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.SortType
+import java.time.LocalDate
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
@@ -70,6 +74,31 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         this.sortType = sortType
     }
 
+
+    fun writePersonalDataToSharedPref(user: User){
+        mainRepository.writePersonalDataToSharedPref(user)
+    }
+
+    fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
+
+    fun getFirstTimeToogle() = mainRepository.getFirstTimeToogle()
+
+
+    var userLiveData = MutableLiveData<User?>()
+    fun getUserLiveData(username: String, password: String){
+        mainRepository.getUser(username, password).enqueue(object : Callback<User>{
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                userLiveData.value = response.body()
+                Log.d("call api", response.body().toString())
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                userLiveData.value = null
+                Log.d("call api error", t.toString())
+            }
+
+        })
+    }
 
     fun getUser(username:String, password:String) = mainRepository.getUser(username, password)
 

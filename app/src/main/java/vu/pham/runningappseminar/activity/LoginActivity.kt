@@ -1,15 +1,13 @@
 package vu.pham.runningappseminar.activity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.viewModels
 import com.google.android.material.button.MaterialButton
 import retrofit2.Call
@@ -32,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel : MainViewModel by viewModels{
         MainViewModelFactory((application as RunApplication).repository)
     }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -53,6 +53,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun writePersonalDataToSharedPref(user: User){
+        viewModel.writePersonalDataToSharedPref(user)
+    }
+
     private fun checkUserInServer() {
         val username = editTextUsername.text.toString().trim()
         val password = editTextPassword.text.toString().trim()
@@ -61,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 val user = response.body()
                 if(user?.getUsername()== username && user.getPassword()==password){
                     Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
+                    writePersonalDataToSharedPref(user)
                     goToHomePage()
                 }else{
                     Toast.makeText(this@LoginActivity, "Login failed !", Toast.LENGTH_LONG).show()

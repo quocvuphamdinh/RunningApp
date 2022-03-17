@@ -27,6 +27,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.Run
 import vu.pham.runningappseminar.database.RunningDatabase
+import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
@@ -51,7 +52,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var txtTimeRun:TextView
     private var googleMap: GoogleMap?=null
     private var currentTimeInMillies=0L
-    private var weight = 70f
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
@@ -60,10 +60,16 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         MainViewModelFactory((application as RunApplication).repository)
     }
 
+    private var user:User? =null
+    private var weight:Float = 80f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_run)
 
+        user = viewModel.getUserFromSharedPref()
+        weight = user?.getWeight()?.toFloat() ?: 80f
+        Toast.makeText(this@RunActivity, "weight: $weight", Toast.LENGTH_LONG).show()
         anhXa()
         mapView.onCreate(savedInstanceState)
         requestGPS()

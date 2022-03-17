@@ -138,10 +138,6 @@ class SignUpActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun writePersonalDataToSharedPref(){
-
-    }
-
     private fun initSpinner(){
         listGioiTinh = ArrayList()
         listGioiTinh.add(Sex(-1, "Gender"))

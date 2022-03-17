@@ -2,18 +2,26 @@ package vu.pham.runningappseminar.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activity.EditProfileActivity
 import vu.pham.runningappseminar.activity.HistoryRunActivity
+import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -22,6 +30,10 @@ import kotlin.math.round
 
 class ProfileFragment : Fragment() {
     private lateinit var imgEditProfile:ImageView
+    private lateinit var txtFullName:TextView
+    private lateinit var txtSex:TextView
+    private lateinit var txtHeight:TextView
+    private lateinit var txtWeight:TextView
     private lateinit var cardViewRunHistory:CardView
     private lateinit var txtTotalDistance:TextView
     private lateinit var txtTotalHours:TextView
@@ -32,6 +44,8 @@ class ProfileFragment : Fragment() {
         MainViewModelFactory((activity?.application as RunApplication).repository)
     }
 
+    private lateinit var userLocal:User
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +54,9 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.profile_fragment, container, false)
 
         anhXa(view)
+
+        setUpInfoUserProfile()
+        setUpInfoLiveDataUserProfile()
 
         imgEditProfile.setOnClickListener {
             goToEditProfile()
@@ -50,6 +67,28 @@ class ProfileFragment : Fragment() {
         }
         subscribeToObservers()
         return view
+    }
+
+    private fun bindUserDataToView(userBind: User?){
+        if(userBind?.getAvartar()?.isNotEmpty() == true){
+            Picasso.get().load(userBind.getAvartar()).into(imgEditProfile)
+        }
+        txtFullName.text = userBind?.getFullname()
+        txtSex.text = userBind?.getSex()
+        txtHeight.text = "${userBind?.getHeight()} cm"
+        txtWeight.text = "${userBind?.getWeight()} kg"
+    }
+
+    private fun setUpInfoLiveDataUserProfile(){
+        viewModel.getUserLiveData(userLocal.getUsername(), userLocal.getPassword())
+        viewModel.userLiveData.observe(viewLifecycleOwner, Observer {
+            viewModel.getUserLiveData(userLocal.getUsername(), userLocal.getPassword())
+           bindUserDataToView(it)
+        })
+    }
+    private fun setUpInfoUserProfile() {
+        userLocal = viewModel.getUserFromSharedPref()!!
+        //bindUserDataToView(userLocal)
     }
 
     private fun subscribeToObservers() {
@@ -92,5 +131,9 @@ class ProfileFragment : Fragment() {
         txtTotalHours = view.findViewById(R.id.textViewTotalHoursProfile)
         txtCaloriesBurned = view.findViewById(R.id.textViewTotalCaloriesBurnedProfile)
         txtAvgSpeed = view.findViewById(R.id.textViewTotalAvgSpeedProfile)
+        txtFullName = view.findViewById(R.id.textViewFullnameProfileFragment)
+        txtSex = view.findViewById(R.id.textViewSexProfile)
+        txtHeight = view.findViewById(R.id.textViewHeight)
+        txtWeight = view.findViewById(R.id.textViewWeight)
     }
 }
