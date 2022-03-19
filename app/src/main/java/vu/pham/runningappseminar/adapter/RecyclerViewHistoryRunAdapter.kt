@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.database.Run
+import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.utils.TrackingUtil
 import java.text.SimpleDateFormat
 import java.util.*

@@ -19,6 +19,10 @@ open class ParentViewModel(private val mainRepository: MainRepository): ViewMode
         mainRepository.writePersonalDataToSharedPref(user)
     }
 
+    fun removePersonalDataFromSharedPref(){
+        mainRepository.removePersonalDataFromSharedPref()
+    }
+
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
     fun getFirstTimeToogle() = mainRepository.getFirstTimeToogle()
@@ -27,6 +31,10 @@ open class ParentViewModel(private val mainRepository: MainRepository): ViewMode
 
     fun insertUser(user: User) = viewModelScope.launch {
         mainRepository.insertUser(user)
+    }
+
+    fun updateUser(user: User) = viewModelScope.launch {
+        mainRepository.updateUser(user)
     }
 
 

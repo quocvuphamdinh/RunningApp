@@ -25,7 +25,7 @@ class Data {
             Activity("Running Day 4", 1, 1, workoutList4),
             Activity("Running Day 5", 1, 1, workoutList2),
         )
-        val user = User("quocvu22", "12345vu", "Phạm Đình Quốc Vũ", "", 70, 175)
+        val user = User("quocvu22", "12345vu", "Phạm Đình Quốc Vũ", "", 70, 175, 0)
         val date = Date(System.currentTimeMillis())
         val run=Run(3.2, 2, 15.5, date, date, date, user)
         val run2=Run(4.0, 10, 30.5, date, date, date, user)

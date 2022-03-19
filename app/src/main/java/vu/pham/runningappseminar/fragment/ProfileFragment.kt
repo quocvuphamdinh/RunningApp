@@ -21,6 +21,7 @@ import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activity.EditProfileActivity
 import vu.pham.runningappseminar.activity.HistoryRunActivity
+import vu.pham.runningappseminar.activity.MainActivity
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
@@ -35,6 +36,7 @@ class ProfileFragment : Fragment() {
     private lateinit var txtHeight:TextView
     private lateinit var txtWeight:TextView
     private lateinit var cardViewRunHistory:CardView
+    private lateinit var cardViewLogout:CardView
     private lateinit var txtTotalDistance:TextView
     private lateinit var txtTotalHours:TextView
     private lateinit var txtCaloriesBurned:TextView
@@ -65,8 +67,21 @@ class ProfileFragment : Fragment() {
         cardViewRunHistory.setOnClickListener {
             goToHistoryRun()
         }
+
+        cardViewLogout.setOnClickListener {
+            clickLogout()
+        }
+
         subscribeToObservers()
+
         return view
+    }
+
+    private fun clickLogout() {
+        val intent = Intent(context, MainActivity::class.java)
+        viewModel.removePersonalDataFromSharedPref()
+        activity?.finish()
+        startActivity(intent)
     }
 
     private fun bindUserDataToView(userBind: User?){
@@ -135,5 +150,6 @@ class ProfileFragment : Fragment() {
         txtSex = view.findViewById(R.id.textViewSexProfile)
         txtHeight = view.findViewById(R.id.textViewHeight)
         txtWeight = view.findViewById(R.id.textViewWeight)
+        cardViewLogout = view.findViewById(R.id.cardViewLogout)
     }
 }

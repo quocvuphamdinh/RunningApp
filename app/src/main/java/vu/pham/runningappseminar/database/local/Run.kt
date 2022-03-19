@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.database
+package vu.pham.runningappseminar.database.local
 
 import android.graphics.Bitmap
 import androidx.room.Entity

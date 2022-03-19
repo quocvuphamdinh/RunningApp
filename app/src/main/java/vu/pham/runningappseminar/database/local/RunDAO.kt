@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.database
+package vu.pham.runningappseminar.database.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

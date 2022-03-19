@@ -1,19 +1,14 @@
 package vu.pham.runningappseminar.repositories
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import vu.pham.runningappseminar.database.FirebaseRun
-import vu.pham.runningappseminar.database.RetrofitBuilder
-import vu.pham.runningappseminar.database.Run
-import vu.pham.runningappseminar.database.RunDAO
+import vu.pham.runningappseminar.database.remote.ApiService
+import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.database.local.RunDAO
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.Constants
 
-class MainRepository(private val runDAO: RunDAO, private val firebaseRun:FirebaseRun, private val sharedPref:SharedPreferences) {
+class MainRepository(private val runDAO: RunDAO, private val apiService: ApiService, private val sharedPref:SharedPreferences) {
 
     fun writePersonalDataToSharedPref(user: User){
         val gson = Gson()
@@ -23,6 +18,14 @@ class MainRepository(private val runDAO: RunDAO, private val firebaseRun:Firebas
             .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
             .apply()
     }
+
+    fun removePersonalDataFromSharedPref(){
+        sharedPref.edit()
+            .remove(Constants.KEY_USER)
+            .remove(Constants.KEY_FIRST_TIME_TOGGLE)
+            .apply()
+    }
+
     fun getUserFromSharedPref() :User?{
         val gson = Gson()
         val json = sharedPref.getString(Constants.KEY_USER, "")
@@ -32,11 +35,11 @@ class MainRepository(private val runDAO: RunDAO, private val firebaseRun:Firebas
         return sharedPref.getBoolean(Constants.KEY_FIRST_TIME_TOGGLE, true)
     }
 
-    suspend fun insertUser(user: User){
-        firebaseRun.insertUser(user.getUsername(), user.getPassword(), user)
-    }
+    suspend fun insertUser(user: User)= apiService.insertUser(user)
 
-    fun getUser(username:String, password:String) = firebaseRun.getUser(username, password)
+    fun getUser(username:String, password:String) = apiService.getUser(username, password)
+
+    suspend fun updateUser(user: User) = apiService.updateUser(user, user.getId())
 
 
     suspend fun insertRun(run: Run){

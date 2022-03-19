@@ -1,26 +1,35 @@
 package vu.pham.runningappseminar.model
 
 class User() {
-    //private var id:Long=0L
-    private var username:String=""
-    private var password:String=""
-    private var fullname:String=""
+    private var id:Long=0L
+    private var userName:String=""
+    private var passWord:String=""
+    private var fullName:String=""
     private var avartar:String=""
-    private var sex:String=""
+    private var gender:String=""
     private var weight:Int=0
     private var height:Int=0
+    private var distanceGoal:Long=0L
 
-    constructor(username: String, password: String, fullname: String, sex :String, weight:Int, height:Int) : this() {
-        this.username = username
-        this.password = password
-        this.fullname = fullname
-        this.sex = sex
+    constructor(username: String, password: String, fullname: String, gender :String, weight:Int, height:Int, distanceGoal:Long) : this() {
+        this.userName = username
+        this.passWord = password
+        this.fullName = fullname
+        this.gender = gender
         this.weight = weight
         this.height = height
+        this.distanceGoal = distanceGoal
+    }
+
+    fun getdistanceGoal():Long{
+        return distanceGoal
+    }
+    fun setdistanceGoal(distanceGoal:Long){
+        this.distanceGoal = distanceGoal
     }
 
     fun getSex():String{
-        return sex
+        return gender
     }
     fun getWeight():Int{
         return weight
@@ -28,29 +37,29 @@ class User() {
     fun getHeight():Int{
         return height
     }
-//    fun getId():Long{
-//        return id
-//    }
-//    fun setId(id:Long){
-//        this.id = id
-//    }
+    fun getId():Long{
+        return id
+    }
+    fun setId(id:Long){
+        this.id = id
+    }
     fun getUsername():String{
-        return username
+        return userName
     }
     fun setUsername(username:String){
-        this.username = username
+        this.userName = username
     }
     fun getPassword():String{
-        return password
+        return passWord
     }
-    fun setPassword(password:String){
-        this.password = password
+    fun setPassword(passWord:String){
+        this.passWord = passWord
     }
     fun getFullname():String{
-        return fullname
+        return fullName
     }
-    fun setFullname(fullname:String){
-        this.fullname = fullname
+    fun setFullname(fullName:String){
+        this.fullName = fullName
     }
     fun getAvartar():String{
         return avartar

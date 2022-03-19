@@ -57,8 +57,8 @@ class LoginActivity : AppCompatActivity() {
     private fun checkUserInServer() {
         val username = editTextUsername.text.toString().trim()
         val password = editTextPassword.text.toString().trim()
-        viewModel.getUser(username, password).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        viewModel.getUser(username, password)?.enqueue(object : Callback<User?> {
+            override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
                 if(viewModel.checkSameUser(username, password, user)){
                     Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
@@ -69,9 +69,10 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
             }
+
         })
     }
 

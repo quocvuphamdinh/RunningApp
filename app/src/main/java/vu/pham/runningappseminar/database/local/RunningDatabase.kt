@@ -1,12 +1,9 @@
-package vu.pham.runningappseminar.database
+package vu.pham.runningappseminar.database.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.google.gson.GsonBuilder
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import vu.pham.runningappseminar.utils.Constants
 
 

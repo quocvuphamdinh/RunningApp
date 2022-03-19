@@ -40,7 +40,6 @@ class SignUpActivity : AppCompatActivity() {
     private var showPass = false
     private var showPass2 = false
     var sex = ""
-    private var user2:User? = null
 
     private val viewModel : ParentViewModel by viewModels{
         ParentViewModelFactory((application as RunApplication).repository)
@@ -86,16 +85,17 @@ class SignUpActivity : AppCompatActivity() {
             if(!viewModel.checkSamePassword(password, password2)){
                 Toast.makeText(this@SignUpActivity, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
             }else{
-                val user = User(username, password, fullname, sex, weight.toInt(), height.toInt())
+                val user = User(username, password, fullname, sex, weight.toInt(), height.toInt(), 0)
                 getUser(user)
             }
         }
     }
+
     private fun checkUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User>{
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                user2 = response.body()
-                if(viewModel.checkSameUser(user2?.getUsername()!!, user2?.getPassword()!!, user)){
+        viewModel.getUser(user.getUsername(), user.getPassword())?.enqueue(object : Callback<User?>{
+            override fun onResponse(call: Call<User?>, response: Response<User?>) {
+                val user3 = response.body()
+                if(viewModel.checkSameUser(user3?.getUsername()!!, user3.getPassword(), user)){
                     Toast.makeText(this@SignUpActivity, "Sign up success !", Toast.LENGTH_LONG).show()
                     goToLogin()
                 }else{
@@ -103,17 +103,16 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
             }
-
         })
     }
     private fun getUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User>{
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                user2 = response.body()
-                if(viewModel.checkSameUser(user2?.getUsername()!!, user2?.getPassword()!!, user)){
+        viewModel.getUser(user.getUsername(), user.getPassword())?.enqueue(object : Callback<User?>{
+            override fun onResponse(call: Call<User?>, response: Response<User?>) {
+                val user2 = response.body()
+                if(viewModel.checkSameUser(user2?.getUsername()!!, user2.getPassword(), user)){
                     Toast.makeText(this@SignUpActivity, "Account exist !", Toast.LENGTH_LONG).show()
                 }else{
                     //Toast.makeText(this@SignUpActivity, "Account valid !", Toast.LENGTH_LONG).show()
@@ -122,7 +121,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
             }
         })

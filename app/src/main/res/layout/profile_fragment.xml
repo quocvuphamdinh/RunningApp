@@ -333,20 +333,44 @@
                 android:layout_below="@id/cardView2"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
+                android:elevation="0dp"
+                android:paddingVertical="20dp"
+                app:cardBackgroundColor="@color/grey_90"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_history"
+                    android:padding="10dp"
+                    android:text="See your run history"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cardViewHistoryRun"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="100dp"
                 android:elevation="0dp"
                 android:paddingVertical="20dp"
                 app:cardBackgroundColor="@color/grey_90"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
+
                 <TextView
-                    android:drawableEnd="@drawable/ic_history"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:textSize="20sp"
-                    android:text="See your run history"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_baseline_logout_24"
+                    android:padding="10dp"
+                    android:text="Logout"
+                    android:textColor="@color/red"
+                    android:textSize="20sp" />
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
     </ScrollView>
