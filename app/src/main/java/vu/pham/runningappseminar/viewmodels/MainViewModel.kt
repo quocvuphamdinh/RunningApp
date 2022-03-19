@@ -14,7 +14,7 @@ import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.SortType
 import java.time.LocalDate
 
-class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
+class MainViewModel(private val mainRepository: MainRepository) : ParentViewModel(mainRepository) {
 
     private val runSortedByDate = mainRepository.getAllRunsSortedByDate()
     private val runSortedByTimeInMillies = mainRepository.getAllRunsSortedByTimeInMillies()
@@ -75,18 +75,9 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
     }
 
 
-    fun writePersonalDataToSharedPref(user: User){
-        mainRepository.writePersonalDataToSharedPref(user)
-    }
-
-    fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
-
-    fun getFirstTimeToogle() = mainRepository.getFirstTimeToogle()
-
-
     var userLiveData = MutableLiveData<User?>()
     fun getUserLiveData(username: String, password: String){
-        mainRepository.getUser(username, password).enqueue(object : Callback<User>{
+        mainRepository.getUser(username, password).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 userLiveData.value = response.body()
                 Log.d("call api", response.body().toString())
@@ -96,15 +87,9 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
                 userLiveData.value = null
                 Log.d("call api error", t.toString())
             }
-
         })
     }
 
-    fun getUser(username:String, password:String) = mainRepository.getUser(username, password)
-
-    fun insertUser(user: User) = viewModelScope.launch {
-        mainRepository.insertUser(user)
-    }
 
     val totalDistanceWeekly = mainRepository.getTotalDitanceWeekly()
 

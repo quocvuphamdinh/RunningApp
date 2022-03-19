@@ -13,17 +13,14 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.ParentViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ParentViewModelFactory
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -45,8 +42,8 @@ class SignUpActivity : AppCompatActivity() {
     var sex = ""
     private var user2:User? = null
 
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((application as RunApplication).repository)
+    private val viewModel : ParentViewModel by viewModels{
+        ParentViewModelFactory((application as RunApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,15 +80,14 @@ class SignUpActivity : AppCompatActivity() {
         val fullname = editTextFullname.text.toString().trim()
         val height = editTextHeight.text.toString().trim()
         val weight = editTextWeight.text.toString().trim()
-        if(username.isEmpty() || password.isEmpty() || password2.isEmpty() || fullname.isEmpty() || sex.isEmpty() || height.isEmpty() || weight.isEmpty()){
+        if(!viewModel.checkInfoUser(username, password, password2, fullname, height, weight)){
             Toast.makeText(this@SignUpActivity, "Please enter your information to create account !", Toast.LENGTH_LONG).show()
         }else{
-            if(password != password2){
+            if(!viewModel.checkSamePassword(password, password2)){
                 Toast.makeText(this@SignUpActivity, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
             }else{
                 val user = User(username, password, fullname, sex, weight.toInt(), height.toInt())
                 getUser(user)
-
             }
         }
     }
@@ -99,7 +95,7 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User>{
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 user2 = response.body()
-                if(user2?.getUsername()== user.getUsername() && user2?.getPassword()==user.getPassword()){
+                if(viewModel.checkSameUser(user2?.getUsername()!!, user2?.getPassword()!!, user)){
                     Toast.makeText(this@SignUpActivity, "Sign up success !", Toast.LENGTH_LONG).show()
                     goToLogin()
                 }else{
@@ -117,7 +113,7 @@ class SignUpActivity : AppCompatActivity() {
         viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User>{
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 user2 = response.body()
-                if(user2?.getUsername()== user.getUsername() && user2?.getPassword()==user.getPassword()){
+                if(viewModel.checkSameUser(user2?.getUsername()!!, user2?.getPassword()!!, user)){
                     Toast.makeText(this@SignUpActivity, "Account exist !", Toast.LENGTH_LONG).show()
                 }else{
                     //Toast.makeText(this@SignUpActivity, "Account valid !", Toast.LENGTH_LONG).show()

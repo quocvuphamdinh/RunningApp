@@ -1,12 +1,10 @@
 package vu.pham.runningappseminar.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import com.google.android.material.button.MaterialButton
@@ -16,8 +14,8 @@ import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.ParentViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ParentViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var txtGoBackWelcomeScreen:TextView
@@ -27,10 +25,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var txtShowAndHidePassword:TextView
     private lateinit var btnLogin:MaterialButton
     private var showPass = false
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((application as RunApplication).repository)
+    private val viewModel : ParentViewModel by viewModels{
+        ParentViewModelFactory((application as RunApplication).repository)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +60,9 @@ class LoginActivity : AppCompatActivity() {
         viewModel.getUser(username, password).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
-                if(user?.getUsername()== username && user.getPassword()==password){
+                if(viewModel.checkSameUser(username, password, user)){
                     Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
-                    writePersonalDataToSharedPref(user)
+                    writePersonalDataToSharedPref(user!!)
                     goToHomePage()
                 }else{
                     Toast.makeText(this@LoginActivity, "Login failed !", Toast.LENGTH_LONG).show()
