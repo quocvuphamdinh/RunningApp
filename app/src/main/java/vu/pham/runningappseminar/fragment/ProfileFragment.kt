@@ -23,6 +23,8 @@ import vu.pham.runningappseminar.activity.EditProfileActivity
 import vu.pham.runningappseminar.activity.HistoryRunActivity
 import vu.pham.runningappseminar.activity.MainActivity
 import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.utils.CheckConnection
+import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -41,6 +43,7 @@ class ProfileFragment : Fragment() {
     private lateinit var txtTotalHours:TextView
     private lateinit var txtCaloriesBurned:TextView
     private lateinit var txtAvgSpeed:TextView
+    private lateinit var txtDistanceGoal:TextView
 
     private val viewModel : MainViewModel by viewModels{
         MainViewModelFactory((activity?.application as RunApplication).repository)
@@ -58,7 +61,6 @@ class ProfileFragment : Fragment() {
         anhXa(view)
 
         setUpInfoUserProfile()
-        setUpInfoLiveDataUserProfile()
 
         imgEditProfile.setOnClickListener {
             goToEditProfile()
@@ -92,9 +94,11 @@ class ProfileFragment : Fragment() {
         txtSex.text = userBind?.getSex()
         txtHeight.text = "${userBind?.getHeight()} cm"
         txtWeight.text = "${userBind?.getWeight()} kg"
+        txtDistanceGoal.text = "${userBind?.getdistanceGoal()} km"
     }
 
-    private fun setUpInfoLiveDataUserProfile(){
+
+    private fun setUpUserProfileFromServer(){
         viewModel.getUserLiveData(userLocal.getUsername(), userLocal.getPassword())
         viewModel.userLiveData.observe(viewLifecycleOwner, Observer {
             viewModel.getUserLiveData(userLocal.getUsername(), userLocal.getPassword())
@@ -103,7 +107,11 @@ class ProfileFragment : Fragment() {
     }
     private fun setUpInfoUserProfile() {
         userLocal = viewModel.getUserFromSharedPref()!!
-        //bindUserDataToView(userLocal)
+        if(context?.let { CheckConnection.haveNetworkConnection(it) } == true){
+            setUpUserProfileFromServer()
+        }else{
+            bindUserDataToView(userLocal)
+        }
     }
 
     private fun subscribeToObservers() {
@@ -129,6 +137,10 @@ class ProfileFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        userLocal = viewModel.getUserFromSharedPref()!!
+    }
     private fun goToHistoryRun() {
         val intent = Intent(context, HistoryRunActivity::class.java)
         startActivity(intent)
@@ -136,6 +148,9 @@ class ProfileFragment : Fragment() {
 
     private fun goToEditProfile() {
         val intent = Intent(context, EditProfileActivity::class.java)
+        val bundle = Bundle()
+        bundle.putSerializable(Constants.EDIT_USER, userLocal)
+        intent.putExtras(bundle)
         startActivity(intent)
     }
 
@@ -151,5 +166,6 @@ class ProfileFragment : Fragment() {
         txtHeight = view.findViewById(R.id.textViewHeight)
         txtWeight = view.findViewById(R.id.textViewWeight)
         cardViewLogout = view.findViewById(R.id.cardViewLogout)
+        txtDistanceGoal= view.findViewById(R.id.textViewDistanceGoalProfileFragment)
     }
 }

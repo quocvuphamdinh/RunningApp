@@ -1,6 +1,7 @@
 package vu.pham.runningappseminar.repositories
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import vu.pham.runningappseminar.database.remote.ApiService
 import vu.pham.runningappseminar.database.local.Run
@@ -26,7 +27,7 @@ class MainRepository(private val runDAO: RunDAO, private val apiService: ApiServ
             .apply()
     }
 
-    fun getUserFromSharedPref() :User?{
+    fun getUserFromSharedPref() : User? {
         val gson = Gson()
         val json = sharedPref.getString(Constants.KEY_USER, "")
         return gson.fromJson(json, User::class.java)

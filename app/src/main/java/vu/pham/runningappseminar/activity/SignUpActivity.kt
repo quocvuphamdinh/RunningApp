@@ -19,8 +19,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.ParentViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ParentViewModelFactory
+import vu.pham.runningappseminar.viewmodels.SignUpViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFactory
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -41,8 +41,8 @@ class SignUpActivity : AppCompatActivity() {
     private var showPass2 = false
     var sex = ""
 
-    private val viewModel : ParentViewModel by viewModels{
-        ParentViewModelFactory((application as RunApplication).repository)
+    private val viewModel : SignUpViewModel by viewModels{
+        SignUpViewModelFactory((application as RunApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

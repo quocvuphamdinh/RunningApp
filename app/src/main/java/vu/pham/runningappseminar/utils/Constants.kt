@@ -19,9 +19,11 @@ object Constants {
     const val TIMER_UPDATE_INTERVAL = 50L
     const val DATABASE_NAME = "Running App Seminar Vu"
     const val INTENT_SET_MYGOAL="my_goal"
+    const val INIT_SET_MYGOAL="init_my_goal"
     const val SHARED_PREFERENCES_NAME = "vuSharedPref"
     const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"
     const val KEY_USER = "KEY_USER"
     //const val BASE_URL="https://runningappseminar-default-rtdb.firebaseio.com/"
     const val BASE_URL2="http://192.168.0.106:8087/"
+    const val EDIT_USER="EDIT_USER"
 }

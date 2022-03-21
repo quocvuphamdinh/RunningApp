@@ -15,8 +15,8 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapter.RecyclerViewHistoryRunAdapter
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.SortType
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.HistoryRunViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.HistoryRunViewModelFactory
 
 class HistoryRunActivity : AppCompatActivity() {
     private lateinit var recyclerViewHistoryRun:RecyclerView
@@ -24,8 +24,8 @@ class HistoryRunActivity : AppCompatActivity() {
     private lateinit var runAdapter:RecyclerViewHistoryRunAdapter
     private lateinit var spinnerFilter:Spinner
 
-    private val viewModel :MainViewModel by viewModels{
-        MainViewModelFactory((application as RunApplication).repository)
+    private val viewModel : HistoryRunViewModel by viewModels{
+        HistoryRunViewModelFactory((application as RunApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

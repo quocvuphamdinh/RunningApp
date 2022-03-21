@@ -43,4 +43,10 @@
         <item>Distance</item>
         <item>Average Speed</item>
     </string-array>
+
+    <string-array name="spinner_sex">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
 </resources>

@@ -1,11 +1,6 @@
 package vu.pham.runningappseminar.database.remote
 
-import androidx.lifecycle.LiveData
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import vu.pham.runningappseminar.model.User
 

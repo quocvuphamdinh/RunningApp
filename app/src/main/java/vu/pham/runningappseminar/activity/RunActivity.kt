@@ -36,7 +36,9 @@ import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
+import vu.pham.runningappseminar.viewmodels.RunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunViewModelFactory
 import java.util.*
 import kotlin.math.round
 
@@ -52,8 +54,8 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
 
-    private val viewModel :MainViewModel by viewModels{
-        MainViewModelFactory((application as RunApplication).repository)
+    private val viewModel :RunViewModel by viewModels{
+        RunViewModelFactory((application as RunApplication).repository)
     }
 
     private var user:User? =null

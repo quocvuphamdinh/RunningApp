@@ -8,7 +8,7 @@ import vu.pham.runningappseminar.utils.Constants
 
 object RetrofitBuilder {
     private val gson: Gson = GsonBuilder().setDateFormat("dd-MM-yyyy HH:mm:ss").create()
-    val FIREBASE_DATABASE : ApiService = Retrofit.Builder()
+    val API_SERVICE : ApiService = Retrofit.Builder()
             .baseUrl(Constants.BASE_URL2)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

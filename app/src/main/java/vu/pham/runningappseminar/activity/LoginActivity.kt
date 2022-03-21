@@ -14,8 +14,8 @@ import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.ParentViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ParentViewModelFactory
+import vu.pham.runningappseminar.viewmodels.LoginViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var txtGoBackWelcomeScreen:TextView
@@ -25,8 +25,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var txtShowAndHidePassword:TextView
     private lateinit var btnLogin:MaterialButton
     private var showPass = false
-    private val viewModel : ParentViewModel by viewModels{
-        ParentViewModelFactory((application as RunApplication).repository)
+    private val viewModel : LoginViewModel by viewModels{
+        LoginViewModelFactory((application as RunApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

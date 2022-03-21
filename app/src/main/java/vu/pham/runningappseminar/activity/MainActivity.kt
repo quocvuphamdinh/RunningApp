@@ -11,14 +11,16 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_TRACKING_ACTIVITY
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.MainViewModel
+import vu.pham.runningappseminar.viewmodels.WelcomeViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.WelcomeViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnCreateAccount:MaterialButton
     private lateinit var btnSignIn:MaterialButton
 
-    private val viewModel :MainViewModel by viewModels{
-        MainViewModelFactory((application as RunApplication).repository)
+    private val viewModel :WelcomeViewModel by viewModels{
+        WelcomeViewModelFactory((application as RunApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

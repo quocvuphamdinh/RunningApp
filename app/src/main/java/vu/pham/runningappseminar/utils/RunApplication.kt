@@ -10,5 +10,5 @@ class RunApplication : Application() {
     // rather than when the application starts
     val database by lazy { RunningDatabase.getInstance(this) }
     val sharedPreferences by lazy { getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE) }
-    val repository by lazy { MainRepository(database.getRunDAO(), RetrofitBuilder.FIREBASE_DATABASE, sharedPreferences) }
+    val repository by lazy { MainRepository(database.getRunDAO(), RetrofitBuilder.API_SERVICE, sharedPreferences) }
 }

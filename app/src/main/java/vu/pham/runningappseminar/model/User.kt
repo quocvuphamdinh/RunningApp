@@ -1,6 +1,8 @@
 package vu.pham.runningappseminar.model
 
-class User() {
+import java.io.Serializable
+
+class User() : Serializable{
     private var id:Long=0L
     private var userName:String=""
     private var passWord:String=""
@@ -11,7 +13,7 @@ class User() {
     private var height:Int=0
     private var distanceGoal:Long=0L
 
-    constructor(username: String, password: String, fullname: String, gender :String, weight:Int, height:Int, distanceGoal:Long) : this() {
+    constructor(username: String, password: String, fullname: String, gender :String, height:Int, weight:Int, distanceGoal:Long) : this() {
         this.userName = username
         this.passWord = password
         this.fullName = fullname

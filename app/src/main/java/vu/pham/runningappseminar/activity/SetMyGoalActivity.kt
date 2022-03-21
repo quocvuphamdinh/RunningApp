@@ -1,13 +1,10 @@
 package vu.pham.runningappseminar.activity
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.NumberPicker
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import com.google.android.material.button.MaterialButton
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.utils.Constants
@@ -46,7 +43,8 @@ class SetMyGoalActivity : AppCompatActivity() {
     private fun initNumberPicker(){
         numberPicker.maxValue = Int.MAX_VALUE
         numberPicker.minValue = 1
-        numberPicker.value = 1
+        val bundle = intent?.extras
+        numberPicker.value = bundle?.getLong(Constants.INIT_SET_MYGOAL, 1)?.toInt() ?: 1
         numberPicker.wrapSelectorWheel = false
     }
     private fun anhXa() {

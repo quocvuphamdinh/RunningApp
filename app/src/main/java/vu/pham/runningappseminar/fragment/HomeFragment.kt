@@ -3,6 +3,9 @@ package vu.pham.runningappseminar.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +23,14 @@ import vu.pham.runningappseminar.activity.SetMyGoalActivity
 import vu.pham.runningappseminar.adapter.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapter.RecyclerViewRecentActivitiesAdapter
 import vu.pham.runningappseminar.model.Data
+import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+
 
 class HomeFragment : Fragment() {
     private lateinit var recyclerViewTodayTraining:RecyclerView
@@ -42,20 +48,26 @@ class HomeFragment : Fragment() {
     private lateinit var txtMaxDistance:TextView
     private lateinit var txtMaxTimeInMillies:TextView
     private lateinit var txtMaxCaloriesBurned:TextView
+    private lateinit var txtWelcome :TextView
+
+    private var user:User?=null
+    private val viewModel : MainViewModel by viewModels{
+        MainViewModelFactory((activity?.application as RunApplication).repository)
+    }
+
     private var resultLauncher =registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
             val goalValue = data?.getIntExtra(Constants.INTENT_SET_MYGOAL, 1000)
             goalValue?.let {
-                progressBar.max = it
-                txtWeeklyGoal.text = "Weekly goal $it km"
+                val user = viewModel.getUserFromSharedPref()
+                user?.setdistanceGoal(it.toLong())
+                viewModel.writePersonalDataToSharedPref(user!!)
+                viewModel.updateUser(user)
             }
         }
     }
 
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,12 +78,41 @@ class HomeFragment : Fragment() {
         anhXa(view)
         initActivityList()
         initRecentActivities()
+        initUserInfo()
 
         imgSetMyGoal.setOnClickListener {
             clickGoToSetMyGoal()
         }
         subscribeToObservers()
         return view
+    }
+
+    private fun initUserInfo() {
+        user = viewModel.getUserFromSharedPref()
+        if(context?.let { CheckConnection.haveNetworkConnection(it) } == true){
+            user?.getUsername()?.let {
+                viewModel.getUserLiveData(it, user!!.getPassword())
+                viewModel.userLiveData.observe(viewLifecycleOwner, Observer {
+                    user = it
+                    viewModel.getUserLiveData(user!!.getUsername(), user!!.getPassword())
+                    bindDataToDistanceGoalView(user)
+                })
+            }
+        }else{
+            bindDataToDistanceGoalView(user)
+        }
+    }
+    private fun bindDataToDistanceGoalView(user: User?){
+        txtWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
+        progressBar.max = user?.getdistanceGoal()?.toInt() ?: 0
+        val text = "Let's go "
+        val nameUser = user?.getFullname()
+        val text2 = text+nameUser
+        val spannable: Spannable = SpannableString(text2)
+
+        spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.grey_200)), text.length, (text + nameUser).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        txtWelcome.setText(spannable, TextView.BufferType.SPANNABLE)
     }
 
     private fun subscribeToObservers(){
@@ -124,6 +165,9 @@ class HomeFragment : Fragment() {
 
     private fun clickGoToSetMyGoal() {
         val intent = Intent(context, SetMyGoalActivity::class.java)
+        val bundle = Bundle()
+        bundle.putLong(Constants.INIT_SET_MYGOAL, user?.getdistanceGoal()!!)
+        intent.putExtras(bundle)
         resultLauncher.launch(intent)
     }
 
@@ -158,5 +202,6 @@ class HomeFragment : Fragment() {
         txtMaxDistance = view.findViewById(R.id.textViewMaxDistance)
         txtMaxTimeInMillies = view.findViewById(R.id.textViewMaxTimeInMillies)
         txtMaxCaloriesBurned = view.findViewById(R.id.textViewMaxCaloriesBurned)
+        txtWelcome = view.findViewById(R.id.textViewWellcome)
     }
 }
