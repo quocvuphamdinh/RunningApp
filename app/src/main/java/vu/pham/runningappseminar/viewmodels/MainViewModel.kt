@@ -41,6 +41,10 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         })
     }
 
+
+    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String) = mainRepository.getTotalDitanceInSpecificDayOfWeek(date)
+    suspend fun getTotalDitanceInSpecificMonth(month:String) = mainRepository.getTotalDitanceInSpecificMonth(month)
+
     val totalDistanceWeekly = mainRepository.getTotalDitanceWeekly()
 
     val totalCaloriesBurnedToday = mainRepository.getTotalCaloriesBurnedToDay()

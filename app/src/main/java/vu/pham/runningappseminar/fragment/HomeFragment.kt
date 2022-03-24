@@ -105,12 +105,12 @@ class HomeFragment : Fragment() {
     private fun bindDataToDistanceGoalView(user: User?){
         txtWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
         progressBar.max = user?.getdistanceGoal()?.toInt() ?: 0
-        val text = "Let's go "
-        val nameUser = user?.getFullname()
-        val text2 = text+nameUser
+        val nameUser = "Let's go "
+        val text = user?.getFullname()
+        val text2 = nameUser+text
         val spannable: Spannable = SpannableString(text2)
 
-        spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.grey_200)), text.length, (text + nameUser).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.grey_200)), nameUser.length, (text + nameUser).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         txtWelcome.setText(spannable, TextView.BufferType.SPANNABLE)
     }

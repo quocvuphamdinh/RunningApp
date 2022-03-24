@@ -15,8 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecyclerViewHistoryRunAdapter : RecyclerView.Adapter<RecyclerViewHistoryRunAdapter.RunViewHolder>() {
-
-
+    
     inner class RunViewHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         var textViewTimeStampHistoryRun:TextView
         var textViewAverageSpeedInKMHHistoryRun:TextView

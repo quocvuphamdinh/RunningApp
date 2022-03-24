@@ -39,7 +39,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="italic" />
+                android:textStyle="italic|bold" />
         </LinearLayout>
         <ImageView
             android:scaleType="centerCrop"

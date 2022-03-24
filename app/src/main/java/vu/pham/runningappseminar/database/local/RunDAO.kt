@@ -43,9 +43,6 @@ interface RunDAO {
     @Query("SELECT SUM(distanceInKilometers) FROM running_table")
     fun getTotalDistance():LiveData<Int>
 
-    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
-    fun getTotalDitanceWeekly():LiveData<Int>
-
     @Query("SELECT SUM(caloriesBurned) FROM running_table WHERE DATE(DATETIME(timestamp/1000, 'unixepoch')) = DATE('now')")
     fun getTotalCaloriesBurnedToDay():LiveData<Int>
 
@@ -69,4 +66,25 @@ interface RunDAO {
 
     @Query("SELECT MAX(averageSpeedInKilometersPerHour) FROM running_table")
     fun getMaxAvgSpeedInKMH():LiveData<Float>
+
+    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
+    fun getTotalDitanceWeekly():LiveData<Int>
+
+
+    // nếu > thì monday là week 0 còn >= sunday là week 0
+    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%w',DATE(DATETIME(timestamp/1000, 'unixepoch'))) IN (:date) AND strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
+    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String):Int?
+
+    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%m',DATE('now')) AND strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = :month")
+    suspend fun getTotalDitanceInSpecificMonth(month:String):Int?
+
+//    @Query("SELECT * FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
+//    fun getListDurationWeekly():LiveData<List<Run>>
+//
+//    @Query("SELECT * FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
+//    fun getListCaloriesBurnedWeekly():LiveData<List<Run>>
+//
+//    @Query("SELECT * FROM running_table WHERE strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%m',DATE('now'))")
+//    fun getListDistanceWeekly():LiveData<List<Run>>
+
 }

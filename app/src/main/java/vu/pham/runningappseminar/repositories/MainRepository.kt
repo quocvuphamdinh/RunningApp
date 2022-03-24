@@ -51,6 +51,9 @@ class MainRepository(private val runDAO: RunDAO, private val apiService: ApiServ
         runDAO.deleteRun(run)
     }
 
+    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String) = runDAO.getTotalDitanceInSpecificDayOfWeek(date)
+    suspend fun getTotalDitanceInSpecificMonth(month:String) = runDAO.getTotalDitanceInSpecificMonth(month)
+
     fun getAllRunsSortedByDate() = runDAO.getAllRunsSortedByDate()
 
     fun getAllRunsSortedByTimeInMillies() = runDAO.getAllRunsSortedByTimeInMillies()
