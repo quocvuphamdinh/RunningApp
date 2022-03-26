@@ -10,6 +10,7 @@ import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.SortType
+import java.util.*
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
@@ -41,9 +42,7 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         })
     }
 
-
-    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String) = mainRepository.getTotalDitanceInSpecificDayOfWeek(date)
-    suspend fun getTotalDitanceInSpecificMonth(month:String) = mainRepository.getTotalDitanceInSpecificMonth(month)
+    fun getListDistanceInSpecificDate(date:String) = mainRepository.getListDistanceInSpecificDate(date)
 
     val totalDistanceWeekly = mainRepository.getTotalDitanceWeekly()
 

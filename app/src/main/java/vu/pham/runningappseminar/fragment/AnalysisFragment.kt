@@ -1,14 +1,17 @@
 package vu.pham.runningappseminar.fragment
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
@@ -17,29 +20,29 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.utils.RunApplication
+import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AnalysisFragment : Fragment() {
 
-    private lateinit var spinner1:Spinner
-    private lateinit var spinner2: Spinner
-    private lateinit var spinner3: Spinner
     private lateinit var barChart1:BarChart
     private lateinit var barChart2:BarChart
     private lateinit var barChart3:BarChart
-    private lateinit var barEntriesDistance:ArrayList<BarEntry>
-    private lateinit var barEntriesDuration:ArrayList<BarEntry>
-    private lateinit var barEntriesCaloriesBurned:ArrayList<BarEntry>
-    private lateinit var spinnerAdapter:ArrayAdapter<String>
+    private lateinit var imageViewSelectDate:ImageView
+    private var date = Date(System.currentTimeMillis())
 
     private val viewModel : MainViewModel by viewModels{
         MainViewModelFactory((activity?.application as RunApplication).repository)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,100 +52,60 @@ class AnalysisFragment : Fragment() {
 
         anhXa(view)
 
-        initSpinner(spinner1, barChart1, 0, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor), barEntriesDistance)
-        initSpinner(spinner2, barChart2, 1, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2), barEntriesDuration)
-        initSpinner(spinner3, barChart3, 2, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3), barEntriesCaloriesBurned)
+        setUpDataToBarEntries()
 
-        barEntriesDistance = ArrayList()
-        barEntriesDistance.clear()
-        getRunDayOfWeek(1, 0F)
-        getRunDayOfWeek(2, 1F)
-        getRunDayOfWeek(3, 2F)
-        getRunDayOfWeek(4, 3F)
-        getRunDayOfWeek(5, 4F)
-        getRunDayOfWeek(6, 5F)
-        getRunDayOfWeek(7, 6F)
+        imageViewSelectDate.setOnClickListener {
+            showDialogSelectDate()
+        }
 
-        barEntriesDuration = ArrayList()
-        barEntriesDuration.clear()
-
-        barEntriesCaloriesBurned= ArrayList()
-        barEntriesCaloriesBurned.clear()
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        barEntriesDistance.clear()
-        getRunDayOfWeek(1, 0F)
-        getRunDayOfWeek(2, 1F)
-        getRunDayOfWeek(3, 2F)
-        getRunDayOfWeek(4, 3F)
-        getRunDayOfWeek(5, 4F)
-        getRunDayOfWeek(6, 5F)
-        getRunDayOfWeek(7, 6F)
-
-        barEntriesDuration = ArrayList()
-        barEntriesDuration.clear()
-
-        barEntriesCaloriesBurned= ArrayList()
-        barEntriesCaloriesBurned.clear()
-    }
-
-
-    private fun getRunDayOfWeek(date:Int, index:Float){
-        lifecycleScope.launch {
-           val data= viewModel.getTotalDitanceInSpecificDayOfWeek(date.toString())
-            barEntriesDistance.add(BarEntry(index, (data?.toFloat()?:0f)/1000f))
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun showDialogSelectDate() {
+       val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog)
+        val datePicker = bottomSheetDialog.findViewById<DatePicker>(R.id.datePicker)
+        datePicker?.setOnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
+            date.year = year - 1900
+            date.month = monthOfYear
+            date.date = dayOfMonth
+            setUpDataToBarEntries()
         }
+        bottomSheetDialog.show()
     }
-    private fun initSpinner(spinner: Spinner, barChart: BarChart, index:Int, startColor:Int, endColor:Int, barEntry: List<BarEntry>) {
-        spinnerAdapter = context?.let { ArrayAdapter<String>(it, android.R.layout.simple_spinner_item,
-            resources.getStringArray(R.array.spinner_data)) }!!
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = spinnerAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if(position==0){
-                    initBarChart(barChart, startColor, endColor, resources.getStringArray(R.array.spinner_data)[position],
-                        resources.getStringArray(R.array.analysisLabel)[index],
-                        resources.getStringArray(R.array.date_array), barEntry)
-                }else if(position==1){
-                    initBarChart(barChart, startColor, endColor, resources.getStringArray(R.array.spinner_data)[position],
-                        resources.getStringArray(R.array.analysisLabel)[index],
-                        resources.getStringArray(R.array.month_array), barEntry)
-                }
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-        }
+    @SuppressLint("SimpleDateFormat")
+    private fun setUpDataToBarEntries() {
+        val dateDate = SimpleDateFormat("yyyy-MM-dd")
+        viewModel.getListDistanceInSpecificDate(dateDate.format(date)).observe(viewLifecycleOwner, Observer {
+            val allDistance = it.indices.map { i-> BarEntry(i.toFloat(), it[i].distanceInKilometers.toFloat()) }
+            val allDuration = it.indices.map { i-> BarEntry(i.toFloat(), it[i].timeInMillis.toFloat()) }
+            val allCaloriesBurned = it.indices.map { i-> BarEntry(i.toFloat(), it[i].caloriesBurned.toFloat()) }
+            initBarChart(barChart1, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor),
+                resources.getStringArray(R.array.analysisLabel)[0], allDistance, resources.getStringArray(R.array.analysisLabel2)[0])
+            initBarChart(barChart2, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2),
+                resources.getStringArray(R.array.analysisLabel)[1], allDuration, resources.getStringArray(R.array.analysisLabel2)[1])
+            initBarChart(barChart3, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3),
+                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, resources.getStringArray(R.array.analysisLabel2)[2])
+        })
     }
 
 
-    private fun initBarChart(barChart:BarChart, startColor:Int, endColor:Int, label:String, label2:String, lists: Array<String>, barEntry: List<BarEntry>) {
-//        for (i in 0 until lists.size){
-//            barEntries.add(BarEntry(i.toFloat(),
-//                viewModel.getTotalDitanceInSpecificDayOfWeek("weekday 0").toFloat()
-//            ))
-//        }
-
-        val barDataSet = BarDataSet(barEntry, label2)
+    private fun initBarChart(barChart:BarChart, startColor:Int, endColor:Int, label:String, barEntry: List<BarEntry>, label2:String) {
+        val barDataSet = BarDataSet(barEntry, label)
         barDataSet.setColors(endColor)
         barDataSet.formLineWidth= 10f
         barDataSet.setGradientColor(startColor, endColor)
         barChart.data = BarData(barDataSet)
         val description = Description()
-        description.text = label
+        description.text = label2
         barChart.description = description
         val xAxis = barChart.xAxis
-        xAxis.valueFormatter = IndexAxisValueFormatter(lists)
         xAxis.position = XAxis.XAxisPosition.TOP
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
         xAxis.granularity = 1f
-        xAxis.labelCount = lists.size
         barChart.animateY(2000)
         barChart.invalidate()
     }
@@ -151,8 +114,6 @@ class AnalysisFragment : Fragment() {
         barChart1 = view.findViewById(R.id.barChar1)
         barChart2 = view.findViewById(R.id.barChar2)
         barChart3 = view.findViewById(R.id.barChar3)
-        spinner1 = view.findViewById(R.id.spinner1)
-        spinner2 = view.findViewById(R.id.spinner2)
-        spinner3 = view.findViewById(R.id.spinner3)
+        imageViewSelectDate = view.findViewById(R.id.imageViewSelectDate)
     }
 }

@@ -5,6 +5,8 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import java.sql.Date
+import java.util.*
 
 
 @Dao
@@ -70,21 +72,6 @@ interface RunDAO {
     @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
     fun getTotalDitanceWeekly():LiveData<Int>
 
-
-    // nếu > thì monday là week 0 còn >= sunday là week 0
-    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%w',DATE(DATETIME(timestamp/1000, 'unixepoch'))) IN (:date) AND strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
-    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String):Int?
-
-    @Query("SELECT SUM(distanceInKilometers) FROM running_table WHERE strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%m',DATE('now')) AND strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = :month")
-    suspend fun getTotalDitanceInSpecificMonth(month:String):Int?
-
-//    @Query("SELECT * FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
-//    fun getListDurationWeekly():LiveData<List<Run>>
-//
-//    @Query("SELECT * FROM running_table WHERE strftime('%W',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%W',DATE('now'))")
-//    fun getListCaloriesBurnedWeekly():LiveData<List<Run>>
-//
-//    @Query("SELECT * FROM running_table WHERE strftime('%m',DATE(DATETIME(timestamp/1000, 'unixepoch'))) = strftime('%m',DATE('now'))")
-//    fun getListDistanceWeekly():LiveData<List<Run>>
-
+    @Query("SELECT * FROM running_table WHERE strftime('%Y-%m-%d',DATE(DATETIME(timestamp/1000, 'unixepoch'))) IN (:date)")
+    fun getListDistanceInSpecificDate(date:String):LiveData<List<Run>>
 }

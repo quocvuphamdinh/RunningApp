@@ -67,7 +67,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         user = viewModel.getUserFromSharedPref()
         weight = user?.getWeight()?.toFloat() ?: 80f
-        Toast.makeText(this@RunActivity, "weight: $weight", Toast.LENGTH_LONG).show()
         anhXa()
         mapView.onCreate(savedInstanceState)
         requestGPS()

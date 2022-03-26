@@ -8,6 +8,7 @@ import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.database.local.RunDAO
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.Constants
+import java.util.*
 
 class MainRepository(private val runDAO: RunDAO, private val apiService: ApiService, private val sharedPref:SharedPreferences) {
 
@@ -51,8 +52,7 @@ class MainRepository(private val runDAO: RunDAO, private val apiService: ApiServ
         runDAO.deleteRun(run)
     }
 
-    suspend fun getTotalDitanceInSpecificDayOfWeek(date:String) = runDAO.getTotalDitanceInSpecificDayOfWeek(date)
-    suspend fun getTotalDitanceInSpecificMonth(month:String) = runDAO.getTotalDitanceInSpecificMonth(month)
+    fun getListDistanceInSpecificDate(date:String) = runDAO.getListDistanceInSpecificDate(date)
 
     fun getAllRunsSortedByDate() = runDAO.getAllRunsSortedByDate()
 
