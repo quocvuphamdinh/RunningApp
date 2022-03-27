@@ -72,12 +72,29 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+            <androidx.cardview.widget.CardView
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="@color/endColor"
+                android:layout_below="@id/textViewFullnameProfileFragment"
+                android:id="@+id/cardViewSyncData"
+                android:layout_width="100dp"
+                android:layout_height="50dp">
+                <TextView
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:text="Sync Data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textViewFullnameProfileFragment"
+                android:layout_below="@id/cardViewSyncData"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:elevation="0dp"

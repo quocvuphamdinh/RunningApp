@@ -14,6 +14,15 @@ import java.util.*
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
+
+    fun deleteAllRun() = viewModelScope.launch {
+        mainRepository.deleteAllRun()
+    }
+
+    fun insertRunRemote(run: Run, userId:Long, userActivitesId:Long) = viewModelScope.launch {
+        mainRepository.insertRunRemote(run, userId, userActivitesId)
+    }
+
     fun updateUser(user: User) = viewModelScope.launch {
         mainRepository.updateUser(user)
     }
@@ -41,6 +50,8 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
             }
         })
     }
+
+    suspend fun getAllRunFromLocal() = mainRepository.getAllRun()
 
     fun getListDistanceInSpecificDate(date:String) = mainRepository.getListDistanceInSpecificDate(date)
 

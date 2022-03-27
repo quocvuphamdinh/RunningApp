@@ -7,11 +7,14 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
@@ -34,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         anhXa()
+
 
         txtGoBackWelcomeScreen.setOnClickListener {
             goBack()
@@ -61,9 +65,22 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
                 if(viewModel.checkSameUser(username, password, user)){
-                    Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
-                    writePersonalDataToSharedPref(user!!)
-                    goToHomePage()
+                    lifecycleScope.launch {
+                        viewModel.getAllRunFromRemote(user?.getId()!!).enqueue(object : Callback<List<Run>>{
+                            override fun onResponse(call: Call<List<Run>>, response: Response<List<Run>>) {
+                                val listRun = response.body()
+                                for (run in listRun!!){
+                                    viewModel.insertRunLocal(run)
+                                }
+                                writePersonalDataToSharedPref(user)
+                                goToHomePage()
+                                Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
+                            }
+                            override fun onFailure(call: Call<List<Run>>, t: Throwable) {
+                                Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                            }
+                        })
+                    }
                 }else{
                     Toast.makeText(this@LoginActivity, "Login failed !", Toast.LENGTH_LONG).show()
                 }

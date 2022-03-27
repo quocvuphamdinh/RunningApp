@@ -12,6 +12,23 @@ import java.util.*
 
 class MainRepository(private val runDAO: RunDAO, private val apiService: ApiService, private val sharedPref:SharedPreferences) {
 
+
+    //remote
+    fun getAllRunFromRemote(userId: Long) = apiService.getRun(userId)
+    suspend fun insertUser(user: User)= apiService.insertUser(user)
+
+    fun getUser(username:String, password:String) = apiService.getUser(username, password)
+
+    suspend fun updateUser(user: User) = apiService.updateUser(user, user.getId())
+
+    suspend fun insertRunRemote(run: Run, userId:Long, userActivitesId:Long){
+        apiService.insertRun(run, userId, userActivitesId)
+    }
+
+    //local
+    suspend fun deleteAllRun() = runDAO.deleteAllRun()
+    suspend fun getAllRun() = runDAO.getAllRun()
+
     fun writePersonalDataToSharedPref(user: User){
         val gson = Gson()
         val json = gson.toJson(user)
@@ -37,11 +54,6 @@ class MainRepository(private val runDAO: RunDAO, private val apiService: ApiServ
         return sharedPref.getBoolean(Constants.KEY_FIRST_TIME_TOGGLE, true)
     }
 
-    suspend fun insertUser(user: User)= apiService.insertUser(user)
-
-    fun getUser(username:String, password:String) = apiService.getUser(username, password)
-
-    suspend fun updateUser(user: User) = apiService.updateUser(user, user.getId())
 
 
     suspend fun insertRun(run: Run){

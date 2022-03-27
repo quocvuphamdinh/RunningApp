@@ -14,7 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +46,7 @@ class ProfileFragment : Fragment() {
     private lateinit var txtCaloriesBurned:TextView
     private lateinit var txtAvgSpeed:TextView
     private lateinit var txtDistanceGoal:TextView
+    private lateinit var btnSyncData:CardView
 
     private val viewModel : MainViewModel by viewModels{
         MainViewModelFactory((activity?.application as RunApplication).repository)
@@ -74,16 +77,37 @@ class ProfileFragment : Fragment() {
             clickLogout()
         }
 
+        btnSyncData.setOnClickListener {
+            doSyncData()
+        }
+
         subscribeToObservers()
 
         return view
     }
 
+    private fun doSyncData() {
+        lifecycleScope.launch {
+            val listRun = viewModel.getAllRunFromLocal()
+            for (run in listRun){
+                viewModel.insertRunRemote(run, userLocal.getId(), -1L)
+            }
+            Toast.makeText(context, "Sync successfully !", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun clickLogout() {
-        val intent = Intent(context, MainActivity::class.java)
-        viewModel.removePersonalDataFromSharedPref()
-        activity?.finish()
-        startActivity(intent)
+        lifecycleScope.launch {
+            val listRun = viewModel.getAllRunFromLocal()
+            for (run in listRun){
+                viewModel.insertRunRemote(run, userLocal.getId(), -1L)
+            }
+            viewModel.deleteAllRun()
+            val intent = Intent(context, MainActivity::class.java)
+            viewModel.removePersonalDataFromSharedPref()
+            activity?.finish()
+            startActivity(intent)
+        }
     }
 
     private fun bindUserDataToView(userBind: User?){
@@ -167,5 +191,6 @@ class ProfileFragment : Fragment() {
         txtWeight = view.findViewById(R.id.textViewWeight)
         cardViewLogout = view.findViewById(R.id.cardViewLogout)
         txtDistanceGoal= view.findViewById(R.id.textViewDistanceGoalProfileFragment)
+        btnSyncData = view.findViewById(R.id.cardViewSyncData)
     }
 }

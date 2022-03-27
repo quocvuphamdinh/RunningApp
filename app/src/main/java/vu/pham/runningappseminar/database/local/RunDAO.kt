@@ -74,4 +74,10 @@ interface RunDAO {
 
     @Query("SELECT * FROM running_table WHERE strftime('%Y-%m-%d',DATE(DATETIME(timestamp/1000, 'unixepoch'))) IN (:date)")
     fun getListDistanceInSpecificDate(date:String):LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table")
+    suspend fun getAllRun():List<Run>
+
+    @Query("DELETE FROM running_table")
+    suspend fun deleteAllRun()
 }

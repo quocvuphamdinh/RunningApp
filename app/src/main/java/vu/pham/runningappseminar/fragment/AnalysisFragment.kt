@@ -83,11 +83,11 @@ class AnalysisFragment : Fragment() {
             val allDuration = it.indices.map { i-> BarEntry(i.toFloat(), it[i].timeInMillis.toFloat()) }
             val allCaloriesBurned = it.indices.map { i-> BarEntry(i.toFloat(), it[i].caloriesBurned.toFloat()) }
             initBarChart(barChart1, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor),
-                resources.getStringArray(R.array.analysisLabel)[0], allDistance, resources.getStringArray(R.array.analysisLabel2)[0])
+                resources.getStringArray(R.array.analysisLabel)[0], allDistance, dateDate.format(date))
             initBarChart(barChart2, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2),
-                resources.getStringArray(R.array.analysisLabel)[1], allDuration, resources.getStringArray(R.array.analysisLabel2)[1])
+                resources.getStringArray(R.array.analysisLabel)[1], allDuration, dateDate.format(date))
             initBarChart(barChart3, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3),
-                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, resources.getStringArray(R.array.analysisLabel2)[2])
+                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, dateDate.format(date))
         })
     }
 
