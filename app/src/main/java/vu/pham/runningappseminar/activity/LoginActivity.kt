@@ -7,6 +7,7 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
@@ -15,18 +16,20 @@ import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.databinding.ActivityLoginBinding
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var txtGoBackWelcomeScreen:TextView
-    private lateinit var txtForgotPassword:TextView
-    private lateinit var editTextUsername:EditText
-    private lateinit var editTextPassword:EditText
-    private lateinit var txtShowAndHidePassword:TextView
-    private lateinit var btnLogin:MaterialButton
+//    private lateinit var txtGoBackWelcomeScreen:TextView
+//    private lateinit var txtForgotPassword:TextView
+//    private lateinit var editTextUsername:EditText
+//    private lateinit var editTextPassword:EditText
+//    private lateinit var txtShowAndHidePassword:TextView
+//    private lateinit var btnLogin:MaterialButton
+    private lateinit var binding:ActivityLoginBinding
     private var showPass = false
     private val viewModel : LoginViewModel by viewModels{
         LoginViewModelFactory((application as RunApplication).repository)
@@ -34,22 +37,22 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        //setContentView(R.layout.activity_login)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        anhXa()
+        //anhXa()
 
-
-        txtGoBackWelcomeScreen.setOnClickListener {
+        binding.textViewBackWelComeScreen2.setOnClickListener {
             goBack()
         }
-        txtForgotPassword.setOnClickListener {
+        binding.textViewForgotPassword.setOnClickListener {
             val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
-        txtShowAndHidePassword.setOnClickListener {
+        binding.textViewShowHidePassword.setOnClickListener {
             onClickShowPass()
         }
-        btnLogin.setOnClickListener {
+        binding.buttonSignIn.setOnClickListener {
             checkUserInServer()
         }
     }
@@ -59,8 +62,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun checkUserInServer() {
-        val username = editTextUsername.text.toString().trim()
-        val password = editTextPassword.text.toString().trim()
+        val username = binding.editTextUsernameLogin.text.toString().trim()
+        val password = binding.editTextPasswordLogin.text.toString().trim()
         viewModel.getUser(username, password)?.enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
@@ -107,21 +110,21 @@ class LoginActivity : AppCompatActivity() {
     private fun onClickShowPass() {
         if(showPass){
             showPass=false
-            editTextPassword.transformationMethod=PasswordTransformationMethod.getInstance()
-            txtShowAndHidePassword.text = "SHOW"
+            binding.editTextPasswordLogin.transformationMethod=PasswordTransformationMethod.getInstance()
+            binding.textViewShowHidePassword.text = "SHOW"
         }else{
             showPass=true
-            editTextPassword.transformationMethod=HideReturnsTransformationMethod.getInstance()
-            txtShowAndHidePassword.text = "HIDE"
+            binding.editTextPasswordLogin.transformationMethod=HideReturnsTransformationMethod.getInstance()
+            binding.textViewShowHidePassword.text = "HIDE"
         }
     }
 
-    private fun anhXa() {
-        txtGoBackWelcomeScreen = findViewById(R.id.textViewBackWelComeScreen2)
-        txtForgotPassword = findViewById(R.id.textViewForgotPassword)
-        editTextUsername = findViewById(R.id.editTextUsernameLogin)
-        editTextPassword = findViewById(R.id.editTextPasswordLogin)
-        txtShowAndHidePassword = findViewById(R.id.textViewShowHidePassword)
-        btnLogin = findViewById(R.id.buttonSignIn)
-    }
+//    private fun anhXa() {
+//        txtGoBackWelcomeScreen = findViewById(R.id.textViewBackWelComeScreen2)
+//        txtForgotPassword = findViewById(R.id.textViewForgotPassword)
+//        editTextUsername = findViewById(R.id.editTextUsernameLogin)
+//        editTextPassword = findViewById(R.id.editTextPasswordLogin)
+//        txtShowAndHidePassword = findViewById(R.id.textViewShowHidePassword)
+//        btnLogin = findViewById(R.id.buttonSignIn)
+//    }
 }

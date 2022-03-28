@@ -8,8 +8,10 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.databinding.ActivityEditProfileBinding
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
@@ -19,15 +21,16 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.EditProfileViewMo
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
 
 class EditProfileActivity : AppCompatActivity() {
-    private lateinit var txtCancel:TextView
-    private lateinit var txtSave:TextView
-    private lateinit var edtUsername:EditText
-    private lateinit var edtPassword:EditText
-    private lateinit var edtFullname:EditText
-    private lateinit var edtHeight:EditText
-    private lateinit var edtWeight:EditText
-    private lateinit var spinnerSex:Spinner
-    private lateinit var txtShowAndHidePassword:TextView
+//    private lateinit var txtCancel:TextView
+//    private lateinit var txtSave:TextView
+//    private lateinit var edtUsername:EditText
+//    private lateinit var edtPassword:EditText
+//    private lateinit var edtFullname:EditText
+//    private lateinit var edtHeight:EditText
+//    private lateinit var edtWeight:EditText
+//    private lateinit var spinnerSex:Spinner
+//    private lateinit var txtShowAndHidePassword:TextView
+    private lateinit var binding:ActivityEditProfileBinding
     private var showPass=false
     var sex = ""
     private var user:User= User()
@@ -39,19 +42,20 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
+        //setContentView(R.layout.activity_edit_profile)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile)
 
-        anhXa()
+        //anhXa()
         setUpSpinnerSex()
         getUserData()
 
-        txtSave.setOnClickListener {
+        binding.textViewSaveEditProfile.setOnClickListener {
             onClickSave()
         }
-        txtShowAndHidePassword.setOnClickListener {
+        binding.textViewShowHidePasswordEditProfile.setOnClickListener {
             onClickShowPass()
         }
-        txtCancel.setOnClickListener {
+        binding.textViewCancelEditProfile.setOnClickListener {
             onClickCancel()
         }
     }
@@ -59,20 +63,20 @@ class EditProfileActivity : AppCompatActivity() {
     private fun onClickShowPass() {
         if(showPass){
             showPass=false
-            edtPassword.transformationMethod= PasswordTransformationMethod.getInstance()
-            txtShowAndHidePassword.text = "SHOW"
+            binding.editTextPasswordEditProfile.transformationMethod= PasswordTransformationMethod.getInstance()
+            binding.textViewShowHidePasswordEditProfile.text = "SHOW"
         }else{
             showPass=true
-            edtPassword.transformationMethod= HideReturnsTransformationMethod.getInstance()
-            txtShowAndHidePassword.text = "HIDE"
+            binding.editTextPasswordEditProfile.transformationMethod= HideReturnsTransformationMethod.getInstance()
+            binding.textViewShowHidePasswordEditProfile.text = "HIDE"
         }
     }
     private fun onClickSave() {
-        val username = edtUsername.text.toString().trim()
-        val password = edtPassword.text.toString().trim()
-        val fullname = edtFullname.text.toString().trim()
-        val height = edtHeight.text.toString().trim()
-        val weight = edtWeight.text.toString().trim()
+        val username = binding.editTextUsernameEditProfile.text.toString().trim()
+        val password = binding.editTextPasswordEditProfile.text.toString().trim()
+        val fullname = binding.editTextFullnameEditProfile.text.toString().trim()
+        val height = binding.editTextHeightEditProfile.text.toString().trim()
+        val weight = binding.editTextWeightEditProfile.text.toString().trim()
         if(viewModel.checkInfoUser(username, password, password, fullname, height, weight)){
             val userNew = User(username, password, fullname, sex, height.toInt(), weight.toInt(), user.getdistanceGoal())
             userNew.setId(user.getId())
@@ -88,12 +92,12 @@ class EditProfileActivity : AppCompatActivity() {
         val bundle = intent?.extras
         user = bundle?.getSerializable(Constants.EDIT_USER) as User
         user.let {
-            edtUsername.setText(it.getUsername())
-            edtPassword.setText(it.getPassword())
-            edtFullname.setText(it.getFullname())
-            edtHeight.setText(it.getHeight().toString())
-            edtWeight.setText(it.getWeight().toString())
-            spinnerSex.setSelection(if(it.getSex()=="Male") 0 else if (it.getSex()=="Female") 1 else 2)
+            binding.editTextUsernameEditProfile.setText(it.getUsername())
+            binding.editTextPasswordEditProfile.setText(it.getPassword())
+            binding.editTextFullnameEditProfile.setText(it.getFullname())
+            binding.editTextHeightEditProfile.setText(it.getHeight().toString())
+            binding.editTextWeightEditProfile.setText(it.getWeight().toString())
+            binding.spinnerGioiTinhEditProfile.setSelection(if(it.getSex()=="Male") 0 else if (it.getSex()=="Female") 1 else 2)
         }
     }
 
@@ -102,8 +106,8 @@ class EditProfileActivity : AppCompatActivity() {
             android.R.layout.simple_list_item_1,
             resources.getStringArray(R.array.spinner_sex))
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerSex.adapter = spinnerAdapter
-        spinnerSex.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        binding.spinnerGioiTinhEditProfile.adapter = spinnerAdapter
+        binding.spinnerGioiTinhEditProfile.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 sex = parent?.getItemAtPosition(position).toString()
             }
@@ -116,15 +120,15 @@ class EditProfileActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun anhXa() {
-        txtCancel = findViewById(R.id.textViewCancelEditProfile)
-        txtSave = findViewById(R.id.textViewSaveEditProfile)
-        edtUsername = findViewById(R.id.editTextUsernameEditProfile)
-        edtPassword = findViewById(R.id.editTextPasswordEditProfile)
-        edtFullname = findViewById(R.id.editTextFullnameEditProfile)
-        edtHeight = findViewById(R.id.editTextHeightEditProfile)
-        edtWeight = findViewById(R.id.editTextWeightEditProfile)
-        spinnerSex = findViewById(R.id.spinnerGioiTinhEditProfile)
-        txtShowAndHidePassword = findViewById(R.id.textViewShowHidePasswordEditProfile)
-    }
+//    private fun anhXa() {
+//        txtCancel = findViewById(R.id.textViewCancelEditProfile)
+//        txtSave = findViewById(R.id.textViewSaveEditProfile)
+//        edtUsername = findViewById(R.id.editTextUsernameEditProfile)
+//        edtPassword = findViewById(R.id.editTextPasswordEditProfile)
+//        edtFullname = findViewById(R.id.editTextFullnameEditProfile)
+//        edtHeight = findViewById(R.id.editTextHeightEditProfile)
+//        edtWeight = findViewById(R.id.editTextWeightEditProfile)
+//        spinnerSex = findViewById(R.id.spinnerGioiTinhEditProfile)
+//        txtShowAndHidePassword = findViewById(R.id.textViewShowHidePasswordEditProfile)
+//    }
 }

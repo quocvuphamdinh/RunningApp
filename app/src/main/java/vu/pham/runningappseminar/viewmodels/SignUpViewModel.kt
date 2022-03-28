@@ -17,9 +17,7 @@ class SignUpViewModel(private val mainRepository: MainRepository) : ViewModel() 
 
     fun getUser(username:String, password:String) = mainRepository.getUser(username, password)
 
-    fun insertUser(user: User) = viewModelScope.launch {
-        mainRepository.insertUser(user)
-    }
+    suspend fun insertUser(user: User) = mainRepository.insertUser(user)
 
     fun checkInfoUser(username: String, password: String, password2: String, fullname:String, height:String, weight:String):Boolean{
         val usernameValid = checkInfo(username)

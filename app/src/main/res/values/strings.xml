@@ -23,6 +23,13 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="spinner_sex_signup">
+        <item>Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="analysisLabel">
         <item>Your Distance progress</item>
         <item>Your Duration progress</item>

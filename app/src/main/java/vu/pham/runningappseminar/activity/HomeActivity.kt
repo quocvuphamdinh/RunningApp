@@ -7,12 +7,14 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.databinding.ActivityHomeBinding
 import vu.pham.runningappseminar.fragment.ActivityFragment
 import vu.pham.runningappseminar.fragment.AnalysisFragment
 import vu.pham.runningappseminar.fragment.HomeFragment
@@ -21,18 +23,20 @@ import vu.pham.runningappseminar.utils.Constants
 
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var bottomNav:BottomNavigationView
-    private lateinit var bottomAppBar:BottomAppBar
-    private lateinit var fab:FloatingActionButton
+//    private lateinit var bottomNav:BottomNavigationView
+//    private lateinit var bottomAppBar:BottomAppBar
+//    private lateinit var fab:FloatingActionButton
     private val HOME_FRAGMENT=1
     private val ACTIVITY_FRAGMENT=2
     private val ANALYSIS_FRAGMENT=3
     private val PROFILE_FRAGMENT=4
     private var currentFragment=HOME_FRAGMENT
+    private lateinit var binding:ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        //setContentView(R.layout.activity_home)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
 
         anhXa()
         goToRunActivityIfNeeded(intent)
@@ -51,14 +55,14 @@ class HomeActivity : AppCompatActivity() {
         }
     }
     private fun clickRun() {
-        fab.setOnClickListener {
+        binding.floatingButtonRun.setOnClickListener {
             val intent = Intent(this@HomeActivity, RunActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun clickItemInBottomAppBar(){
-        bottomNav.setOnNavigationItemSelectedListener(object :NavigationView.OnNavigationItemSelectedListener,
+        binding.bottomNavHome.setOnNavigationItemSelectedListener(object :NavigationView.OnNavigationItemSelectedListener,
             BottomNavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 val id = item.itemId
@@ -94,11 +98,11 @@ class HomeActivity : AppCompatActivity() {
         transaction.commit()
     }
     private fun anhXa() {
-        fab = findViewById(R.id.floatingButtonRun)
-        bottomNav = findViewById(R.id.bottomNavHome)
-        bottomAppBar = findViewById(R.id.bottomAppBar)
-        bottomNav.background = null
-        bottomNav.menu.findItem(R.id.nav_home).isChecked = true
+//        fab = findViewById(R.id.floatingButtonRun)
+//        bottomNav = findViewById(R.id.bottomNavHome)
+//        bottomAppBar = findViewById(R.id.bottomAppBar)
+        binding.bottomNavHome.background = null
+        binding.bottomNavHome.menu.findItem(R.id.nav_home).isChecked = true
         replaceFragment(HomeFragment())
     }
 }

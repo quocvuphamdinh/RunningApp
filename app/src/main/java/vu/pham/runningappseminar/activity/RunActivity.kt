@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,6 +24,7 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.databinding.ActivityRunBinding
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
@@ -43,11 +45,12 @@ import java.util.*
 import kotlin.math.round
 
 class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-    private lateinit var txtStopRun:TextView
-    private lateinit var btnRun:MaterialButton
-    private lateinit var imgClose:ImageView
-    private lateinit var mapView: MapView
-    private lateinit var txtTimeRun:TextView
+//    private lateinit var txtStopRun:TextView
+//    private lateinit var btnRun:MaterialButton
+//    private lateinit var imgClose:ImageView
+//    private lateinit var mapView: MapView
+//    private lateinit var txtTimeRun:TextView
+    private lateinit var binding:ActivityRunBinding
     private var googleMap: GoogleMap?=null
     private var currentTimeInMillies=0L
 
@@ -63,12 +66,13 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_run)
+        //setContentView(R.layout.activity_run)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_run)
 
         user = viewModel.getUserFromSharedPref()
         weight = user?.getWeight()?.toFloat() ?: 80f
-        anhXa()
-        mapView.onCreate(savedInstanceState)
+        //anhXa()
+        binding.mapView.onCreate(savedInstanceState)
         requestGPS()
         initGoogleMap()
         subscribeToObservers()
@@ -78,7 +82,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun clickStopRun() {
-        txtStopRun.setOnClickListener {
+        binding.textViewStopRun.setOnClickListener {
             zoomToSeeWholeTrack()
             saveRunToDatabase()
         }
@@ -121,11 +125,11 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         TrackingService.timeRunInMillis.observe(this, Observer {
             currentTimeInMillies = it
             val formattedTimer = TrackingUtil.getFormattedTimer(currentTimeInMillies, true)
-            txtTimeRun.text = formattedTimer
+            binding.textViewTimeCountRun.text = formattedTimer
             if(currentTimeInMillies > 0L){
-                txtStopRun.visibility = View.VISIBLE
+                binding.textViewStopRun.visibility = View.VISIBLE
             }else{
-                txtStopRun.visibility = View.INVISIBLE
+                binding.textViewStopRun.visibility = View.INVISIBLE
             }
         })
     }
@@ -143,9 +147,9 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun updateTracking(isTracking:Boolean){
         this.isTracking = isTracking
         if (!isTracking){
-            btnRun.text = "START"
+            binding.buttonRun.text = "START"
         }else{
-            btnRun.text = "RESUME"
+            binding.buttonRun.text = "RESUME"
         }
     }
     private fun moveCameraToUser(){
@@ -165,9 +169,9 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         googleMap?.moveCamera(CameraUpdateFactory.newLatLngBounds(
             bounds.build(),
-            mapView.width,
-            mapView.height,
-            (mapView.height * 0.05f).toInt()
+            binding.mapView.width,
+            binding.mapView.height,
+            (binding.mapView.height * 0.05f).toInt()
         ))
     }
 
@@ -219,13 +223,13 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
     private fun clickRun() {
-        btnRun.setOnClickListener {
+        binding.buttonRun.setOnClickListener {
             toggleRun()
         }
     }
 
     private fun initGoogleMap() {
-        mapView.getMapAsync {
+        binding.mapView.getMapAsync {
             googleMap = it
             addAllPolylines()
         }
@@ -233,37 +237,37 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        binding.mapView.onResume()
     }
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        binding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        binding.mapView.onStop()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        binding.mapView.onPause()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        binding.mapView.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView.onDestroy()
+        binding.mapView.onDestroy()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        binding.mapView.onSaveInstanceState(outState)
     }
 
     private fun sendCommandToService(action:String){
@@ -297,7 +301,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun clickToClose() {
-        imgClose.setOnClickListener {
+        binding.imageViewCloseRunningActivity.setOnClickListener {
             if(currentTimeInMillies > 0){
                 showCancelRunningDialog()
             }else{
@@ -331,11 +335,11 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this@RunActivity)
     }
 
-    private fun anhXa() {
-        imgClose = findViewById(R.id.imageViewCloseRunningActivity)
-        mapView = findViewById(R.id.mapView)
-        btnRun = findViewById(R.id.buttonRun)
-        txtTimeRun = findViewById(R.id.textViewTimeCountRun)
-        txtStopRun = findViewById(R.id.textViewStopRun)
-    }
+//    private fun anhXa() {
+//        imgClose = findViewById(R.id.imageViewCloseRunningActivity)
+//        mapView = findViewById(R.id.mapView)
+//        btnRun = findViewById(R.id.buttonRun)
+//        txtTimeRun = findViewById(R.id.textViewTimeCountRun)
+//        txtStopRun = findViewById(R.id.textViewStopRun)
+//    }
 }

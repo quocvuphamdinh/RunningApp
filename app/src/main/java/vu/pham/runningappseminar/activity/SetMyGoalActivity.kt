@@ -5,32 +5,36 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.NumberPicker
+import androidx.databinding.DataBindingUtil
 import com.google.android.material.button.MaterialButton
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.databinding.ActivitySetMyGoalBinding
 import vu.pham.runningappseminar.utils.Constants
 
 
 class SetMyGoalActivity : AppCompatActivity() {
-    private lateinit var numberPicker:NumberPicker
-    private lateinit var imgClose:ImageView
-    private lateinit var btnSetMyGoal:MaterialButton
+//    private lateinit var numberPicker:NumberPicker
+//    private lateinit var imgClose:ImageView
+//    private lateinit var btnSetMyGoal:MaterialButton
+    private lateinit var binding:ActivitySetMyGoalBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_set_my_goal)
+        //setContentView(R.layout.activity_set_my_goal)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_set_my_goal)
 
-        anhXa()
+        //anhXa()
         initNumberPicker()
-        imgClose.setOnClickListener {
+        binding.imageCloseSetMyGoal.setOnClickListener {
             closeSetMyGoal()
         }
-        btnSetMyGoal.setOnClickListener {
+        binding.buttonSetMyGoal.setOnClickListener {
             onCLickBackToHome()
         }
     }
 
     private fun onCLickBackToHome() {
         val intent = Intent()
-        val goalValue =numberPicker.value
+        val goalValue = binding.numberPicker1.value
         intent.putExtra(Constants.INTENT_SET_MYGOAL, goalValue)
         setResult(RESULT_OK, intent)
         finish()
@@ -41,15 +45,16 @@ class SetMyGoalActivity : AppCompatActivity() {
     }
 
     private fun initNumberPicker(){
-        numberPicker.maxValue = Int.MAX_VALUE
-        numberPicker.minValue = 1
+        binding.numberPicker1.maxValue = Int.MAX_VALUE
+        binding.numberPicker1.minValue = 1
         val bundle = intent?.extras
-        numberPicker.value = bundle?.getLong(Constants.INIT_SET_MYGOAL, 1)?.toInt() ?: 1
-        numberPicker.wrapSelectorWheel = false
+        val data = bundle?.getLong(Constants.INIT_SET_MYGOAL, 1)?.toInt()
+        binding.numberPicker1.value = if(data==0) 1 else data!!
+        binding.numberPicker1.wrapSelectorWheel = false
     }
-    private fun anhXa() {
-        numberPicker = findViewById(R.id.numberPicker1)
-        imgClose = findViewById(R.id.imageCloseSetMyGoal)
-        btnSetMyGoal = findViewById(R.id.buttonSetMyGoal)
-    }
+//    private fun anhXa() {
+//        numberPicker = findViewById(R.id.numberPicker1)
+//        imgClose = findViewById(R.id.imageCloseSetMyGoal)
+//        btnSetMyGoal = findViewById(R.id.buttonSetMyGoal)
+//    }
 }
