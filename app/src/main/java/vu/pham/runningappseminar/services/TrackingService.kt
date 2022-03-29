@@ -149,6 +149,8 @@ class TrackingService : LifecycleService() {
         pathPoints.postValue(mutableListOf()) // khởi tạo list rỗng
         timeRunInSecond.postValue(0L)
         timeRunInMillis.postValue(0L)
+        lapTime = 0L
+        timeRun = 0L
     }
 
     private fun stopService(){

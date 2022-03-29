@@ -91,23 +91,24 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //show Alertdialog thông báo khi người dùng hủy running
     private fun showCancelRunningDialog(){
         val dialog = MaterialAlertDialogBuilder(this@RunActivity, R.style.AlertDialogTheme)
-        dialog.setTitle("Cancel the Run ?")
-        dialog.setMessage("Are you sure to cancel this run and the data will be deleted ?")
-        dialog.setIcon(R.drawable.ic_warning)
-        dialog.setPositiveButton("Yes", object : DialogInterface.OnClickListener{
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                stopRun()
-            }
-        })
-        dialog.setNegativeButton("No", object : DialogInterface.OnClickListener{
-            override fun onClick(dialog: DialogInterface?, which: Int) {
-                dialog?.cancel()
-            }
-        })
+            .setTitle("Cancel the Run ?")
+            .setMessage("Are you sure to cancel this run and the data will be deleted ?")
+            .setIcon(R.drawable.ic_warning)
+            .setPositiveButton("Yes", object : DialogInterface.OnClickListener{
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    stopRun()
+                }
+            })
+            .setNegativeButton("No", object : DialogInterface.OnClickListener{
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    dialog?.cancel()
+                }
+            })
         dialog.show()
     }
 
     private fun stopRun() {
+        binding.textViewTimeCountRun.text = "00:00:00:00"
         sendCommandToService(ACTION_STOP_SERVICE)
         finish()
     }
@@ -146,9 +147,9 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun updateTracking(isTracking:Boolean){
         this.isTracking = isTracking
-        if (!isTracking){
+        if (!isTracking && currentTimeInMillies>0L){
             binding.buttonRun.text = "START"
-        }else{
+        }else if(isTracking){
             binding.buttonRun.text = "RESUME"
         }
     }
@@ -188,7 +189,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
         val dateTimestamp = Calendar.getInstance().timeInMillis
         val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
-        val run = Run(dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned)
+        val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned)
 
         viewModel.insertRun(run)
 

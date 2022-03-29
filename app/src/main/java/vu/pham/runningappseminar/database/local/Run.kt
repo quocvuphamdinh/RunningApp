@@ -1,14 +1,12 @@
 package vu.pham.runningappseminar.database.local
 
-import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "running_table")
 class Run {
-    @PrimaryKey(autoGenerate = true)
-     var id:Int?=null
+    @PrimaryKey(autoGenerate = false)
+     var id:String=""
      var timestamp:Long=0L // khoảng thời gian khi nào chạy
      var averageSpeedInKilometersPerHour:Float=0F
      var distanceInKilometers:Int=0
@@ -16,12 +14,14 @@ class Run {
      var caloriesBurned:Int =0
 
     constructor(
+        id:String,
         timestamp: Long,
         averageSpeedInKilometersPerHour: Float,
         distanceInKilometers: Int,
         timeInMillis: Long,
         caloriesBurned: Int,
     ) {
+        this.id = id
         this.timestamp = timestamp
         this.averageSpeedInKilometersPerHour = averageSpeedInKilometersPerHour
         this.distanceInKilometers = distanceInKilometers
