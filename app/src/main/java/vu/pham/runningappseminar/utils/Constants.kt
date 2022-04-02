@@ -23,7 +23,8 @@ object Constants {
     const val SHARED_PREFERENCES_NAME = "vuSharedPref"
     const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"
     const val KEY_USER = "KEY_USER"
-    //const val BASE_URL="https://runningappseminar-default-rtdb.firebaseio.com/"
-    const val BASE_URL2="http://192.168.0.106:8087/"
-    const val EDIT_USER="EDIT_USER"
+    const val URL_FIREBASE = "gs://runningappseminar.appspot.com"
+    const val BASE_URL2 = "http://192.168.0.106:8087/"
+    const val EDIT_USER = "EDIT_USER"
+    const val REQUEST_CODE_IMAGE_UPLOAD=10
 }

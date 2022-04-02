@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.databinding.AnalysisFragmentBinding
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -32,33 +34,31 @@ import java.util.*
 
 class AnalysisFragment : Fragment() {
 
-    private lateinit var barChart1:BarChart
-    private lateinit var barChart2:BarChart
-    private lateinit var barChart3:BarChart
-    private lateinit var imageViewSelectDate:ImageView
+    private lateinit var binding:AnalysisFragmentBinding
     private var date = Date(System.currentTimeMillis())
 
     private val viewModel : MainViewModel by viewModels{
         MainViewModelFactory((activity?.application as RunApplication).repository)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.analysis_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.analysis_fragment, container, false)
 
-        anhXa(view)
+        return binding.root
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setUpDataToBarEntries()
 
-        imageViewSelectDate.setOnClickListener {
+        binding.imageViewSelectDate.setOnClickListener {
             showDialogSelectDate()
         }
-
-        return view
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -82,11 +82,11 @@ class AnalysisFragment : Fragment() {
             val allDistance = it.indices.map { i-> BarEntry(i.toFloat(), it[i].distanceInKilometers.toFloat()) }
             val allDuration = it.indices.map { i-> BarEntry(i.toFloat(), it[i].timeInMillis.toFloat()) }
             val allCaloriesBurned = it.indices.map { i-> BarEntry(i.toFloat(), it[i].caloriesBurned.toFloat()) }
-            initBarChart(barChart1, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor),
+            initBarChart(binding.barChar1, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor),
                 resources.getStringArray(R.array.analysisLabel)[0], allDistance, dateDate.format(date))
-            initBarChart(barChart2, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2),
+            initBarChart(binding.barChar2, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2),
                 resources.getStringArray(R.array.analysisLabel)[1], allDuration, dateDate.format(date))
-            initBarChart(barChart3, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3),
+            initBarChart(binding.barChar3, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3),
                 resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, dateDate.format(date))
         })
     }
@@ -108,12 +108,5 @@ class AnalysisFragment : Fragment() {
         xAxis.granularity = 1f
         barChart.animateY(2000)
         barChart.invalidate()
-    }
-
-    private fun anhXa(view: View) {
-        barChart1 = view.findViewById(R.id.barChar1)
-        barChart2 = view.findViewById(R.id.barChar2)
-        barChart3 = view.findViewById(R.id.barChar3)
-        imageViewSelectDate = view.findViewById(R.id.imageViewSelectDate)
     }
 }

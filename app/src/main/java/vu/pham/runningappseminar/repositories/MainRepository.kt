@@ -1,18 +1,23 @@
 package vu.pham.runningappseminar.repositories
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import vu.pham.runningappseminar.database.remote.ApiService
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.database.local.RunDAO
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.Constants
-import java.util.*
 
-class MainRepository(private val runDAO: RunDAO, private val apiService: ApiService, private val sharedPref:SharedPreferences) {
+class MainRepository(
+    private val runDAO: RunDAO,
+    private val apiService: ApiService,
+    private val sharedPref:SharedPreferences,
+    private val firebaseStorageService:FirebaseStorage
+) {
 
 
+    fun getFirebaseStorage() = firebaseStorageService
     //remote
     fun getAllRunFromRemote(userId: Long) = apiService.getRun(userId)
     suspend fun insertUser(user: User)= apiService.insertUser(user)

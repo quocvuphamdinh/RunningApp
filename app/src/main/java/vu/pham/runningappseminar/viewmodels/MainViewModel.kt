@@ -14,6 +14,7 @@ import java.util.*
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
+    fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
 
     fun deleteAllRun() = viewModelScope.launch {
         mainRepository.deleteAllRun()

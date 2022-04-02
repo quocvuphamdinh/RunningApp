@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -22,6 +23,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activity.SetMyGoalActivity
 import vu.pham.runningappseminar.adapter.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapter.RecyclerViewRecentActivitiesAdapter
+import vu.pham.runningappseminar.databinding.HomeFragmentBinding
 import vu.pham.runningappseminar.model.Data
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.utils.CheckConnection
@@ -33,22 +35,9 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFact
 
 
 class HomeFragment : Fragment() {
-    private lateinit var recyclerViewTodayTraining:RecyclerView
-    private lateinit var recyclerViewRecentActivities:RecyclerView
     private lateinit var adapterTodayTraining:RecyclerViewActivityAdapter
     private lateinit var adapterRecentActivities:RecyclerViewRecentActivitiesAdapter
-    private lateinit var imgSetMyGoal:ImageView
-    private lateinit var txtDistanceWeekly:TextView
-    private lateinit var txtWeeklyGoal:TextView
-    private lateinit var progressBar:ProgressBar
-    private lateinit var txtTotalCaloriesBurnedToday:TextView
-    private lateinit var txtTotalTimeInMilliesToday:TextView
-    private lateinit var txtAvgSpeedToday:TextView
-    private lateinit var txtRunCountToday:TextView
-    private lateinit var txtMaxDistance:TextView
-    private lateinit var txtMaxTimeInMillies:TextView
-    private lateinit var txtMaxCaloriesBurned:TextView
-    private lateinit var txtWelcome :TextView
+    private lateinit var binding:HomeFragmentBinding
 
     private var user:User?=null
     private val viewModel : MainViewModel by viewModels{
@@ -74,17 +63,20 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.home_fragment, container, false)
-        anhXa(view)
+        binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initActivityList()
         initRecentActivities()
         initUserInfo()
 
-        imgSetMyGoal.setOnClickListener {
+        binding.imageViewSetMyGoal.setOnClickListener {
             clickGoToSetMyGoal()
         }
         subscribeToObservers()
-        return view
     }
 
     private fun initUserInfo() {
@@ -103,8 +95,8 @@ class HomeFragment : Fragment() {
         }
     }
     private fun bindDataToDistanceGoalView(user: User?){
-        txtWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
-        progressBar.max = user?.getdistanceGoal()?.toInt() ?: 0
+        binding.textViewWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
+        binding.progressBar.max = user?.getdistanceGoal()?.toInt() ?: 0
         val nameUser = "Let's go "
         val text = user?.getFullname()
         val text2 = nameUser+text
@@ -112,53 +104,53 @@ class HomeFragment : Fragment() {
 
         spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.grey_200)), nameUser.length, (text + nameUser).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        txtWelcome.setText(spannable, TextView.BufferType.SPANNABLE)
+        binding.textViewWellcome.setText(spannable, TextView.BufferType.SPANNABLE)
     }
 
     private fun subscribeToObservers(){
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtDistanceWeekly.text = (it/ 1000f).toString()
-                progressBar.progress = (it/ 1000f).toInt()
+                binding.textViewNumberDistance.text = (it/ 1000f).toString()
+                binding.progressBar.progress = (it/ 1000f).toInt()
             }
         })
 
         viewModel.totalCaloriesBurnedToday.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtTotalCaloriesBurnedToday.text = it.toString()
+                binding.textViewCaloriedBurnHomeFragment.text = it.toString()
             }
         })
 
         viewModel.totalTimeInMilliesToday.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtTotalTimeInMilliesToday.text = it.toString()
+                binding.textViewRunInTimeMilliesHomeFragment.text = it.toString()
             }
         })
 
         viewModel.totalAvgSpeedToday.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtAvgSpeedToday.text = it.toString()
+                binding.textViewAvgSpeedHomeFragment.text = it.toString()
             }
         })
 
         viewModel.runCount.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtRunCountToday.text = it.toString()
+                binding.textViewRunCountHomeFragment.text = it.toString()
             }
         })
         viewModel.maxDistance.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtMaxDistance.text = "${(it/1000f)} km"
+                binding.textViewMaxDistance.text = "${(it/1000f)} km"
             }
         })
         viewModel.maxTimeInMillies.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtMaxTimeInMillies.text = TrackingUtil.getFormattedTimer(it)
+                binding.textViewMaxTimeInMillies.text = TrackingUtil.getFormattedTimer(it)
             }
         })
         viewModel.maxCaloriesBurned.observe(viewLifecycleOwner, Observer {
             it?.let {
-                txtMaxCaloriesBurned.text = "$it kcal"
+                binding.textViewMaxCaloriesBurned.text = "$it kcal"
             }
         })
     }
@@ -174,34 +166,17 @@ class HomeFragment : Fragment() {
     private fun initRecentActivities() {
         adapterRecentActivities = RecyclerViewRecentActivitiesAdapter()
         adapterRecentActivities.setData(Data.userActivityList)
-        recyclerViewRecentActivities.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerViewRecentActivities.adapter = adapterRecentActivities
-        recyclerViewRecentActivities.setHasFixedSize(true)
-        recyclerViewRecentActivities.isNestedScrollingEnabled = false
+        binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities
+        binding.recyclerViewRecentActiviesHomeFragment.setHasFixedSize(true)
+        binding.recyclerViewRecentActiviesHomeFragment.isNestedScrollingEnabled = false
     }
 
     private fun initActivityList() {
         adapterTodayTraining = RecyclerViewActivityAdapter()
         adapterTodayTraining.setData(Data.ActivityList, R.layout.activity_item_row)
-        recyclerViewTodayTraining.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewTodayTraining.adapter = adapterTodayTraining
-        recyclerViewTodayTraining.setHasFixedSize(true)
-    }
-
-    private fun anhXa(view: View) {
-        recyclerViewTodayTraining = view.findViewById(R.id.recyclerViewActivityHomeFragment)
-        recyclerViewRecentActivities = view.findViewById(R.id.recyclerViewRecentActiviesHomeFragment)
-        imgSetMyGoal = view.findViewById(R.id.imageViewSetMyGoal)
-        txtDistanceWeekly = view.findViewById(R.id.textViewNumberDistance)
-        progressBar = view.findViewById(R.id.progressBar)
-        txtWeeklyGoal = view.findViewById(R.id.textViewWeeklyGoal)
-        txtTotalCaloriesBurnedToday = view.findViewById(R.id.textViewCaloriedBurnHomeFragment)
-        txtTotalTimeInMilliesToday = view.findViewById(R.id.textViewRunInTimeMilliesHomeFragment)
-        txtAvgSpeedToday = view.findViewById(R.id.textViewAvgSpeedHomeFragment)
-        txtRunCountToday = view.findViewById(R.id.textViewRunCountHomeFragment)
-        txtMaxDistance = view.findViewById(R.id.textViewMaxDistance)
-        txtMaxTimeInMillies = view.findViewById(R.id.textViewMaxTimeInMillies)
-        txtMaxCaloriesBurned = view.findViewById(R.id.textViewMaxCaloriesBurned)
-        txtWelcome = view.findViewById(R.id.textViewWellcome)
+        binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining
+        binding.recyclerViewActivityHomeFragment.setHasFixedSize(true)
     }
 }
