@@ -1,6 +1,5 @@
 package vu.pham.runningappseminar.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -9,10 +8,10 @@ import retrofit2.Response
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.model.User
 import vu.pham.runningappseminar.repositories.MainRepository
-import vu.pham.runningappseminar.utils.SortType
-import java.util.*
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
+
+    fun getListActivityByType(type:Int) = mainRepository.getListActivityByType(type)
 
     fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
 
@@ -43,11 +42,10 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
         mainRepository.getUser(username, password)?.enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 userLiveData.value = response.body()
-                Log.d("call api", response.body().toString())
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
-                Log.d("call api error", t.toString())
+                userLiveData.value = null
             }
         })
     }

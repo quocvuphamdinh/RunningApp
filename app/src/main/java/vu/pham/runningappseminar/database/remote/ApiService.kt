@@ -3,16 +3,11 @@ package vu.pham.runningappseminar.database.remote
 import retrofit2.Call
 import retrofit2.http.*
 import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.model.Activity
 import vu.pham.runningappseminar.model.User
 
 
 interface ApiService {
-
-//    @GET("user/user{username}-{password}.json")
-//    fun getUser(@Path("username") username:String?, @Path("password") password:String?): Call<User>
-
-//    @PUT("user/user{username}-{password}.json")
-//    suspend fun insertUser(@Path("username") username:String?, @Path("password") password:String?, @Body user: User?)
 
     @GET("user/{userName}-{passWord}")
     fun getUser(@Path("userName") username:String?, @Path("passWord") password:String?): Call<User?>?
@@ -28,4 +23,10 @@ interface ApiService {
 
     @GET("run/{userId}")
     fun getRun(@Path("userId") userId:Long) : Call<List<Run>>
+
+    @GET("activity/{type}")
+    fun getListActivityByType(@Path("type") type:Int) : Call<List<Activity>>
+
+    @GET("activity/detail/{id}")
+    fun getActivityDetail(@Path("id") id:Long) : Call<Activity>
 }

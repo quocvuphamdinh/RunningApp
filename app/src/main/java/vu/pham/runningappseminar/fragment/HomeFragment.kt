@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,7 +20,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activity.DetailExerciseActivity
 import vu.pham.runningappseminar.activity.SetMyGoalActivity
 import vu.pham.runningappseminar.adapter.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapter.RecyclerViewRecentActivitiesAdapter
@@ -57,7 +62,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,7 +73,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initActivityList()
+
+        getListToTraining()
         initRecentActivities()
         initUserInfo()
 
@@ -107,6 +112,17 @@ class HomeFragment : Fragment() {
         binding.textViewWellcome.setText(spannable, TextView.BufferType.SPANNABLE)
     }
 
+    private fun getListToTraining(){
+        viewModel.getListActivityByType(1).enqueue(object : Callback<List<vu.pham.runningappseminar.model.Activity>>{
+            override fun onResponse(call: Call<List<vu.pham.runningappseminar.model.Activity>>, response: Response<List<vu.pham.runningappseminar.model.Activity>>) {
+                initActivityList(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<List<vu.pham.runningappseminar.model.Activity>>, t: Throwable) {
+                Toast.makeText(context, "Error: $t", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     private fun subscribeToObservers(){
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -163,18 +179,29 @@ class HomeFragment : Fragment() {
         resultLauncher.launch(intent)
     }
 
+    private fun goToActivityDetailPage(id:Long){
+        val intent = Intent(context, DetailExerciseActivity::class.java)
+        val bundle = Bundle()
+        bundle.putLong(Constants.DETAIL_EXERCISE_ID, id)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     private fun initRecentActivities() {
         adapterRecentActivities = RecyclerViewRecentActivitiesAdapter()
-        adapterRecentActivities.setData(Data.userActivityList)
         binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities
         binding.recyclerViewRecentActiviesHomeFragment.setHasFixedSize(true)
         binding.recyclerViewRecentActiviesHomeFragment.isNestedScrollingEnabled = false
     }
 
-    private fun initActivityList() {
-        adapterTodayTraining = RecyclerViewActivityAdapter()
-        adapterTodayTraining.setData(Data.ActivityList, R.layout.activity_item_row)
+    private fun initActivityList(list: List<vu.pham.runningappseminar.model.Activity>) {
+        adapterTodayTraining = RecyclerViewActivityAdapter(R.layout.activity_item_row, object : RecyclerViewActivityAdapter.ClickItem{
+            override fun clickItem(activity: vu.pham.runningappseminar.model.Activity) {
+                goToActivityDetailPage(activity.getId())
+            }
+        })
+        adapterTodayTraining.submitList(list)
         binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining
         binding.recyclerViewActivityHomeFragment.setHasFixedSize(true)

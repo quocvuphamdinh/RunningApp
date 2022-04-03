@@ -4,16 +4,15 @@ class Activity() {
     private var id:Long=0L
     private var name:String=""
     private var type:Int=1
-    private var isUseGPS:Int=1
-    private var workouts:ArrayList<Workout> = ArrayList()
     private var durationOfWorkouts:Int=0
+    private var workouts:List<Workout> = ArrayList()
 
-    constructor(name: String, type: Int, isUseGPS: Int, workouts: ArrayList<Workout>) : this() {
+    constructor(name: String, type: Int, workouts: List<Workout>) : this() {
         this.name = name
         this.type = type
-        this.isUseGPS = isUseGPS
         this.workouts = workouts
     }
+
     fun getId():Long{
         return id
     }
@@ -32,27 +31,36 @@ class Activity() {
     fun setType(type:Int){
         this.type = type
     }
-    fun getIsUseGPS():Int{
-        return isUseGPS
-    }
-    fun setIsUseGPS(isUseGPS: Int){
-        this.isUseGPS = isUseGPS
-    }
-    fun getWorkouts():ArrayList<Workout>{
+
+    fun getWorkouts():List<Workout>{
         return workouts
     }
-    fun setWorkouts(workouts: ArrayList<Workout>){
+    fun setWorkouts(workouts: List<Workout>){
         this.workouts = workouts
     }
     fun getDurationOfWorkouts():Int{
-
-        for (i in 0 until workouts.size){
-            durationOfWorkouts += workouts[i].getDuration()
-        }
         return durationOfWorkouts
     }
 
-
+    override fun equals(other: Any?): Boolean {
+        other as Activity
+        if(id!=other.id){
+            return false
+        }
+        if(name!=other.name){
+            return false
+        }
+        if(type!=other.type){
+            return false
+        }
+        if(durationOfWorkouts!=other.durationOfWorkouts){
+            return false
+        }
+        if(workouts!=other.workouts){
+            return false
+        }
+        return true
+    }
 }
 
 

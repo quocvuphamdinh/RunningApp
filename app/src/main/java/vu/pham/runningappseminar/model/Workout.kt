@@ -3,9 +3,9 @@ package vu.pham.runningappseminar.model
 class Workout {
     private var id:Long=0L
     private var name:String=""
-    private var duration:Int=0
+    private var duration:Long=0
 
-    constructor(name: String, duration: Int) {
+    constructor(name: String, duration: Long) {
         this.name = name
         this.duration = duration
     }
@@ -20,13 +20,13 @@ class Workout {
     fun getName():String{
         return name
     }
-    fun setName(duration:Int){
+    fun setName(duration:Long){
         this.duration = duration
     }
-    fun getDuration():Int{
+    fun getDuration():Long{
         return duration
     }
-    fun setDuration(duration: Int){
+    fun setDuration(duration: Long){
         this.duration = duration
     }
 }

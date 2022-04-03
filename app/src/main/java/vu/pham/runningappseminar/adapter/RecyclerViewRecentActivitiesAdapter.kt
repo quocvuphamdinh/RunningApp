@@ -5,22 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.model.Activity
 import vu.pham.runningappseminar.model.UserActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
-    private var recentActivitiesList:ArrayList<UserActivity> = ArrayList()
 
-    fun setData(recentActivitiesList:ArrayList<UserActivity>){
-        this.recentActivitiesList = recentActivitiesList
-        notifyDataSetChanged()
+    val differCallBack = object : DiffUtil.ItemCallback<UserActivity>(){
+        override fun areItemsTheSame(oldItem: UserActivity, newItem: UserActivity): Boolean {
+            return oldItem.getId() == newItem.getId()
+        }
+
+        override fun areContentsTheSame(oldItem: UserActivity, newItem: UserActivity): Boolean {
+            return oldItem.hashCode() == newItem.hashCode()
+        }
     }
 
-    class RecentActivitiesHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
+    val differ = AsyncListDiffer(this, differCallBack)
+
+    fun submitList(list:List<UserActivity>) = differ.submitList(list)
+
+
+    inner class RecentActivitiesHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         var txtNameActivity:TextView
         var txtDate:TextView
         var txtDistance:TextView
@@ -45,7 +57,7 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecentActivitiesHolder, position: Int) {
-        val userActivity = recentActivitiesList[position]
+        val userActivity = differ.currentList[position]
         holder.txtNameActivity.text = userActivity.getActivity().getName()
         val calendar = Calendar.getInstance()
         calendar.time = userActivity.getRun().getDayOfWeek()
@@ -64,6 +76,9 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
     }
 
     override fun getItemCount(): Int {
-        return 2
+        if(differ.currentList.size > 2 ){
+            return 2
+        }
+        return differ.currentList.size
     }
 }

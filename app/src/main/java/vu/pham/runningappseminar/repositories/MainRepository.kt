@@ -16,10 +16,15 @@ class MainRepository(
     private val firebaseStorageService:FirebaseStorage
 ) {
 
+    //remote
+    fun getActivityDetail(id:Long) = apiService.getActivityDetail(id)
+
+    fun getListActivityByType(type:Int) = apiService.getListActivityByType(type)
 
     fun getFirebaseStorage() = firebaseStorageService
-    //remote
+
     fun getAllRunFromRemote(userId: Long) = apiService.getRun(userId)
+
     suspend fun insertUser(user: User)= apiService.insertUser(user)
 
     fun getUser(username:String, password:String) = apiService.getUser(username, password)
@@ -32,6 +37,7 @@ class MainRepository(
 
     //local
     suspend fun deleteAllRun() = runDAO.deleteAllRun()
+
     suspend fun getAllRun() = runDAO.getAllRun()
 
     fun writePersonalDataToSharedPref(user: User){
@@ -58,8 +64,6 @@ class MainRepository(
     fun getFirstTimeToogle():Boolean{
         return sharedPref.getBoolean(Constants.KEY_FIRST_TIME_TOGGLE, true)
     }
-
-
 
     suspend fun insertRun(run: Run){
         runDAO.insertRun(run)

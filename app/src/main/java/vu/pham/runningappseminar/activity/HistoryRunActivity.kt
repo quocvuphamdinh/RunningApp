@@ -82,9 +82,4 @@ class HistoryRunActivity : AppCompatActivity() {
         binding.recyclerViewHistoryRun.setHasFixedSize(true)
     }
 
-//    private fun anhXa() {
-//        recyclerViewHistoryRun = findViewById(R.id.recyclerViewHistoryRun)
-//        txtGoBack= findViewById(R.id.textViewBackHistoryRun)
-//        spinnerFilter = findViewById(R.id.spinnerFilterRun)
-//    }
 }
