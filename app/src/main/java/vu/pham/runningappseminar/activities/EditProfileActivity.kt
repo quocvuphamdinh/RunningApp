@@ -1,24 +1,20 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivityEditProfileBinding
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.EditProfileViewModel
-import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.EditProfileViewModelFactory
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
 
 class EditProfileActivity : AppCompatActivity() {
 //    private lateinit var txtCancel:TextView
@@ -78,7 +74,7 @@ class EditProfileActivity : AppCompatActivity() {
         val height = binding.editTextHeightEditProfile.text.toString().trim()
         val weight = binding.editTextWeightEditProfile.text.toString().trim()
         if(viewModel.checkInfoUser(username, password, password, fullname, height, weight)){
-            val userNew = User(username, password, fullname, sex, height.toInt(), weight.toInt(), user.getdistanceGoal())
+            val userNew = User(username, password, fullname, sex, height.toInt(), weight.toInt(), user.getdistanceGoal(), user.getAvartar())
             userNew.setId(user.getId())
             viewModel.updateUser(userNew)
             viewModel.writePersonalDataToSharedPref(userNew)

@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.adapter
+package vu.pham.runningappseminar.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.model.Workout
+import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.utils.TrackingUtil
 
 class RecyclerViewWorkoutAdapter : RecyclerView.Adapter<RecyclerViewWorkoutAdapter.WorkoutViewHolder>() {
@@ -45,7 +45,7 @@ class RecyclerViewWorkoutAdapter : RecyclerView.Adapter<RecyclerViewWorkoutAdapt
 
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
        val workout = differ.currentList[position]
-        if(workout.getName() == "Walk") holder.imageView.setImageResource(R.drawable.ic_walk) else holder.imageView.setImageResource(R.drawable.ic_run_2)
+        if(workout.getName() == "Walk") holder.imageView.setImageResource(R.drawable.ic_walk) else if(workout.getName() == "Run") holder.imageView.setImageResource(R.drawable.ic_run_2) else holder.imageView.setImageResource(R.drawable.ic_cool_down)
         holder.txtName.text = workout.getName()
         holder.txtDuration.text = TrackingUtil.getFormattedTimer(workout.getDuration())
     }

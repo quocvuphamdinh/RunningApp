@@ -28,4 +28,6 @@ object Constants {
     const val EDIT_USER = "EDIT_USER"
     const val REQUEST_CODE_IMAGE_UPLOAD=10
     const val DETAIL_EXERCISE_ID = "DETAIL_EXERCISE_ID"
+    const val TITLE_NAME = "TITLE_NAME"
+    const val TYPE_EXERCISE = "TYPE_EXERCISE"
 }

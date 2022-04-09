@@ -1,9 +1,7 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.ImageView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivityForgotPasswordBinding
 

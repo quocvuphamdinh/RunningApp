@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -70,17 +70,18 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/textViewMoreWalking"
-                        android:paddingTop="5dp"
-                        android:gravity="end"
-                        android:layout_weight="2"
-                        android:layout_gravity="center_horizontal"
-                        android:textStyle="bold"
-                        android:textColor="@color/yellow"
-                        android:text="More"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="2"
+                        android:gravity="end"
+                        android:paddingTop="5dp"
+                        android:text="More"
+                        android:textColor="@color/yellow"
+                        android:textStyle="bold" />
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewWalkingActivity"

@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.model
+package vu.pham.runningappseminar.models
 
 import java.io.Serializable
 
@@ -13,7 +13,7 @@ class User() : Serializable{
     private var height:Int=0
     private var distanceGoal:Long=0L
 
-    constructor(username: String, password: String, fullname: String, gender :String, height:Int, weight:Int, distanceGoal:Long) : this() {
+    constructor(username: String, password: String, fullname: String, gender :String, height:Int, weight:Int, distanceGoal:Long, avartar: String) : this() {
         this.userName = username
         this.passWord = password
         this.fullName = fullname
@@ -21,6 +21,7 @@ class User() : Serializable{
         this.weight = weight
         this.height = height
         this.distanceGoal = distanceGoal
+        this.avartar = avartar
     }
 
     fun getdistanceGoal():Long{

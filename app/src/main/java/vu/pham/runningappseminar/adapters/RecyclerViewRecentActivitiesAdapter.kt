@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.adapter
+package vu.pham.runningappseminar.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,11 +9,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.model.Activity
-import vu.pham.runningappseminar.model.UserActivity
+import vu.pham.runningappseminar.models.UserActivity
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
 

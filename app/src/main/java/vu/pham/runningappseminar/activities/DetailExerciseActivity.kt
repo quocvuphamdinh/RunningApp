@@ -1,19 +1,16 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.adapter.RecyclerViewWorkoutAdapter
+import vu.pham.runningappseminar.adapters.RecyclerViewWorkoutAdapter
 import vu.pham.runningappseminar.databinding.ActivityDetailExerciseBinding
-import vu.pham.runningappseminar.model.Activity
-import vu.pham.runningappseminar.model.Workout
+import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.DetailExerciseViewModel
@@ -48,14 +45,10 @@ class DetailExerciseActivity : AppCompatActivity() {
     }
     private fun getActivityDetailFromRemote(){
         id?.let {
-            viewModel.getActivityDetail(id!!).enqueue(object : Callback<Activity>{
-                override fun onResponse(call: Call<Activity>, response: Response<Activity>) {
-                    val activity =  response.body()
-                    bindDataToView(activity!!)
-                }
-                override fun onFailure(call: Call<Activity>, t: Throwable) {
-                    Toast.makeText(this@DetailExerciseActivity, "Error: $t", Toast.LENGTH_SHORT).show()
-                }
+            viewModel.getActivityDetail(id!!)
+            viewModel.activityDetail.observe(this, Observer {
+                setUpRecyclerView(it.getWorkouts())
+                bindDataToView(it)
             })
         }
     }

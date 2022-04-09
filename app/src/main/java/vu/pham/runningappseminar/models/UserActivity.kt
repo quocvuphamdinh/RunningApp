@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.model
+package vu.pham.runningappseminar.models
 
 class UserActivity() {
     private var id:Long=0L

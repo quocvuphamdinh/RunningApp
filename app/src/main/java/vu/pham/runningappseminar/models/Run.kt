@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.model
+package vu.pham.runningappseminar.models
 
 import java.util.*
 

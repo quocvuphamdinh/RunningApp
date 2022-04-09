@@ -1,19 +1,16 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.adapter.RecyclerViewHistoryRunAdapter
+import vu.pham.runningappseminar.adapters.RecyclerViewHistoryRunAdapter
 import vu.pham.runningappseminar.databinding.ActivityHistoryRunBinding
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.SortType
@@ -21,9 +18,6 @@ import vu.pham.runningappseminar.viewmodels.HistoryRunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.HistoryRunViewModelFactory
 
 class HistoryRunActivity : AppCompatActivity() {
-//    private lateinit var recyclerViewHistoryRun:RecyclerView
-//    private lateinit var txtGoBack:TextView
-//    private lateinit var spinnerFilter:Spinner
     private lateinit var binding:ActivityHistoryRunBinding
     private lateinit var runAdapter:RecyclerViewHistoryRunAdapter
 

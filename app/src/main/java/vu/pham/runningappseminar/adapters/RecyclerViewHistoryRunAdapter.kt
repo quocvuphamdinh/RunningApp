@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.adapter
+package vu.pham.runningappseminar.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

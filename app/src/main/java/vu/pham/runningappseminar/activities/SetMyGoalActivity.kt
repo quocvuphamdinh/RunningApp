@@ -1,12 +1,9 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.NumberPicker
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.button.MaterialButton
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivitySetMyGoalBinding
 import vu.pham.runningappseminar.utils.Constants

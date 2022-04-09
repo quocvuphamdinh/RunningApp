@@ -1,24 +1,19 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivityHomeBinding
-import vu.pham.runningappseminar.fragment.ActivityFragment
-import vu.pham.runningappseminar.fragment.AnalysisFragment
-import vu.pham.runningappseminar.fragment.HomeFragment
-import vu.pham.runningappseminar.fragment.ProfileFragment
+import vu.pham.runningappseminar.fragments.ActivityFragment
+import vu.pham.runningappseminar.fragments.AnalysisFragment
+import vu.pham.runningappseminar.fragments.HomeFragment
+import vu.pham.runningappseminar.fragments.ProfileFragment
 import vu.pham.runningappseminar.utils.Constants
 
 

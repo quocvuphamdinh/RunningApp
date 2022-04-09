@@ -1,27 +1,21 @@
-package vu.pham.runningappseminar.fragment
+package vu.pham.runningappseminar.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.activity.DetailExerciseActivity
-import vu.pham.runningappseminar.adapter.RecyclerViewActivityAdapter
+import vu.pham.runningappseminar.activities.DetailExerciseActivity
+import vu.pham.runningappseminar.activities.ListExerciseActivity
+import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.databinding.ActivityFragmentBinding
-import vu.pham.runningappseminar.model.Activity
-import vu.pham.runningappseminar.model.Data
+import vu.pham.runningappseminar.models.Activity
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -45,29 +39,36 @@ class ActivityFragment : Fragment() {
 
         getListActivityWalkingFromRemote()
         getListActivityRunningFromRemote()
+
+        binding.textViewMoreWalking.setOnClickListener {
+            goToListExercisePage("Walking for weight loss", 0)
+        }
+
+        binding.textViewMoreRunning.setOnClickListener {
+            goToListExercisePage("Running for weight loss", 1)
+        }
+    }
+
+    private fun goToListExercisePage(titleName:String, typeExercise:Int){
+        val intent = Intent(context, ListExerciseActivity::class.java)
+        val bundle = Bundle()
+        bundle.putString(Constants.TITLE_NAME, titleName)
+        bundle.putInt(Constants.TYPE_EXERCISE, typeExercise)
+        intent.putExtras(bundle)
+        startActivity(intent)
     }
 
     private fun getListActivityWalkingFromRemote(){
-        viewModel.getListActivityByType(0).enqueue(object : Callback<List<Activity>>{
-            override fun onResponse(call: Call<List<Activity>>, response: Response<List<Activity>>) {
-                initWalkingActivity(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<List<Activity>>, t: Throwable) {
-                Toast.makeText(context, "Error: $t", Toast.LENGTH_SHORT).show()
-            }
+        viewModel.getListActivityWalk()
+        viewModel.listActivityWalk.observe(viewLifecycleOwner, Observer {
+            initWalkingActivity(it)
         })
     }
 
     private fun getListActivityRunningFromRemote(){
-        viewModel.getListActivityByType(1).enqueue(object : Callback<List<Activity>>{
-            override fun onResponse(call: Call<List<Activity>>, response: Response<List<Activity>>) {
-                initRunningActivity(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<List<Activity>>, t: Throwable) {
-                Toast.makeText(context, "Error: $t", Toast.LENGTH_SHORT).show()
-            }
+        viewModel.getListActivityRun()
+        viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
+            initRunningActivity(it)
         })
     }
 
@@ -78,12 +79,12 @@ class ActivityFragment : Fragment() {
         intent.putExtras(bundle)
         startActivity(intent)
     }
-    private fun initWalkingActivity(list: List<Activity>) {
+    private fun initWalkingActivity(list:List<Activity>) {
         adapterWalking = RecyclerViewActivityAdapter(R.layout.walking_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
                 goToActivityDetailPage(activity.getId())
             }
-        })
+        }, false, false, false)
         adapterWalking.submitList(list)
         binding.recyclerViewWalkingActivity.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewWalkingActivity.adapter = adapterWalking
@@ -91,12 +92,12 @@ class ActivityFragment : Fragment() {
         binding.recyclerViewWalkingActivity.isNestedScrollingEnabled = false
     }
 
-    private fun initRunningActivity(list: List<Activity>) {
+    private fun initRunningActivity(list:List<Activity>) {
         adapterRunning = RecyclerViewActivityAdapter(R.layout.running_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
                 goToActivityDetailPage(activity.getId())
             }
-        })
+        }, false, true, false)
         adapterRunning.submitList(list)
         binding.recyclerViewRunningActivity.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRunningActivity.adapter = adapterRunning

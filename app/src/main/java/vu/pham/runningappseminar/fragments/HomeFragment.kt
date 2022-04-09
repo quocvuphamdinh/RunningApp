@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.fragment
+package vu.pham.runningappseminar.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -9,28 +9,21 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.activity.DetailExerciseActivity
-import vu.pham.runningappseminar.activity.SetMyGoalActivity
-import vu.pham.runningappseminar.adapter.RecyclerViewActivityAdapter
-import vu.pham.runningappseminar.adapter.RecyclerViewRecentActivitiesAdapter
+import vu.pham.runningappseminar.activities.DetailExerciseActivity
+import vu.pham.runningappseminar.activities.ListExerciseActivity
+import vu.pham.runningappseminar.activities.SetMyGoalActivity
+import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
+import vu.pham.runningappseminar.adapters.RecyclerViewRecentActivitiesAdapter
 import vu.pham.runningappseminar.databinding.HomeFragmentBinding
-import vu.pham.runningappseminar.model.Data
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
@@ -81,7 +74,19 @@ class HomeFragment : Fragment() {
         binding.imageViewSetMyGoal.setOnClickListener {
             clickGoToSetMyGoal()
         }
+        binding.textViewMoreTodayTraining.setOnClickListener {
+            goToListExercisePage("Running for today training", 1)
+        }
         subscribeToObservers()
+    }
+
+    private fun goToListExercisePage(titleName:String, typeExercise:Int){
+        val intent = Intent(context, ListExerciseActivity::class.java)
+        val bundle = Bundle()
+        bundle.putString(Constants.TITLE_NAME, titleName)
+        bundle.putInt(Constants.TYPE_EXERCISE, typeExercise)
+        intent.putExtras(bundle)
+        startActivity(intent)
     }
 
     private fun initUserInfo() {
@@ -113,14 +118,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun getListToTraining(){
-        viewModel.getListActivityByType(1).enqueue(object : Callback<List<vu.pham.runningappseminar.model.Activity>>{
-            override fun onResponse(call: Call<List<vu.pham.runningappseminar.model.Activity>>, response: Response<List<vu.pham.runningappseminar.model.Activity>>) {
-                initActivityList(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<List<vu.pham.runningappseminar.model.Activity>>, t: Throwable) {
-                Toast.makeText(context, "Error: $t", Toast.LENGTH_SHORT).show()
-            }
+        viewModel.getListActivityRun()
+        viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
+            initActivityList(it)
         })
     }
     private fun subscribeToObservers(){
@@ -195,12 +195,12 @@ class HomeFragment : Fragment() {
         binding.recyclerViewRecentActiviesHomeFragment.isNestedScrollingEnabled = false
     }
 
-    private fun initActivityList(list: List<vu.pham.runningappseminar.model.Activity>) {
+    private fun initActivityList(list: List<vu.pham.runningappseminar.models.Activity>) {
         adapterTodayTraining = RecyclerViewActivityAdapter(R.layout.activity_item_row, object : RecyclerViewActivityAdapter.ClickItem{
-            override fun clickItem(activity: vu.pham.runningappseminar.model.Activity) {
+            override fun clickItem(activity: vu.pham.runningappseminar.models.Activity) {
                 goToActivityDetailPage(activity.getId())
             }
-        })
+        }, false, true, true)
         adapterTodayTraining.submitList(list)
         binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining

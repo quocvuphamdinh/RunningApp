@@ -1,9 +1,7 @@
 package vu.pham.runningappseminar.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.repositories.MainRepository
 
 class SignUpViewModel(private val mainRepository: MainRepository) : ViewModel() {
@@ -15,7 +13,7 @@ class SignUpViewModel(private val mainRepository: MainRepository) : ViewModel() 
         return false
     }
 
-    fun getUser(username:String, password:String) = mainRepository.getUser(username, password)
+    fun getUser(username:String, password:String) = mainRepository.getUserLogin(username, password)
 
     suspend fun insertUser(user: User) = mainRepository.insertUser(user)
 

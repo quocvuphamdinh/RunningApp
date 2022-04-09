@@ -2,16 +2,26 @@ package vu.pham.runningappseminar.viewmodels
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import vu.pham.runningappseminar.database.local.Run
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.repositories.MainRepository
 
 class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
-    fun getListActivityByType(type:Int) = mainRepository.getListActivityByType(type)
+    private var _listActivityRun:MutableLiveData<List<Activity>> = MutableLiveData()
+    val listActivityRun : LiveData<List<Activity>>
+    get() = _listActivityRun
+    fun getListActivityRun() = viewModelScope.launch {
+        _listActivityRun.postValue(mainRepository.getListActivityByType(1))
+    }
+
+    private var _listActivityWalk:MutableLiveData<List<Activity>> = MutableLiveData()
+    val listActivityWalk : LiveData<List<Activity>>
+        get() = _listActivityWalk
+    fun getListActivityWalk() = viewModelScope.launch {
+        _listActivityWalk.postValue(mainRepository.getListActivityByType(0))
+    }
 
     fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
 
@@ -37,17 +47,13 @@ class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
-    var userLiveData = MutableLiveData<User?>()
+    private var _userLiveData = MutableLiveData<User>()
+    val userLiveData : LiveData<User>
+    get() = _userLiveData
     fun getUserLiveData(username: String, password: String){
-        mainRepository.getUser(username, password)?.enqueue(object : Callback<User?> {
-            override fun onResponse(call: Call<User?>, response: Response<User?>) {
-                userLiveData.value = response.body()
-            }
-
-            override fun onFailure(call: Call<User?>, t: Throwable) {
-                userLiveData.value = null
-            }
-        })
+        viewModelScope.launch {
+            _userLiveData.postValue(mainRepository.getUserLiveData(username, password))
+        }
     }
 
     suspend fun getAllRunFromLocal() = mainRepository.getAllRun()

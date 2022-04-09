@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import android.Manifest
 import android.content.DialogInterface
@@ -7,25 +7,21 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.databinding.ActivityRunBinding
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
@@ -37,9 +33,7 @@ import vu.pham.runningappseminar.utils.Constants.POLYLINE_COLOR
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
-import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.RunViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunViewModelFactory
 import java.util.*
 import kotlin.math.round

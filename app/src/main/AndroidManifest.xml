@@ -22,35 +22,38 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".activity.DetailExerciseActivity"
+            android:name=".activities.ListExerciseActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HistoryRunActivity"
+            android:name=".activities.DetailExerciseActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.RunActivity"
+            android:name=".activities.HistoryRunActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RunActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activity.EditProfileActivity"
+            android:name=".activities.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SetMyGoalActivity"
+            android:name=".activities.SetMyGoalActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>

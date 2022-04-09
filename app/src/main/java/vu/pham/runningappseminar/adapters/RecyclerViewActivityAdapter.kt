@@ -1,21 +1,24 @@
-package vu.pham.runningappseminar.adapter
+package vu.pham.runningappseminar.adapters
 
-import android.R.attr.data
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.model.Activity
+import vu.pham.runningappseminar.models.Activity
 
 
-class RecyclerViewActivityAdapter(val layout:Int, private val clickItem: ClickItem) : RecyclerView.Adapter<RecyclerViewActivityAdapter.ActivityHolder>(){
+class RecyclerViewActivityAdapter(
+    val layout:Int,
+    private val clickItem: ClickItem,
+    private val isShowAll:Boolean,
+    private val isRunning:Boolean,
+    private val isHaveImageBackground:Boolean,
+) : RecyclerView.Adapter<RecyclerViewActivityAdapter.ActivityHolder>(){
 
     interface ClickItem{
         fun clickItem(activity: Activity)
@@ -57,6 +60,13 @@ class RecyclerViewActivityAdapter(val layout:Int, private val clickItem: ClickIt
         val activity = differ.currentList[position]
         holder.txtNameItem.text = activity.getName()
         holder.txtTimeSumItem.text = "${activity.getDurationOfWorkouts()} min"
+        if(isHaveImageBackground){
+            if(isRunning){
+                holder.linearLayout.setBackgroundResource(R.drawable.activity_background)
+            }else{
+                holder.linearLayout.setBackgroundResource(R.drawable.walking_background)
+            }
+        }
 
         holder.txtNameItem.setOnClickListener {
             clickItem.clickItem(activity)
@@ -70,9 +80,13 @@ class RecyclerViewActivityAdapter(val layout:Int, private val clickItem: ClickIt
     }
 
     override fun getItemCount(): Int {
-        if(differ.currentList.size > 4 ){
-            return 4
+        if(isShowAll){
+            return differ.currentList.size
+        }else{
+            if(differ.currentList.size > 4 ){
+                return 4
+            }
+            return differ.currentList.size
         }
-        return differ.currentList.size
     }
 }

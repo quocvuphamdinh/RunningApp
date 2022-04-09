@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -14,30 +14,18 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.databinding.ActivitySignUpBinding
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.SignUpViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFactory
 
 
 class SignUpActivity : AppCompatActivity() {
-//    private lateinit var txtGoBackWelComeScreen:TextView
-//    private lateinit var spinnerGioiTinh:Spinner
-//    private lateinit var txtPassword:TextView
-//    private lateinit var txtPassword2:TextView
-//    private lateinit var edtUsername:TextView
-//    private lateinit var editTextPassword:EditText
-//    private lateinit var editTextPassword2:EditText
-//    private lateinit var editTextFullname:EditText
-//    private lateinit var editTextHeight:EditText
-//    private lateinit var editTextWeight:EditText
-//    private lateinit var btnSignup:MaterialButton
     private lateinit var binding:ActivitySignUpBinding
     private lateinit var adapterSpinner:ArrayAdapter<String>
     private var showPass = false
@@ -53,7 +41,6 @@ class SignUpActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_sign_up)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up)
 
-        //anhXa()
         initSpinner()
 
         binding.textViewGoBackWelcomeScreen.setOnClickListener {
@@ -89,7 +76,7 @@ class SignUpActivity : AppCompatActivity() {
             if(!viewModel.checkSamePassword(password, password2)){
                 Toast.makeText(this@SignUpActivity, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
             }else{
-                val user = User(username, password, fullname, sex, height.toInt(), weight.toInt(), 0)
+                val user = User(username, password, fullname, sex, height.toInt(), weight.toInt(), 0, "")
                 getUser(user)
             }
         }
@@ -194,18 +181,4 @@ class SignUpActivity : AppCompatActivity() {
         }
 
     }
-
-//    private fun anhXa() {
-//        spinnerGioiTinh = findViewById(R.id.spinnerGioiTinh)
-//        txtGoBackWelComeScreen = findViewById(R.id.textViewGoBackWelcomeScreen)
-//        txtPassword = findViewById(R.id.textViewShowHidePasswordSignUp)
-//        txtPassword2 = findViewById(R.id.textViewShowHidePasswordSignUp2)
-//        editTextPassword = findViewById(R.id.editTextPasswordSignUp)
-//        editTextPassword2 = findViewById(R.id.editTextPasswordSignUp2)
-//        btnSignup = findViewById(R.id.buttonSignUp)
-//        edtUsername = findViewById(R.id.editTextUsernameSignUp)
-//        editTextFullname = findViewById(R.id.editTextFullNameSignup)
-//        editTextWeight = findViewById(R.id.editTextWeightSignup)
-//        editTextHeight = findViewById(R.id.editTextHeightSignup)
-//    }
 }

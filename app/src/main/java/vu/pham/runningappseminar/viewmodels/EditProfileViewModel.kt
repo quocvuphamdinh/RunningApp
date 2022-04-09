@@ -3,7 +3,7 @@ package vu.pham.runningappseminar.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.repositories.MainRepository
 
 class EditProfileViewModel(private val mainRepository: MainRepository) : ViewModel() {

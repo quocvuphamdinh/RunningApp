@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.activity
+package vu.pham.runningappseminar.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +9,6 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,18 +16,12 @@ import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.databinding.ActivityLoginBinding
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
-//    private lateinit var txtGoBackWelcomeScreen:TextView
-//    private lateinit var txtForgotPassword:TextView
-//    private lateinit var editTextUsername:EditText
-//    private lateinit var editTextPassword:EditText
-//    private lateinit var txtShowAndHidePassword:TextView
-//    private lateinit var btnLogin:MaterialButton
     private lateinit var binding:ActivityLoginBinding
     private var showPass = false
     private val viewModel : LoginViewModel by viewModels{
@@ -39,8 +32,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_login)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-
-        //anhXa()
 
         binding.textViewBackWelComeScreen2.setOnClickListener {
             goBack()
@@ -64,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkUserInServer() {
         val username = binding.editTextUsernameLogin.text.toString().trim()
         val password = binding.editTextPasswordLogin.text.toString().trim()
-        viewModel.getUser(username, password)?.enqueue(object : Callback<User?> {
+        viewModel.getUser(username, password).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
                 if(viewModel.checkSameUser(username, password, user)){
@@ -118,13 +109,4 @@ class LoginActivity : AppCompatActivity() {
             binding.textViewShowHidePassword.text = "HIDE"
         }
     }
-
-//    private fun anhXa() {
-//        txtGoBackWelcomeScreen = findViewById(R.id.textViewBackWelComeScreen2)
-//        txtForgotPassword = findViewById(R.id.textViewForgotPassword)
-//        editTextUsername = findViewById(R.id.editTextUsernameLogin)
-//        editTextPassword = findViewById(R.id.editTextPasswordLogin)
-//        txtShowAndHidePassword = findViewById(R.id.textViewShowHidePassword)
-//        btnLogin = findViewById(R.id.buttonSignIn)
-//    }
 }

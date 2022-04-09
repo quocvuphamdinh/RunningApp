@@ -1,7 +1,6 @@
-package vu.pham.runningappseminar.fragment
+package vu.pham.runningappseminar.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,20 +12,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.AnalysisFragmentBinding
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
 import java.text.SimpleDateFormat

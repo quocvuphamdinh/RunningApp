@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import vu.pham.runningappseminar.database.remote.ApiService
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.database.local.RunDAO
-import vu.pham.runningappseminar.model.User
+import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.Constants
 
 class MainRepository(
@@ -17,9 +17,9 @@ class MainRepository(
 ) {
 
     //remote
-    fun getActivityDetail(id:Long) = apiService.getActivityDetail(id)
+    suspend fun getActivityDetail(id:Long) = apiService.getActivityDetail(id)
 
-    fun getListActivityByType(type:Int) = apiService.getListActivityByType(type)
+    suspend fun getListActivityByType(type:Int) = apiService.getListActivityByType(type)
 
     fun getFirebaseStorage() = firebaseStorageService
 
@@ -27,7 +27,9 @@ class MainRepository(
 
     suspend fun insertUser(user: User)= apiService.insertUser(user)
 
-    fun getUser(username:String, password:String) = apiService.getUser(username, password)
+    suspend fun getUserLiveData(username:String, password:String) = apiService.getUserLiveData(username, password)
+
+    fun getUserLogin(username: String, password: String) = apiService.getUserLogin(username, password)
 
     suspend fun updateUser(user: User) = apiService.updateUser(user, user.getId())
 
