@@ -28,10 +28,7 @@ import vu.pham.runningappseminar.activities.HistoryRunActivity
 import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.databinding.ProfileFragmentBinding
 import vu.pham.runningappseminar.models.User
-import vu.pham.runningappseminar.utils.CheckConnection
-import vu.pham.runningappseminar.utils.Constants
-import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
 import java.io.ByteArrayOutputStream

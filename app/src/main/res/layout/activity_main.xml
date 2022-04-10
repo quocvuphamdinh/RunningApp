@@ -27,6 +27,19 @@
             android:text="Running App"
             android:textColor="@color/black"
             android:textSize="30sp" />
+
+        <TextView
+            android:textStyle="italic"
+            android:id="@+id/textViewRunningapp2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewRunningapp"
+            android:fontFamily="@font/secular_one_regular"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="by VuPham"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
         <com.google.android.material.button.MaterialButton
             app:backgroundTint="@null"
             android:id="@+id/buttonSignupWelcome"
@@ -35,7 +48,7 @@
             android:background="@drawable/custom_button"
             android:text="Create Account"
             android:layout_marginHorizontal="50dp"
-            android:layout_below="@id/textViewRunningapp"
+            android:layout_below="@id/textViewRunningapp2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

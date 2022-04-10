@@ -32,4 +32,10 @@ interface ApiService {
 
     @GET("activity/detail/{id}")
     suspend fun getActivityDetail(@Path("id") id:Long) : Activity
+
+    @GET("user/checkemail/{userName}")
+    suspend fun checkEmailAccount(@Path("userName") userName:String) : User
+
+    @PUT("user/resetpassword")
+    suspend fun resetPassword(@Body user: User):HashMap<String, String>
 }

@@ -17,6 +17,10 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun resetPassword(user: User) = apiService.resetPassword(user)
+
+    suspend fun checkEmailAccount(userName:String) = apiService.checkEmailAccount(userName)
+
     suspend fun getActivityDetail(id:Long) = apiService.getActivityDetail(id)
 
     suspend fun getListActivityByType(type:Int) = apiService.getListActivityByType(type)

@@ -17,11 +17,13 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.databinding.ActivityLoginBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var loadingDialog : LoadingDialog
     private lateinit var binding:ActivityLoginBinding
     private var showPass = false
     private val viewModel : LoginViewModel by viewModels{
@@ -33,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_login)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        loadingDialog = LoadingDialog(this@LoginActivity)
         binding.textViewBackWelComeScreen2.setOnClickListener {
             goBack()
         }
@@ -55,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkUserInServer() {
         val username = binding.editTextUsernameLogin.text.toString().trim()
         val password = binding.editTextPasswordLogin.text.toString().trim()
+        loadingDialog.startLoadingDialog()
         viewModel.getUser(username, password).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
@@ -67,23 +71,26 @@ class LoginActivity : AppCompatActivity() {
                                     viewModel.insertRunLocal(run)
                                 }
                                 writePersonalDataToSharedPref(user)
+                                loadingDialog.dismissDialog()
                                 goToHomePage()
                                 Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
                             }
                             override fun onFailure(call: Call<List<Run>>, t: Throwable) {
                                 Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                                loadingDialog.dismissDialog()
                             }
                         })
                     }
                 }else{
                     Toast.makeText(this@LoginActivity, "Login failed !", Toast.LENGTH_LONG).show()
+                    loadingDialog.dismissDialog()
                 }
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                loadingDialog.dismissDialog()
             }
-
         })
     }
 

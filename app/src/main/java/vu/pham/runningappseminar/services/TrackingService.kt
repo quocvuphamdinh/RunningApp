@@ -118,7 +118,7 @@ class TrackingService : LifecycleService() {
                 }
                 delay(TIMER_UPDATE_INTERVAL) // sau 0.05(50L) giây thì update timer lên main thread
             }
-            timeRun +=lapTime // khoảng thời gian đã chạy dc
+            timeRun +=lapTime // khoảng thời gian đã chạy dc và đã chạy đến đâu để khi pause rồi resume sẽ đếm tiếp
         }
     }
 

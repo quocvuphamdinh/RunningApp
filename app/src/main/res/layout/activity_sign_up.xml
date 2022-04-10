@@ -34,7 +34,7 @@
                 android:id="@+id/editTextUsernameSignUp"
                 android:textColorHint="@color/grey_100"
                 android:padding="10dp"
-                android:hint="Username"
+                android:hint="Email"
                 android:background="@drawable/custom_edit_text"
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"

@@ -20,6 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.databinding.ActivitySignUpBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.SignUpViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFactory
@@ -28,6 +29,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFa
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding:ActivitySignUpBinding
     private lateinit var adapterSpinner:ArrayAdapter<String>
+    private lateinit var loadingDialog: LoadingDialog
     private var showPass = false
     private var showPass2 = false
     var sex = ""
@@ -42,6 +44,7 @@ class SignUpActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up)
 
         initSpinner()
+        loadingDialog = LoadingDialog(this@SignUpActivity)
 
         binding.textViewGoBackWelcomeScreen.setOnClickListener {
             goBack()
@@ -71,40 +74,57 @@ class SignUpActivity : AppCompatActivity() {
         val height = binding.editTextHeightSignup.text.toString().trim()
         val weight = binding.editTextWeightSignup.text.toString().trim()
         if(!viewModel.checkInfoUser(username, password, password2, fullname, height, weight)){
-            Toast.makeText(this@SignUpActivity, "Please enter your information to create account !", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@SignUpActivity, "Please enter your information correctly to create account !", Toast.LENGTH_LONG).show()
         }else{
             if(!viewModel.checkSamePassword(password, password2)){
                 Toast.makeText(this@SignUpActivity, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
             }else{
                 val user = User(username, password, fullname, sex, height.toInt(), weight.toInt(), 0, "")
+                checkEmailAccount(user)
+            }
+        }
+    }
+
+    private fun checkEmailAccount(user: User){
+        lifecycleScope.launch {
+            loadingDialog.startLoadingDialog()
+            val userValid = viewModel.checkEmailAccount(user.getUsername())
+            if (userValid.getUsername().isNotEmpty()){
+                Toast.makeText(this@SignUpActivity, "This email account has already existed !", Toast.LENGTH_LONG).show()
+                loadingDialog.dismissDialog()
+            }else{
                 getUser(user)
             }
         }
     }
 
     private fun checkUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword())?.enqueue(object : Callback<User?>{
+        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?>{
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user3 = response.body()
                 if(viewModel.checkSameUser(user3?.getUsername()!!, user3.getPassword(), user)){
                     Toast.makeText(this@SignUpActivity, "Sign up success !", Toast.LENGTH_LONG).show()
+                    loadingDialog.dismissDialog()
                     goToLogin()
                 }else{
                     Toast.makeText(this@SignUpActivity, "Sign up failed !", Toast.LENGTH_LONG).show()
+                    loadingDialog.dismissDialog()
                 }
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                loadingDialog.dismissDialog()
             }
         })
     }
     private fun getUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword())?.enqueue(object : Callback<User?>{
+        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?>{
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user2 = response.body()
                 if(viewModel.checkSameUser(user2?.getUsername()!!, user2.getPassword(), user)){
-                    Toast.makeText(this@SignUpActivity, "Account exist !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@SignUpActivity, "Email and password exist !", Toast.LENGTH_LONG).show()
+                    loadingDialog.dismissDialog()
                 }else{
                     lifecycleScope.launch {
                         viewModel.insertUser(user)
@@ -115,6 +135,7 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
                 Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                loadingDialog.dismissDialog()
             }
         })
     }
@@ -146,7 +167,6 @@ class SignUpActivity : AppCompatActivity() {
                 val selectedItemText = parent.getItemAtPosition(position).toString()
                 if (position > 0) {
                     sex = selectedItemText
-                    Toast.makeText(this@SignUpActivity, "Selected : $sex", Toast.LENGTH_SHORT).show()
                 }else if(position==0){
                     (view as TextView).setTextColor(resources.getColor(R.color.grey_100))
                 }

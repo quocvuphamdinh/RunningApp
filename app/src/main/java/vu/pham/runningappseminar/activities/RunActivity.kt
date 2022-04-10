@@ -329,12 +329,4 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this@RunActivity)
     }
-
-//    private fun anhXa() {
-//        imgClose = findViewById(R.id.imageViewCloseRunningActivity)
-//        mapView = findViewById(R.id.mapView)
-//        btnRun = findViewById(R.id.buttonRun)
-//        txtTimeRun = findViewById(R.id.textViewTimeCountRun)
-//        txtStopRun = findViewById(R.id.textViewStopRun)
-//    }
 }
