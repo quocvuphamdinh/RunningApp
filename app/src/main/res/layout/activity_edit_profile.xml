@@ -70,142 +70,264 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_marginTop="50dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
+                <CheckBox
+                    android:id="@+id/checkBoxPersonalInfo"
                     android:layout_marginHorizontal="20dp"
-                    android:text="Username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/editTextUsernameEditProfile"
-                    android:paddingHorizontal="10dp"
-                    android:hint="Edit username here"
-                    android:background="@drawable/custom_edit_text"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textStyle="bold"
                     android:layout_marginTop="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="Password"
-                    android:layout_width="match_parent"
+                   android:layout_gravity="end"
+                    android:text="Personal Information"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                <FrameLayout
-                    android:layout_marginHorizontal="20dp"
-                    android:id="@+id/frame_layout"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewPersonalInfor"
+                    app:cardBackgroundColor="@color/grey_90"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
-                        android:inputType="textPassword"
-                        android:id="@+id/editTextPasswordEditProfile"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_edit_text"
-                        android:hint="Edit password"
-                        android:padding="10dp"
-                        android:textColorHint="@color/grey_100" />
-                    <TextView
-                        android:id="@+id/textViewShowHidePasswordEditProfile"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:gravity="center_vertical"
-                        android:layout_marginEnd="10dp"
-                        android:layout_gravity="end"
-                        android:text="SHOW"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"/>
-                </FrameLayout>
-                <TextView
-                    android:textStyle="bold"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Username"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <EditText
+                            android:enabled="false"
+                            android:id="@+id/editTextUsernameEditProfile"
+                            android:paddingHorizontal="10dp"
+                            android:hint="Edit username here"
+                            android:background="@drawable/custom_edit_text"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Fullname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <EditText
+                            android:enabled="false"
+                            android:id="@+id/editTextFullnameEditProfile"
+                            android:paddingHorizontal="10dp"
+                            android:hint="Edit fullname here"
+                            android:background="@drawable/custom_edit_text"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <FrameLayout
+                            android:layout_marginTop="10dp"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Spinner
+                                android:enabled="false"
+                                android:id="@+id/spinnerGioiTinhEditProfile"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/custom_edit_text"
+                                android:layout_height="wrap_content"/>
+                            <ImageView
+                                android:layout_marginEnd="10dp"
+                                android:layout_gravity="end"
+                                android:src="@drawable/ic_arrow_down"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+                        </FrameLayout>
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Height"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <EditText
+                            android:enabled="false"
+                            android:drawableEnd="@drawable/ic_height"
+                            android:inputType="number"
+                            android:id="@+id/editTextHeightEditProfile"
+                            android:paddingHorizontal="10dp"
+                            android:hint="Edit height here"
+                            android:background="@drawable/custom_edit_text"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Weight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <EditText
+                            android:enabled="false"
+                            android:layout_marginBottom="10dp"
+                            android:drawableEnd="@drawable/ic_weight"
+                            android:inputType="number"
+                            android:id="@+id/editTextWeightEditProfile"
+                            android:paddingHorizontal="10dp"
+                            android:hint="Edit Weight here"
+                            android:background="@drawable/custom_edit_text"
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <CheckBox
+                    android:id="@+id/checkBoxChangePassword"
+                    android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="Fullname"
-                    android:layout_width="match_parent"
+                    android:layout_gravity="end"
+                    android:text="Change password"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                <EditText
-                    android:id="@+id/editTextFullnameEditProfile"
-                    android:paddingHorizontal="10dp"
-                    android:hint="Edit fullname here"
-                    android:background="@drawable/custom_edit_text"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="Gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <FrameLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="20dp"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewChangePassword"
+                    app:cardBackgroundColor="@color/grey_90"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <Spinner
-                        android:id="@+id/spinnerGioiTinhEditProfile"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:background="@drawable/custom_edit_text"
-                        android:layout_height="wrap_content"/>
-                    <ImageView
-                        android:layout_marginEnd="10dp"
-                        android:layout_gravity="end"
-                        android:src="@drawable/ic_arrow_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"/>
-                </FrameLayout>
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="Height"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:drawableEnd="@drawable/ic_height"
-                    android:inputType="number"
-                    android:id="@+id/editTextHeightEditProfile"
-                    android:paddingHorizontal="10dp"
-                    android:hint="Edit height here"
-                    android:background="@drawable/custom_edit_text"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:layout_marginHorizontal="20dp"
-                    android:text="Weight"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <EditText
-                    android:layout_marginBottom="50dp"
-                    android:drawableEnd="@drawable/ic_weight"
-                    android:inputType="number"
-                    android:id="@+id/editTextWeightEditProfile"
-                    android:paddingHorizontal="10dp"
-                    android:hint="Edit Weight here"
-                    android:background="@drawable/custom_edit_text"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Old password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <FrameLayout
+                            android:layout_marginHorizontal="20dp"
+                            android:id="@+id/frame_layout_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:enabled="false"
+                                android:inputType="textPassword"
+                                android:id="@+id/editTextOldPasswordEditProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/custom_edit_text"
+                                android:hint="Enter old password here"
+                                android:padding="10dp"
+                                android:textColorHint="@color/grey_100" />
+                            <TextView
+                                android:id="@+id/textViewShowHideOldPasswordEditProfile"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:layout_gravity="end"
+                                android:text="SHOW"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+                        </FrameLayout>
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="New password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <FrameLayout
+                            android:layout_marginHorizontal="20dp"
+                            android:id="@+id/frame_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:enabled="false"
+                                android:inputType="textPassword"
+                                android:id="@+id/editTextNewPasswordEditProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/custom_edit_text"
+                                android:hint="Enter new password here"
+                                android:padding="10dp"
+                                android:textColorHint="@color/grey_100" />
+                            <TextView
+                                android:id="@+id/textViewShowHideNewPasswordEditProfile"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:layout_gravity="end"
+                                android:text="SHOW"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+                        </FrameLayout>
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:layout_marginTop="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:layout_marginHorizontal="20dp"
+                            android:text="Cofirm password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <FrameLayout
+                            android:layout_marginHorizontal="20dp"
+                            android:id="@+id/frame_layout_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:enabled="false"
+                                android:inputType="textPassword"
+                                android:id="@+id/editTextConfirmPasswordEditProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/custom_edit_text"
+                                android:hint="Enter confirm password here"
+                                android:padding="10dp"
+                                android:textColorHint="@color/grey_100" />
+                            <TextView
+                                android:id="@+id/textViewShowHideConfirmPasswordEditProfile"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:layout_marginEnd="10dp"
+                                android:layout_gravity="end"
+                                android:text="SHOW"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"/>
+                        </FrameLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
+
 
         </ScrollView>
 

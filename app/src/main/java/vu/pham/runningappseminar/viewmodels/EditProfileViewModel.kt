@@ -30,7 +30,7 @@ class EditProfileViewModel(private val mainRepository: MainRepository) : ViewMod
         return true
     }
 
-    private fun checkPassword(password: String):Boolean{
+    fun checkPassword(password: String):Boolean{
         if(password.isEmpty() || password.length < 5){
             return false
         }
@@ -39,5 +39,11 @@ class EditProfileViewModel(private val mainRepository: MainRepository) : ViewMod
 
     fun updateUser(user: User) = viewModelScope.launch {
         mainRepository.updateUser(user)
+    }
+    fun checkSamePassword(password: String, password2: String):Boolean{
+        if(password == password2){
+            return true
+        }
+        return false
     }
 }
