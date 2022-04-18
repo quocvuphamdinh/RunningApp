@@ -1,47 +1,56 @@
-package vu.pham.runningappseminar.activities
+package vu.pham.runningappseminar.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.widget.*
-import androidx.activity.viewModels
-import androidx.databinding.DataBindingUtil
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.database.local.Run
-import vu.pham.runningappseminar.databinding.ActivityLoginBinding
+import vu.pham.runningappseminar.databinding.FragmentLoginBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFactory
 
-class LoginActivity : AppCompatActivity() {
+class LoginFragment : Fragment() {
+
+    private lateinit var binding:FragmentLoginBinding
     private lateinit var loadingDialog : LoadingDialog
-    private lateinit var binding:ActivityLoginBinding
     private var showPass = false
     private val viewModel : LoginViewModel by viewModels{
-        LoginViewModelFactory((application as RunApplication).repository)
+        LoginViewModelFactory((activity?.application as RunApplication).repository)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_login)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        loadingDialog = LoadingDialog(this@LoginActivity)
+        loadingDialog = LoadingDialog(activity as MainActivity)
         binding.textViewBackWelComeScreen2.setOnClickListener {
             goBack()
         }
         binding.textViewForgotPassword.setOnClickListener {
-            val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.action_loginFragment_to_forgotPasswordFragment)
         }
         binding.textViewShowHidePassword.setOnClickListener {
             onClickShowPass()
@@ -64,7 +73,8 @@ class LoginActivity : AppCompatActivity() {
                 val user = response.body()
                 if(viewModel.checkSameUser(username, password, user)){
                     lifecycleScope.launch {
-                        viewModel.getAllRunFromRemote(user?.getId()!!).enqueue(object : Callback<List<Run>>{
+                        viewModel.getAllRunFromRemote(user?.getId()!!).enqueue(object :
+                            Callback<List<Run>> {
                             override fun onResponse(call: Call<List<Run>>, response: Response<List<Run>>) {
                                 val listRun = response.body()
                                 for (run in listRun!!){
@@ -73,46 +83,42 @@ class LoginActivity : AppCompatActivity() {
                                 writePersonalDataToSharedPref(user)
                                 loadingDialog.dismissDialog()
                                 goToHomePage()
-                                Toast.makeText(this@LoginActivity, "Login success !", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Login success !", Toast.LENGTH_LONG).show()
                             }
                             override fun onFailure(call: Call<List<Run>>, t: Throwable) {
-                                Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
                                 loadingDialog.dismissDialog()
                             }
                         })
                     }
                 }else{
-                    Toast.makeText(this@LoginActivity, "Login failed !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Login failed !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
                 }
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
             }
         })
     }
 
     private fun goToHomePage(){
-        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-        this.finish()
-        startActivity(intent)
+        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
     private fun goBack() {
-        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-        this.finish()
-        startActivity(intent)
+        findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
     }
 
     private fun onClickShowPass() {
         if(showPass){
             showPass=false
-            binding.editTextPasswordLogin.transformationMethod=PasswordTransformationMethod.getInstance()
+            binding.editTextPasswordLogin.transformationMethod= PasswordTransformationMethod.getInstance()
             binding.textViewShowHidePassword.text = "SHOW"
         }else{
             showPass=true
-            binding.editTextPasswordLogin.transformationMethod=HideReturnsTransformationMethod.getInstance()
+            binding.editTextPasswordLogin.transformationMethod= HideReturnsTransformationMethod.getInstance()
             binding.textViewShowHidePassword.text = "HIDE"
         }
     }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/custom_background_exercise_run">
+
+        <ProgressBar
+            android:scaleY="5"
+            android:layout_marginTop="5dp"
+            android:id="@+id/progressBarExerciseRun"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/progressBarExerciseRun"
+            android:id="@+id/textViewTimeLeftExerciseRun"
+            android:textColor="@color/grey_80"
+            android:layout_centerHorizontal="true"
+            android:text="Time left - 24:45"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:background="@drawable/custom_layout_border_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewTimeLeftExerciseRun"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="20dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="WALK"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="07:45"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="0/1"
+                android:textColor="@color/grey_80"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

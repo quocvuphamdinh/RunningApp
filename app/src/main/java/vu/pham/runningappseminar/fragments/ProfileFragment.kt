@@ -15,18 +15,15 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.activities.EditProfileActivity
-import vu.pham.runningappseminar.activities.HistoryRunActivity
-import vu.pham.runningappseminar.activities.MainActivity
-import vu.pham.runningappseminar.databinding.ProfileFragmentBinding
+import vu.pham.runningappseminar.databinding.FragmentProfileBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -35,7 +32,7 @@ import java.io.ByteArrayOutputStream
 import kotlin.math.round
 
 class ProfileFragment : Fragment() {
-    private lateinit var binding:ProfileFragmentBinding
+    private lateinit var binding:FragmentProfileBinding
     private lateinit var mActivityResult:ActivityResultLauncher<Intent>
 
     private val viewModel : MainViewModel by viewModels{
@@ -49,7 +46,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -78,6 +75,10 @@ class ProfileFragment : Fragment() {
             clickRequestImage()
         }
 
+        binding.cardViewChangePassword.setOnClickListener {
+            goToChangePassword()
+        }
+
         subscribeToObservers()
 
         mActivityResult = registerForActivityResult(
@@ -91,6 +92,12 @@ class ProfileFragment : Fragment() {
                 }
             }
         )
+    }
+
+    private fun goToChangePassword() {
+        val bundle = Bundle()
+        bundle.putSerializable(Constants.CHANGE_PASSWORD, userLocal)
+        findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment, bundle)
     }
 
     private fun uploadImageToServer(bitmap: Bitmap) {
@@ -153,10 +160,8 @@ class ProfileFragment : Fragment() {
                 viewModel.insertRunRemote(run, userLocal.getId(), -1L)
             }
             viewModel.deleteAllRun()
-            val intent = Intent(context, MainActivity::class.java)
             viewModel.removePersonalDataFromSharedPref()
-            activity?.finish()
-            startActivity(intent)
+            findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
         }
     }
 
@@ -218,15 +223,12 @@ class ProfileFragment : Fragment() {
         userLocal = viewModel.getUserFromSharedPref()!!
     }
     private fun goToHistoryRun() {
-        val intent = Intent(context, HistoryRunActivity::class.java)
-        startActivity(intent)
+       findNavController().navigate(R.id.action_profileFragment_to_historyRunFragment)
     }
 
     private fun goToEditProfile() {
-        val intent = Intent(context, EditProfileActivity::class.java)
         val bundle = Bundle()
         bundle.putSerializable(Constants.EDIT_USER, userLocal)
-        intent.putExtras(bundle)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
     }
 }

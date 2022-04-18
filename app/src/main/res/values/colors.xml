@@ -21,4 +21,5 @@
     <color name="startColor3">#B78628</color>
     <color name="endColor3">#D4AF37</color>
     <color name="red">#E50505</color>
+    <color name="grey_80">#B3B1B1</color>
 </resources>

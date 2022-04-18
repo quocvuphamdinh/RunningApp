@@ -20,7 +20,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.databinding.AnalysisFragmentBinding
+import vu.pham.runningappseminar.databinding.FragmentAnalysisBinding
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
@@ -29,7 +29,7 @@ import java.util.*
 
 class AnalysisFragment : Fragment() {
 
-    private lateinit var binding:AnalysisFragmentBinding
+    private lateinit var binding:FragmentAnalysisBinding
     private var date = Date(System.currentTimeMillis())
 
     private val viewModel : MainViewModel by viewModels{
@@ -41,7 +41,7 @@ class AnalysisFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.analysis_fragment, container, false)
+        binding = FragmentAnalysisBinding.inflate(inflater, container, false)
 
         return binding.root
     }

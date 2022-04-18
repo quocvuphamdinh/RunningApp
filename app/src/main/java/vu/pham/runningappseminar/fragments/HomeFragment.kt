@@ -11,18 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.activities.DetailExerciseActivity
-import vu.pham.runningappseminar.activities.ListExerciseActivity
 import vu.pham.runningappseminar.activities.SetMyGoalActivity
 import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapters.RecyclerViewRecentActivitiesAdapter
-import vu.pham.runningappseminar.databinding.HomeFragmentBinding
+import vu.pham.runningappseminar.databinding.FragmentHomeBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
@@ -35,7 +33,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFact
 class HomeFragment : Fragment() {
     private lateinit var adapterTodayTraining:RecyclerViewActivityAdapter
     private lateinit var adapterRecentActivities:RecyclerViewRecentActivitiesAdapter
-    private lateinit var binding:HomeFragmentBinding
+    private lateinit var binding:FragmentHomeBinding
 
     private var user:User?=null
     private val viewModel : MainViewModel by viewModels{
@@ -60,7 +58,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.home_fragment, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -81,12 +79,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun goToListExercisePage(titleName:String, typeExercise:Int){
-        val intent = Intent(context, ListExerciseActivity::class.java)
         val bundle = Bundle()
         bundle.putString(Constants.TITLE_NAME, titleName)
         bundle.putInt(Constants.TYPE_EXERCISE, typeExercise)
-        intent.putExtras(bundle)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_homeFragment_to_listExerciseFragment, bundle)
     }
 
     private fun initUserInfo() {
@@ -180,11 +176,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun goToActivityDetailPage(id:Long){
-        val intent = Intent(context, DetailExerciseActivity::class.java)
         val bundle = Bundle()
         bundle.putLong(Constants.DETAIL_EXERCISE_ID, id)
-        intent.putExtras(bundle)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_homeFragment_to_detailExerciseFragment, bundle)
     }
 
     private fun initRecentActivities() {

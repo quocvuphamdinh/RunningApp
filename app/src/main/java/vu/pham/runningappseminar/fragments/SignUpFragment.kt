@@ -1,50 +1,57 @@
-package vu.pham.runningappseminar.activities
+package vu.pham.runningappseminar.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import vu.pham.runningappseminar.R
-
-import android.view.ViewGroup
-
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.widget.*
-import androidx.activity.viewModels
-import androidx.databinding.DataBindingUtil
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import vu.pham.runningappseminar.databinding.ActivitySignUpBinding
+import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activities.MainActivity
+import vu.pham.runningappseminar.databinding.FragmentSignupBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.SignUpViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFactory
 
-
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding:ActivitySignUpBinding
-    private lateinit var adapterSpinner:ArrayAdapter<String>
+class SignUpFragment : Fragment() {
+    private lateinit var binding : FragmentSignupBinding
+    private lateinit var adapterSpinner: ArrayAdapter<String>
     private lateinit var loadingDialog: LoadingDialog
     private var showPass = false
     private var showPass2 = false
     var sex = ""
-
     private val viewModel : SignUpViewModel by viewModels{
-        SignUpViewModelFactory((application as RunApplication).repository)
+        SignUpViewModelFactory((activity?.application as RunApplication).repository)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_sign_up)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSignupBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initSpinner()
-        loadingDialog = LoadingDialog(this@SignUpActivity)
+        loadingDialog = LoadingDialog(activity as MainActivity)
 
         binding.textViewGoBackWelcomeScreen.setOnClickListener {
             goBack()
@@ -59,11 +66,8 @@ class SignUpActivity : AppCompatActivity() {
             signUpAccount()
         }
     }
-
     private fun goBack() {
-        val intent = Intent(this@SignUpActivity, MainActivity::class.java)
-        this.finish()
-        startActivity(intent)
+        findNavController().navigate(R.id.action_signUpFragment_to_welcomeFragment)
     }
 
     private fun signUpAccount(){
@@ -74,10 +78,10 @@ class SignUpActivity : AppCompatActivity() {
         val height = binding.editTextHeightSignup.text.toString().trim()
         val weight = binding.editTextWeightSignup.text.toString().trim()
         if(!viewModel.checkInfoUser(username, password, password2, fullname, height, weight)){
-            Toast.makeText(this@SignUpActivity, "Please enter your information correctly to create account !", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Please enter your information correctly to create account !", Toast.LENGTH_LONG).show()
         }else{
             if(!viewModel.checkSamePassword(password, password2)){
-                Toast.makeText(this@SignUpActivity, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Confirm password must the same as password. Please try again !", Toast.LENGTH_LONG).show()
             }else{
                 val user = User(username, password, fullname, sex, height.toInt(), weight.toInt(), 0, "")
                 checkEmailAccount(user)
@@ -90,7 +94,7 @@ class SignUpActivity : AppCompatActivity() {
             loadingDialog.startLoadingDialog()
             val userValid = viewModel.checkEmailAccount(user.getUsername())
             if (userValid.getUsername().isNotEmpty()){
-                Toast.makeText(this@SignUpActivity, "This email account has already existed !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "This email account has already existed !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
             }else{
                 getUser(user)
@@ -99,31 +103,31 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun checkUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?>{
+        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user3 = response.body()
                 if(viewModel.checkSameUser(user3?.getUsername()!!, user3.getPassword(), user)){
-                    Toast.makeText(this@SignUpActivity, "Sign up success !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Sign up success !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
                     goToLogin()
                 }else{
-                    Toast.makeText(this@SignUpActivity, "Sign up failed !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Sign up failed !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
                 }
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
-                Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
             }
         })
     }
     private fun getUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?>{
+        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user2 = response.body()
                 if(viewModel.checkSameUser(user2?.getUsername()!!, user2.getPassword(), user)){
-                    Toast.makeText(this@SignUpActivity, "Email and password exist !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Email and password exist !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
                 }else{
                     lifecycleScope.launch {
@@ -134,20 +138,19 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<User?>, t: Throwable) {
-                Toast.makeText(this@SignUpActivity, "Error: $t !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
             }
         })
     }
 
     private fun goToLogin() {
-        val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
-        this.finish()
-        startActivity(intent)
+        findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
     }
 
     private fun initSpinner(){
-        adapterSpinner = object: ArrayAdapter<String>(this@SignUpActivity, android.R.layout.simple_list_item_1, resources.getStringArray(R.array.spinner_sex_signup)){
+        adapterSpinner = object: ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, resources.getStringArray(
+            R.array.spinner_sex_signup)){
             override fun isEnabled(position: Int): Boolean {
                 return position != 0
             }
@@ -199,6 +202,5 @@ class SignUpActivity : AppCompatActivity() {
                 binding.textViewShowHidePasswordSignUp2.text = "HIDE"
             }
         }
-
     }
 }

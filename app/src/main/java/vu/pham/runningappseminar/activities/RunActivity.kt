@@ -141,10 +141,12 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun updateTracking(isTracking:Boolean){
         this.isTracking = isTracking
-        if (!isTracking && currentTimeInMillies>0L){
+        if(!isTracking && currentTimeInMillies<0L){
             binding.buttonRun.text = "START"
-        }else if(isTracking){
+        }else if (!isTracking && currentTimeInMillies>0L){
             binding.buttonRun.text = "RESUME"
+        }else if(isTracking){
+            binding.buttonRun.text = "PAUSE"
         }
     }
     private fun moveCameraToUser(){

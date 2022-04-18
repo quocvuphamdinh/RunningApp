@@ -26,6 +26,7 @@ object Constants {
     const val URL_FIREBASE = "gs://runningappseminar.appspot.com"
     const val BASE_URL2 = "http://192.168.0.106:8087/"
     const val EDIT_USER = "EDIT_USER"
+    const val CHANGE_PASSWORD = "CHANGE_PASSWORD"
     const val REQUEST_CODE_IMAGE_UPLOAD=10
     const val DETAIL_EXERCISE_ID = "DETAIL_EXERCISE_ID"
     const val TITLE_NAME = "TITLE_NAME"
