@@ -4,6 +4,9 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/welcomeFragment">
 
+    <action android:id="@+id/action_global_exerciseRunFragment"
+        app:destination="@id/exerciseRunFragment"
+        app:launchSingleTop="true"/>
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="vu.pham.runningappseminar.fragments.WelcomeFragment"
@@ -153,6 +156,11 @@
             app:popUpTo="@id/detailExerciseFragment"
             android:id="@+id/action_detailExerciseFragment_to_listExerciseFragment"
             app:destination="@id/listExerciseFragment" />
+        <action
+            app:popUpTo="@id/detailExerciseFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_detailExerciseFragment_to_exerciseRunFragment"
+            app:destination="@id/exerciseRunFragment" />
     </fragment>
     <fragment
         android:id="@+id/listExerciseFragment"
@@ -182,4 +190,8 @@
             android:id="@+id/action_changePasswordFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/exerciseRunFragment"
+        android:name="vu.pham.runningappseminar.fragments.ExerciseRunFragment"
+        android:label="ExerciseRunFragment" />
 </navigation>

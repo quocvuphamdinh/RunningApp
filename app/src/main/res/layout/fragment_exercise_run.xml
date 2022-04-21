@@ -6,23 +6,29 @@
         android:background="@drawable/custom_background_exercise_run">
 
         <ProgressBar
-            android:scaleY="5"
-            android:layout_marginTop="5dp"
+            android:progressBackgroundTint="@color/grey_80"
+            android:progressTint="@color/endColor2"
             android:id="@+id/progressBarExerciseRun"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="35dp"/>
+            android:layout_height="10dp"
+            android:layout_marginTop="5dp"
+            android:max="100"
+            android:progress="50"
+            android:scaleY="5" />
+
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/progressBarExerciseRun"
             android:id="@+id/textViewTimeLeftExerciseRun"
-            android:textColor="@color/grey_80"
-            android:layout_centerHorizontal="true"
-            android:text="Time left - 24:45"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressBarExerciseRun"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="Time left - 24:45"
+            android:textColor="@color/grey_80" />
 
         <LinearLayout
+            android:id="@+id/line1"
             android:background="@drawable/custom_layout_border_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,6 +39,7 @@
             android:padding="20dp">
 
             <TextView
+                android:id="@+id/textViewNameEachExercise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -41,6 +48,7 @@
                 android:textSize="20sp" />
 
             <TextView
+                android:id="@+id/textViewTimeCountExerciseRun"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -50,13 +58,183 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/textViewNumberExerciseRun"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="0/1"
+                android:text="0/3"
                 android:textColor="@color/grey_80"
                 android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/line2"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/line1"
+            android:weightSum="15"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/ic_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/textViewDistanceExerciseRun"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="23sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="0.00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="km"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_average_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/textViewAverageSpeedExerciseRun"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="23sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="0.00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="km/h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_calories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/textViewCaloriesBurnedExerciseRun"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="23sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="5.84"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="Kcal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/line3"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:layout_below="@id/line2"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="140dp">
+
+            <ImageButton
+                android:src="@drawable/ic_play"
+                android:id="@+id/buttonStartExerciseRun"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center"
+                android:background="@drawable/custom_button_circle_2"
+                android:elevation="10dp"
+                android:text="Start"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                app:elevation="10dp"/>
+            <ImageButton
+                android:layout_marginStart="30dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_stop"
+                android:id="@+id/buttonStopExerciseRun"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center"
+                android:background="@drawable/custom_button_circle_2"
+                android:elevation="10dp"
+                android:text="Start"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                app:elevation="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_above="@id/layoutPlayMusic"
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"/>
+
+        <LinearLayout
+            android:id="@+id/layoutPlayMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_music" />
+
+            <TextView
+                android:id="@+id/textViewPlayMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:text="Play music"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
         </LinearLayout>
     </RelativeLayout>
 </layout>

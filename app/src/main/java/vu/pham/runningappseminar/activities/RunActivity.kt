@@ -39,11 +39,6 @@ import java.util.*
 import kotlin.math.round
 
 class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-//    private lateinit var txtStopRun:TextView
-//    private lateinit var btnRun:MaterialButton
-//    private lateinit var imgClose:ImageView
-//    private lateinit var mapView: MapView
-//    private lateinit var txtTimeRun:TextView
     private lateinit var binding:ActivityRunBinding
     private var googleMap: GoogleMap?=null
     private var currentTimeInMillies=0L
@@ -149,6 +144,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             binding.buttonRun.text = "PAUSE"
         }
     }
+
     private fun moveCameraToUser(){
         if(pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()){
             googleMap?.animateCamera(

@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewWorkoutAdapter
 import vu.pham.runningappseminar.databinding.FragmentDetailExerciseBinding
 import vu.pham.runningappseminar.models.Activity
@@ -44,6 +45,10 @@ class DetailExerciseFragment : Fragment() {
 
         binding.imageCloseDetailExcerciseActivity.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.imageStartDetailExcerciseActivity.setOnClickListener {
+            findNavController().navigate(R.id.action_detailExerciseFragment_to_exerciseRunFragment)
         }
     }
 

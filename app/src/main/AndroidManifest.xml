@@ -22,6 +22,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".activities.ExerciseRunActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ListExerciseActivity"
             android:exported="false" />
         <activity
