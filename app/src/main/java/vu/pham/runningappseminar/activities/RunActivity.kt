@@ -72,6 +72,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun clickStopRun() {
         binding.textViewStopRun.setOnClickListener {
+            sendCommandToService(ACTION_PAUSE_SERVICE)
             zoomToSeeWholeTrack()
             saveRunToDatabase()
         }
@@ -97,8 +98,9 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun stopRun() {
-        binding.textViewTimeCountRun.text = "00:00:00:00"
         sendCommandToService(ACTION_STOP_SERVICE)
+        currentTimeInMillies = 0L
+        binding.textViewTimeCountRun.text = "00:00:00:00"
         finish()
     }
 
@@ -264,6 +266,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun sendCommandToService(action:String){
+        TrackingService.isRunOnly = true
         Intent(this@RunActivity, TrackingService::class.java).also {
             it.action = action
             this@RunActivity.startService(it)
@@ -295,6 +298,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun clickToClose() {
         binding.imageViewCloseRunningActivity.setOnClickListener {
+            sendCommandToService(ACTION_PAUSE_SERVICE)
             if(currentTimeInMillies > 0){
                 showCancelRunningDialog()
             }else{
@@ -326,5 +330,14 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this@RunActivity)
+    }
+
+    override fun onBackPressed() {
+        if(currentTimeInMillies > 0){
+            sendCommandToService(ACTION_PAUSE_SERVICE)
+            showCancelRunningDialog()
+        }else{
+            finish()
+        }
     }
 }

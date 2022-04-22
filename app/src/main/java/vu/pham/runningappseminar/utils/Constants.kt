@@ -14,7 +14,7 @@ object Constants {
     const val NOTIFICATION_ID=1
     const val LOCATION_UPDATE_INTERVAL = 5000L //5s update location 1 lần
     const val FASTEST_LOCATION_INTERVAL = 2000L
-    const val POLYLINE_COLOR = Color.RED // màu đường
+    const val POLYLINE_COLOR = Color.DKGRAY // màu đường
     const val POLYLINE_WIDTH = 8f// độ dài
     const val MAP_ZOOM = 18f // độ zoom của camera khi trỏ tới user
     const val TIMER_UPDATE_INTERVAL = 50L
@@ -32,4 +32,5 @@ object Constants {
     const val DETAIL_EXERCISE_ID = "DETAIL_EXERCISE_ID"
     const val TITLE_NAME = "TITLE_NAME"
     const val TYPE_EXERCISE = "TYPE_EXERCISE"
+    const val DURATION_EXERCISE = "DURATION_EXERCISE"
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -24,6 +23,7 @@ class DetailExerciseFragment : Fragment() {
     private lateinit var binding : FragmentDetailExerciseBinding
     private lateinit var workoutAdapter: RecyclerViewWorkoutAdapter
     private var id:Long?=null
+    private var durationExercise = LongArray(3)
     private val viewModel : DetailExerciseViewModel by viewModels{
         DetailExerciseViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -48,7 +48,9 @@ class DetailExerciseFragment : Fragment() {
         }
 
         binding.imageStartDetailExcerciseActivity.setOnClickListener {
-            findNavController().navigate(R.id.action_detailExerciseFragment_to_exerciseRunFragment)
+            val bundle = Bundle()
+            bundle.putLongArray(Constants.DURATION_EXERCISE, durationExercise)
+            findNavController().navigate(R.id.action_detailExerciseFragment_to_exerciseRunFragment, bundle)
         }
     }
 
@@ -62,6 +64,9 @@ class DetailExerciseFragment : Fragment() {
             viewModel.activityDetail.observe(viewLifecycleOwner, Observer {
                 setUpRecyclerView(it.getWorkouts())
                 bindDataToView(it)
+                for (i in 0 until it.getWorkouts().size){
+                    durationExercise[i] = it.getWorkouts()[i].getDuration()
+                }
             })
         }
     }

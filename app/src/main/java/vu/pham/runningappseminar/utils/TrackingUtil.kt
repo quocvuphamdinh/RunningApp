@@ -79,7 +79,7 @@ object TrackingUtil {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
         val f: NumberFormat = DecimalFormat("00")
         if(!includeMillis){
-            return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}"
+            return "${f.format(minutes)}:${f.format(seconds)}"
         }
         milliseconds -= TimeUnit.SECONDS.toMillis(seconds)
         milliseconds /=10

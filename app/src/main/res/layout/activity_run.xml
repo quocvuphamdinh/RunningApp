@@ -29,7 +29,7 @@
                     <TextView
                         android:visibility="invisible"
                         android:id="@+id/textViewStopRun"
-                        android:drawableStart="@drawable/ic_stop"
+                        android:drawableStart="@drawable/ic_stop_2"
                         android:paddingStart="15dp"
                         android:gravity="center_vertical"
                         android:layout_weight="9"

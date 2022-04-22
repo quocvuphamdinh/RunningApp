@@ -24,7 +24,7 @@
             android:layout_below="@id/progressBarExerciseRun"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="Time left - 24:45"
+            android:text="Time left - 00:00"
             android:textColor="@color/grey_80" />
 
         <LinearLayout
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="07:45"
+                android:text="00:00"
                 android:textColor="@color/white"
                 android:textSize="40sp"
                 android:textStyle="bold" />
@@ -155,7 +155,7 @@
                     android:textSize="23sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:text="5.84"
+                    android:text="0.00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView

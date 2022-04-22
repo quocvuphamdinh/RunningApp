@@ -28,8 +28,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.activities.RunActivity
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
+import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_EXERCISE_RUN_FRAGMENT
 import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_TRACKING_ACTIVITY
 import vu.pham.runningappseminar.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_STOP_SERVICE
@@ -62,6 +64,7 @@ class TrackingService : LifecycleService() {
     private var lastSecondTimestamp = 0L
 
     companion object{
+        var isRunOnly = true
         var timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>() // ds các đường Polyline
@@ -151,6 +154,8 @@ class TrackingService : LifecycleService() {
         timeRunInMillis.postValue(0L)
         lapTime = 0L
         timeRun = 0L
+        lastSecondTimestamp = 0L
+        timeStarted = 0L
     }
 
     private fun stopService(){
@@ -172,6 +177,7 @@ class TrackingService : LifecycleService() {
                     }else{
                         Log.d("serviceVu", "Resuming service...")
                         startTimer()
+                        //calculateDataRun()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
@@ -236,6 +242,7 @@ class TrackingService : LifecycleService() {
 
     private fun startForegroundService(){
         startTimer()
+        //calculateDataRun()
         isTracking.postValue(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -263,9 +270,9 @@ class TrackingService : LifecycleService() {
         return PendingIntent.getActivity(
             this@TrackingService,
             0,
-            Intent(this@TrackingService, RunActivity::class.java)
+            Intent(this@TrackingService, if(isRunOnly) RunActivity::class.java else MainActivity::class.java)
                 .also {
-                    it.action = ACTION_SHOW_TRACKING_ACTIVITY
+                    it.action = if(isRunOnly) ACTION_SHOW_TRACKING_ACTIVITY else ACTION_SHOW_EXERCISE_RUN_FRAGMENT
                 }, FLAG_UPDATE_CURRENT) // FLAG_UPDATE_CURRENT là khi pendingintent đã tồn tại rồi nó sẽ khởi động hoặc update lại mà ko tạo cái mới
 
     }
