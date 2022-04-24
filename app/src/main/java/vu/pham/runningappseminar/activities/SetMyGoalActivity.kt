@@ -10,16 +10,12 @@ import vu.pham.runningappseminar.utils.Constants
 
 
 class SetMyGoalActivity : AppCompatActivity() {
-//    private lateinit var numberPicker:NumberPicker
-//    private lateinit var imgClose:ImageView
-//    private lateinit var btnSetMyGoal:MaterialButton
     private lateinit var binding:ActivitySetMyGoalBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_set_my_goal)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_set_my_goal)
 
-        //anhXa()
         initNumberPicker()
         binding.imageCloseSetMyGoal.setOnClickListener {
             closeSetMyGoal()
@@ -49,9 +45,4 @@ class SetMyGoalActivity : AppCompatActivity() {
         binding.numberPicker1.value = if(data==0) 1 else data!!
         binding.numberPicker1.wrapSelectorWheel = false
     }
-//    private fun anhXa() {
-//        numberPicker = findViewById(R.id.numberPicker1)
-//        imgClose = findViewById(R.id.imageCloseSetMyGoal)
-//        btnSetMyGoal = findViewById(R.id.buttonSetMyGoal)
-//    }
 }

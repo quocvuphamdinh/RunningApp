@@ -1,5 +1,7 @@
 package vu.pham.runningappseminar.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -8,8 +10,11 @@ import vu.pham.runningappseminar.repositories.MainRepository
 
 class ChangePasswordViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
+    private var _errEvent: MutableLiveData<String> = MutableLiveData<String>()
+    val errEvent: LiveData<String>
+        get() = _errEvent
 
-    fun writePersonalDataToSharedPref(user: User){
+    private fun writePersonalDataToSharedPref(user: User){
         mainRepository.writePersonalDataToSharedPref(user)
     }
 
@@ -21,7 +26,13 @@ class ChangePasswordViewModel(private val mainRepository: MainRepository) : View
     }
 
     fun updateUser(user: User) = viewModelScope.launch {
-        mainRepository.updateUser(user)
+        try {
+            mainRepository.updateUser(user)
+            writePersonalDataToSharedPref(user)
+            _errEvent.postValue("")
+        }catch (e:Exception){
+            _errEvent.postValue("An error has occurred, please check your internet !")
+        }
     }
 
     fun checkSamePassword(password: String, password2: String):Boolean{

@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentChangePasswordBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.ChangePasswordViewModel
@@ -58,9 +60,23 @@ class ChangePasswordFragment : Fragment() {
             findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }
 
+        observeError()
+
         binding.textViewSaveChangePassword.setOnClickListener {
-            changePassword()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                changePassword()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
+    }
+
+    private fun observeError() {
+        viewModel.errEvent.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun onClickShowPass() {
@@ -111,7 +127,6 @@ class ChangePasswordFragment : Fragment() {
             Toast.makeText(requireContext(), "Please enter new password or confirm password correctly !", Toast.LENGTH_LONG).show()
         }else{
             user.setPassword(newPassword)
-            viewModel.writePersonalDataToSharedPref(user)
             viewModel.updateUser(user)
             findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }

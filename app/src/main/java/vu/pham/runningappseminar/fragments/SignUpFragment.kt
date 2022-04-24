@@ -22,6 +22,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.databinding.FragmentSignupBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.SignUpViewModel
@@ -63,7 +64,11 @@ class SignUpFragment : Fragment() {
             onClickShowPass(2)
         }
         binding.buttonSignUp.setOnClickListener {
-            signUpAccount()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                signUpAccount()
+            }else{
+                Toast.makeText(context, "your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
     }
     private fun goBack() {
@@ -92,12 +97,17 @@ class SignUpFragment : Fragment() {
     private fun checkEmailAccount(user: User){
         lifecycleScope.launch {
             loadingDialog.startLoadingDialog()
-            val userValid = viewModel.checkEmailAccount(user.getUsername())
-            if (userValid.getUsername().isNotEmpty()){
-                Toast.makeText(context, "This email account has already existed !", Toast.LENGTH_LONG).show()
+            try {
+                val userValid = viewModel.checkEmailAccount(user.getUsername())
+                if (userValid.getUsername().isNotEmpty()){
+                    Toast.makeText(context, "This email account has already existed !", Toast.LENGTH_LONG).show()
+                    loadingDialog.dismissDialog()
+                }else{
+                    getUser(user)
+                }
+            }catch (e:Exception){
+                Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
-            }else{
-                getUser(user)
             }
         }
     }
@@ -131,8 +141,13 @@ class SignUpFragment : Fragment() {
                     loadingDialog.dismissDialog()
                 }else{
                     lifecycleScope.launch {
-                        viewModel.insertUser(user)
-                        checkUser(user)
+                        try {
+                            viewModel.insertUser(user)
+                            checkUser(user)
+                        }catch (e:Exception){
+                            Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
+                            loadingDialog.dismissDialog()
+                        }
                     }
                 }
             }

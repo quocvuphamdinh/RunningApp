@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.databinding.FragmentForgotPasswordBinding
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.ForgotPasswordViewModel
@@ -47,27 +47,37 @@ class ForgotPasswordFragment : Fragment() {
             findNavController().navigate(R.id.action_forgotPasswordFragment_to_loginFragment)
         }
         binding.buttonResetPassword.setOnClickListener {
-            doResetPassword()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                doResetPassword()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
     }
+
     private fun doResetPassword() {
         val userName = binding.editTextResetPassword.text.toString().trim()
         val success = viewModel.checkEmailIsValid(userName)
         if(success){
             lifecycleScope.launch {
                 loadingDialog.startLoadingDialog()
-                val user = viewModel.checkEmailAccount(userName)
-                if(user.getUsername().isNotEmpty()){
-                    val message = viewModel.resetPassword(user)
-                    loadingDialog.dismissDialog()
-                    Toast.makeText(context, message["message"], Toast.LENGTH_LONG).show()
-                    if(message["message"]!!.contains("successfully")){
-                        findNavController().navigate(R.id.action_forgotPasswordFragment_to_loginFragment)
+                try {
+                    val user = viewModel.checkEmailAccount(userName)
+                    if(user.getUsername().isNotEmpty()){
+                        val message = viewModel.resetPassword(user)
+                        loadingDialog.dismissDialog()
+                        Toast.makeText(context, message["message"], Toast.LENGTH_LONG).show()
+                        if(message["message"]!!.contains("successfully")){
+                            findNavController().navigate(R.id.action_forgotPasswordFragment_to_loginFragment)
+                        }
+                    }else{
+                        delay(1000)
+                        loadingDialog.dismissDialog()
+                        Toast.makeText(context, "Account invalid", Toast.LENGTH_SHORT).show()
                     }
-                }else{
-                    delay(1000)
+                }catch (e:Exception){
+                    Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
-                    Toast.makeText(context, "Account invalid", Toast.LENGTH_SHORT).show()
                 }
             }
         }else{

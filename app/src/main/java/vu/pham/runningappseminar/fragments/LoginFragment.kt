@@ -20,6 +20,7 @@ import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.databinding.FragmentLoginBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.LoginViewModel
@@ -56,7 +57,11 @@ class LoginFragment : Fragment() {
             onClickShowPass()
         }
         binding.buttonSignIn.setOnClickListener {
-            checkUserInServer()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                checkUserInServer()
+            }else{
+                Toast.makeText(context, "your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

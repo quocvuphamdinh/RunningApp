@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -14,6 +15,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.databinding.FragmentListExerciseBinding
 import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.ListExerciseViewModel
@@ -86,7 +88,11 @@ class ListExerciseFragment : Fragment() {
     private fun setUpRecyclerViewRunning(list:List<Activity>, isRunning:Boolean, layout:Int) {
         exerciseAdapter = RecyclerViewActivityAdapter(layout, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
-                goToActivityDetailPage(activity.getId())
+                if(CheckConnection.haveNetworkConnection(requireContext())){
+                    goToActivityDetailPage(activity.getId())
+                }else{
+                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+                }
             }
         }, true, isRunning, false)
         exerciseAdapter.submitList(list)

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -13,6 +15,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.databinding.FragmentActivityBinding
 import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.MainViewModel
@@ -23,7 +26,7 @@ class ActivityFragment : Fragment() {
     private lateinit var adapterWalking:RecyclerViewActivityAdapter
     private lateinit var binding:FragmentActivityBinding
     private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository)
+        MainViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,15 +37,26 @@ class ActivityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getListActivityWalkingFromRemote()
-        getListActivityRunningFromRemote()
-
+        if(CheckConnection.haveNetworkConnection(requireContext())){
+            getListActivityWalkingFromRemote()
+            getListActivityRunningFromRemote()
+        }
         binding.textViewMoreWalking.setOnClickListener {
-            goToListExercisePage("Walking for weight loss", 0)
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                goToListExercisePage("Walking for weight loss", 0)
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.textViewMoreRunning.setOnClickListener {
-            goToListExercisePage("Running for weight loss", 1)
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                goToListExercisePage("Running for weight loss", 1)
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
+        }
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
         }
     }
 
@@ -75,7 +89,11 @@ class ActivityFragment : Fragment() {
     private fun initWalkingActivity(list:List<Activity>) {
         adapterWalking = RecyclerViewActivityAdapter(R.layout.walking_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
-                goToActivityDetailPage(activity.getId())
+                if(CheckConnection.haveNetworkConnection(requireContext())){
+                    goToActivityDetailPage(activity.getId())
+                }else{
+                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+                }
             }
         }, false, false, false)
         adapterWalking.submitList(list)
@@ -88,7 +106,11 @@ class ActivityFragment : Fragment() {
     private fun initRunningActivity(list:List<Activity>) {
         adapterRunning = RecyclerViewActivityAdapter(R.layout.running_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
-                goToActivityDetailPage(activity.getId())
+                if(CheckConnection.haveNetworkConnection(requireContext())){
+                    goToActivityDetailPage(activity.getId())
+                }else{
+                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+                }
             }
         }, false, true, false)
         adapterRunning.submitList(list)

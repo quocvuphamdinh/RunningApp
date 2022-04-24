@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="vu.pham.runningappseminar">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -22,38 +23,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name=".activities.ExerciseRunActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ListExerciseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.DetailExerciseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.HistoryRunActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.RunActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activities.EditProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.SetMyGoalActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.SignUpActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

@@ -9,10 +9,12 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentEditProfileBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.EditProfileViewModel
@@ -42,12 +44,26 @@ class EditProfileFragment : Fragment() {
         setUpSpinnerSex()
         getUserData()
 
+        observeError()
+
         binding.textViewSaveEditProfile.setOnClickListener {
-            savePersonalInfor()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                savePersonalInfor()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
         binding.textViewCancelEditProfile.setOnClickListener {
             onClickCancel()
         }
+    }
+
+    private fun observeError() {
+        viewModel.errEvent.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
     private fun savePersonalInfor(){
@@ -59,7 +75,6 @@ class EditProfileFragment : Fragment() {
             val userNew = User(username, user.getPassword(), fullname, sex, height.toInt(), weight.toInt(), user.getdistanceGoal(), user.getAvartar())
             userNew.setId(user.getId())
             viewModel.updateUser(userNew)
-            viewModel.writePersonalDataToSharedPref(userNew)
             findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }else{
             Toast.makeText(requireContext(), "Please enter your information to update account !", Toast.LENGTH_LONG).show()

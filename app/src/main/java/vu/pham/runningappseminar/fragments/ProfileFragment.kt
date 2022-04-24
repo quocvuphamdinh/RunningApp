@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -36,7 +37,7 @@ class ProfileFragment : Fragment() {
     private lateinit var mActivityResult:ActivityResultLauncher<Intent>
 
     private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository)
+        MainViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
     }
 
     private lateinit var userLocal:User
@@ -64,19 +65,35 @@ class ProfileFragment : Fragment() {
         }
 
         binding.cardViewLogout.setOnClickListener {
-            clickLogout()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                clickLogout()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.cardViewSyncData.setOnClickListener {
-            doSyncData()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                doSyncData()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.imageViewAvartarProfileFragment.setOnClickListener {
-            clickRequestImage()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                clickRequestImage()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.cardViewChangePassword.setOnClickListener {
-            goToChangePassword()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                goToChangePassword()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
 
         subscribeToObservers()
@@ -92,6 +109,9 @@ class ProfileFragment : Fragment() {
                 }
             }
         )
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+        }
     }
 
     private fun goToChangePassword() {
@@ -101,24 +121,23 @@ class ProfileFragment : Fragment() {
     }
 
     private fun uploadImageToServer(bitmap: Bitmap) {
-        val storageRef = viewModel.getFirebaseStorage().reference
+        val storageRef = viewModel.getFirebaseStorage()?.reference
         val nameHinh="image-"+userLocal.getId()
         val nameHinh2= "$nameHinh.png"
-        val mountainsRef = storageRef.child(nameHinh2)
+        val mountainsRef = storageRef?.child(nameHinh2)
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val data = baos.toByteArray()
-        val uploadTask = mountainsRef.putBytes(data)
-        uploadTask.addOnFailureListener {
+        val uploadTask = mountainsRef?.putBytes(data)
+        uploadTask?.addOnFailureListener {
             Toast.makeText(context, "Error uploaded avatar !", Toast.LENGTH_SHORT).show()
             Log.d("hivu", it.toString())
-        }.addOnSuccessListener { taskSnapshot ->
+        }?.addOnSuccessListener { taskSnapshot ->
             Toast.makeText(context, "Uploaded avatar successfully !", Toast.LENGTH_SHORT).show()
         }
-        mountainsRef.downloadUrl.addOnSuccessListener { uri ->
+        mountainsRef?.downloadUrl?.addOnSuccessListener { uri ->
             userLocal.setAvartar(uri.toString())
             viewModel.updateUser(userLocal)
-            viewModel.writePersonalDataToSharedPref(userLocal)
         }
     }
 
@@ -171,10 +190,12 @@ class ProfileFragment : Fragment() {
         binding.textViewHeight.text = "${userBind?.getHeight()} cm"
         binding.textViewWeight.text = "${userBind?.getWeight()} kg"
         binding.textViewDistanceGoalProfileFragment.text = "${userBind?.getdistanceGoal()} km"
-        if(userBind?.getAvartar()?.isNotEmpty() == true){
-            Picasso.get().load(userBind.getAvartar())
-                .placeholder(R.drawable.default_avartar)
-                .into(binding.imageViewAvartarProfileFragment)
+        if(CheckConnection.haveNetworkConnection(requireContext())){
+            if(userBind?.getAvartar()?.isNotEmpty() == true){
+                Picasso.get().load(userBind.getAvartar())
+                    .placeholder(R.drawable.default_avartar)
+                    .into(binding.imageViewAvartarProfileFragment)
+            }
         }
     }
 
@@ -222,6 +243,7 @@ class ProfileFragment : Fragment() {
         super.onResume()
         userLocal = viewModel.getUserFromSharedPref()!!
     }
+
     private fun goToHistoryRun() {
        findNavController().navigate(R.id.action_profileFragment_to_historyRunFragment)
     }

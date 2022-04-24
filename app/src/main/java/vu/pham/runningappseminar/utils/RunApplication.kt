@@ -12,6 +12,6 @@ class RunApplication : Application() {
     // rather than when the application starts
     val database by lazy { RunningDatabase.getInstance(this) }
     val sharedPreferences by lazy { getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE) }
-    val storage by lazy {Firebase.storage(Constants.URL_FIREBASE)}
-    val repository by lazy { MainRepository(database.getRunDAO(), RetrofitBuilder.API_SERVICE, sharedPreferences, storage) }
+    val storage by lazy {if(CheckConnection.haveNetworkConnection(this)) Firebase.storage(Constants.URL_FIREBASE) else null}
+    val repository by lazy { MainRepository(database.getRunDAO(), RetrofitBuilder.API_SERVICE , sharedPreferences, storage) }
 }

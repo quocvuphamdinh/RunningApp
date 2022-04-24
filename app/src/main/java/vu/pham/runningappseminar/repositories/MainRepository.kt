@@ -13,7 +13,7 @@ class MainRepository(
     private val runDAO: RunDAO,
     private val apiService: ApiService,
     private val sharedPref:SharedPreferences,
-    private val firebaseStorageService:FirebaseStorage
+    private val firebaseStorageService:FirebaseStorage?
 ) {
 
     //remote

@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -33,7 +33,7 @@ class AnalysisFragment : Fragment() {
     private var date = Date(System.currentTimeMillis())
 
     private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository)
+        MainViewModelFactory((activity?.application as RunApplication).repository ,activity?.application as RunApplication)
     }
 
     override fun onCreateView(
@@ -53,6 +53,8 @@ class AnalysisFragment : Fragment() {
 
         binding.imageViewSelectDate.setOnClickListener {
             showDialogSelectDate()
+        }
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
         }
     }
 

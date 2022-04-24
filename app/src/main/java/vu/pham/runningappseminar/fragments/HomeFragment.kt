@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +39,9 @@ class HomeFragment : Fragment() {
 
     private var user:User?=null
     private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository)
+        MainViewModelFactory((activity?.application as RunApplication).repository,
+            activity?.application as RunApplication
+        )
     }
 
     private var resultLauncher =registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -47,8 +51,7 @@ class HomeFragment : Fragment() {
             goalValue?.let {
                 val user = viewModel.getUserFromSharedPref()
                 user?.setdistanceGoal(it.toLong())
-                viewModel.writePersonalDataToSharedPref(user!!)
-                viewModel.updateUser(user)
+                viewModel.updateUser(user!!)
             }
         }
     }
@@ -65,17 +68,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initUserInfo()
+        subscribeToObservers()
+        observeError()
         getListToTraining()
         initRecentActivities()
-        initUserInfo()
-
         binding.imageViewSetMyGoal.setOnClickListener {
-            clickGoToSetMyGoal()
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                clickGoToSetMyGoal()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
         binding.textViewMoreTodayTraining.setOnClickListener {
-            goToListExercisePage("Running for today training", 1)
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                goToListExercisePage("Running for today training", 1)
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
         }
-        subscribeToObservers()
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+        }
     }
 
     private fun goToListExercisePage(titleName:String, typeExercise:Int){
@@ -119,6 +133,15 @@ class HomeFragment : Fragment() {
             initActivityList(it)
         })
     }
+
+    private fun observeError(){
+        viewModel.errEvent.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
     private fun subscribeToObservers(){
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -192,7 +215,11 @@ class HomeFragment : Fragment() {
     private fun initActivityList(list: List<vu.pham.runningappseminar.models.Activity>) {
         adapterTodayTraining = RecyclerViewActivityAdapter(R.layout.activity_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: vu.pham.runningappseminar.models.Activity) {
-                goToActivityDetailPage(activity.getId())
+                if(CheckConnection.haveNetworkConnection(requireContext())){
+                    goToActivityDetailPage(activity.getId())
+                }else{
+                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+                }
             }
         }, false, true, true)
         adapterTodayTraining.submitList(list)
