@@ -25,7 +25,7 @@ class DetailExerciseFragment : Fragment() {
     private lateinit var binding : FragmentDetailExerciseBinding
     private lateinit var workoutAdapter: RecyclerViewWorkoutAdapter
     private var id:Long?=null
-    private var durationExercise = LongArray(3)
+    private var workouts = ArrayList<Workout>()
     private val viewModel : DetailExerciseViewModel by viewModels{
         DetailExerciseViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -52,7 +52,7 @@ class DetailExerciseFragment : Fragment() {
         binding.imageStartDetailExcerciseActivity.setOnClickListener {
             if(CheckConnection.haveNetworkConnection(requireContext())){
                 val bundle = Bundle()
-                bundle.putLongArray(Constants.DURATION_EXERCISE, durationExercise)
+                bundle.putParcelableArrayList(Constants.DURATION_EXERCISE, workouts)
                 findNavController().navigate(R.id.action_detailExerciseFragment_to_exerciseRunFragment, bundle)
             }else{
                 Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
@@ -70,9 +70,7 @@ class DetailExerciseFragment : Fragment() {
             viewModel.activityDetail.observe(viewLifecycleOwner, Observer {
                 setUpRecyclerView(it.getWorkouts())
                 bindDataToView(it)
-                for (i in 0 until it.getWorkouts().size){
-                    durationExercise[i] = it.getWorkouts()[i].getDuration()
-                }
+                workouts = it.getWorkouts() as ArrayList<Workout>
             })
         }
     }

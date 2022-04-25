@@ -42,6 +42,8 @@
             android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
             app:destination="@id/forgotPasswordFragment" />
         <action
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
@@ -71,6 +73,7 @@
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
+
         android:id="@+id/homeFragment"
         android:name="vu.pham.runningappseminar.fragments.HomeFragment"
         android:label="HomeFragment" >
@@ -109,7 +112,7 @@
             android:id="@+id/action_profileFragment_to_historyRunFragment"
             app:destination="@id/historyRunFragment" />
         <action
-            app:popUpTo="@id/welcomeFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"
             android:id="@+id/action_profileFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment" />

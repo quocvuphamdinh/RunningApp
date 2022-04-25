@@ -116,7 +116,7 @@ class HomeFragment : Fragment() {
     }
     private fun bindDataToDistanceGoalView(user: User?){
         binding.textViewWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
-        binding.progressBar.max = user?.getdistanceGoal()?.toInt() ?: 0
+        binding.progressBar.max = ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0
         val nameUser = "Let's go "
         val text = user?.getFullname()
         val text2 = nameUser+text
@@ -146,7 +146,7 @@ class HomeFragment : Fragment() {
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.textViewNumberDistance.text = (it/ 1000f).toString()
-                binding.progressBar.progress = (it/ 1000f).toInt()
+                binding.progressBar.progress = (it/100)
             }
         })
 
@@ -191,6 +191,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun clickGoToSetMyGoal() {
+        Toast.makeText(requireContext(), binding.progressBar.max.toString(), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), binding.progressBar.progress.toString(), Toast.LENGTH_SHORT).show()
         val intent = Intent(context, SetMyGoalActivity::class.java)
         val bundle = Bundle()
         bundle.putLong(Constants.INIT_SET_MYGOAL, user?.getdistanceGoal()!!)

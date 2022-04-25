@@ -5,9 +5,11 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,6 +20,7 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentExerciseRunBinding
+import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
@@ -29,6 +32,7 @@ import kotlin.math.round
 class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var binding : FragmentExerciseRunBinding
+    private var isFinishFirstTime = false
     private val viewModel : ExerciseRunViewModel by viewModels{
         ExerciseRunViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -47,7 +51,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         requestGPS()
         subscribeToObservers()
-        getDurationExercise()
+        getDurationExerciseAndBindDataToView()
 
         binding.buttonStartExerciseRun.setOnClickListener {
             toggleRun()
@@ -67,14 +71,17 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun getDurationExercise() {
+    private fun getDurationExerciseAndBindDataToView() {
         val bundle = arguments
-        viewModel.durationExercise = bundle?.getLongArray(Constants.DURATION_EXERCISE)!!
+        viewModel.workours = bundle?.getParcelableArrayList<Workout>(Constants.DURATION_EXERCISE)!!
         var duration = 0L
-        for (i in 0 until viewModel.durationExercise.size){
-            duration +=viewModel.durationExercise[i]
+        for (i in 0 until viewModel.workours.size){
+            duration +=viewModel.workours[i].getDuration()
         }
+
         binding.textViewTimeLeftExerciseRun.text = "Time left - ${TrackingUtil.getFormattedTimer3(duration)}"
+        binding.progressBarExerciseRun.max = (duration.toInt()/100)
+        binding.textViewNumberExerciseRun.text = "1/${viewModel.workours.size}"
     }
 
     private fun showCancelRunningDialog(){
@@ -106,14 +113,12 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun stopRun() {
-        viewModel.currentTimeInMillies = 0L
-        viewModel.distanceInMeters = 0
-        viewModel.averageSpeed = 0F
-        viewModel.caloriesBurned = 0
+        viewModel.resetData()
         binding.textViewTimeCountExerciseRun.text = "00:00"
         binding.textViewDistanceExerciseRun.text = "0"
         binding.textViewAverageSpeedExerciseRun.text ="0.00"
         binding.textViewCaloriesBurnedExerciseRun.text = "0"
+        binding.progressBarExerciseRun.progress = 0
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
         findNavController().popBackStack()
     }
@@ -139,10 +144,31 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             viewModel.distanceInMeters = 0
         })
 
-        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
-            viewModel.currentTimeInMillies = it
-            val formattedTimer = TrackingUtil.getFormattedTimer3(viewModel.currentTimeInMillies, false)
-            binding.textViewTimeCountExerciseRun.text = formattedTimer
+        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {times->
+            if(viewModel.isTracking){
+                viewModel.currentTimeInMillies = times
+                val formattedTimer = TrackingUtil.getFormattedTimer3(viewModel.currentTimeInMillies, false)
+                binding.textViewTimeCountExerciseRun.text = formattedTimer
+                binding.progressBarExerciseRun.progress = (times.toInt()/100)
+            }
+
+            viewModel.index.observe(viewLifecycleOwner, Observer {
+                if(viewModel.isTracking){
+                    if(it <viewModel.workours.size){
+                        binding.textViewNameEachExercise.text = "${viewModel.workours[it].getName().toUpperCase()}"
+                        binding.textViewNumberExerciseRun.text = "${it+1}/${viewModel.workours.size}"
+                    }
+                    if(it< viewModel.workours.size && viewModel.currentTimeInMillies >= (viewModel.workours[it].getDuration()+viewModel.lastCurrentTime)){
+                        viewModel.lastCurrentTime += viewModel.workours[it].getDuration()
+                        viewModel.updateIndex()
+                    }
+                    if(it >= viewModel.workours.size && !isFinishFirstTime){
+                        isFinishFirstTime = true
+                        stopRun()
+                    }
+                }
+            })
+
             if(viewModel.currentTimeInMillies > 0L){
                 binding.buttonStopExerciseRun.visibility = View.VISIBLE
             }else{
