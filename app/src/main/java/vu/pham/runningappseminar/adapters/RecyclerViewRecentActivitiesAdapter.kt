@@ -55,21 +55,21 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecentActivitiesHolder, position: Int) {
         val userActivity = differ.currentList[position]
-        holder.txtNameActivity.text = userActivity.getActivity().getName()
+        //holder.txtNameActivity.text = userActivity.getActivity().getName()
         val calendar = Calendar.getInstance()
-        calendar.time = userActivity.getRun().getDayOfWeek()
+        //calendar.time = userActivity.getRun().getDayOfWeek()
         val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
-        holder.txtDate.text = "$dayOfWeek ${userActivity.getRun().getDayOfWeek().date}, " +
-                "${userActivity.getRun().getRunTime().hours}:${userActivity.getRun().getRunTime().minutes}"
-        holder.txtDistance.text = "${userActivity.getRun().getDistanceInKMH()} km"
+        //holder.txtDate.text = "$dayOfWeek ${userActivity.getRun().getDayOfWeek().date}, " +
+                //"${userActivity.getRun().getRunTime().hours}:${userActivity.getRun().getRunTime().minutes}"
+        //holder.txtDistance.text = "${userActivity.getRun().getDistanceInKMH()} km"
 
 //        val millies = userActivity.getRun().getTimeInMillies().time
-        val minutes = userActivity.getRun().getTimeInMillies().minutes//((millies / 1000) / 60)
-        val seconds = userActivity.getRun().getTimeInMillies().seconds//((millies / 1000) % 60)
-        holder.txtTimeInMillies.text = "$minutes:$seconds"
+        //val minutes = userActivity.getRun().getTimeInMillies().minutes//((millies / 1000) / 60)
+        //val seconds = userActivity.getRun().getTimeInMillies().seconds//((millies / 1000) % 60)
+        //holder.txtTimeInMillies.text = "$minutes:$seconds"
 
-        holder.txtAvgSpeed.text = "${userActivity.getRun().getAvgSpeed()} kph"
-        holder.txtCaloriesBurned.text = "${userActivity.getRun().getCaloriesBurned()} Kcal"
+        //holder.txtAvgSpeed.text = "${userActivity.getRun().getAvgSpeed()} kph"
+        //holder.txtCaloriesBurned.text = "${userActivity.getRun().getCaloriesBurned()} Kcal"
     }
 
     override fun getItemCount(): Int {

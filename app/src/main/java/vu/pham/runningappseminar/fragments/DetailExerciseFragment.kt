@@ -53,6 +53,7 @@ class DetailExerciseFragment : Fragment() {
             if(CheckConnection.haveNetworkConnection(requireContext())){
                 val bundle = Bundle()
                 bundle.putParcelableArrayList(Constants.DURATION_EXERCISE, workouts)
+                bundle.putLong(Constants.ID_EXERCISE, id!!)
                 findNavController().navigate(R.id.action_detailExerciseFragment_to_exerciseRunFragment, bundle)
             }else{
                 Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()

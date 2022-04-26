@@ -7,6 +7,7 @@ import vu.pham.runningappseminar.database.remote.ApiService
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.database.local.RunDAO
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.utils.Constants
 
 class MainRepository(
@@ -17,6 +18,8 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun insertUserExercise(userActivity: UserActivity) = apiService.insertUserExercise(userActivity)
+
     suspend fun resetPassword(user: User) = apiService.resetPassword(user)
 
     suspend fun checkEmailAccount(userName:String) = apiService.checkEmailAccount(userName)

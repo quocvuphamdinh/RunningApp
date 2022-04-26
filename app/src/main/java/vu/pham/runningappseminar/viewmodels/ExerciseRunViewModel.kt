@@ -3,6 +3,10 @@ package vu.pham.runningappseminar.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.services.Polyline
@@ -34,5 +38,16 @@ class ExerciseRunViewModel(private val mainRepository: MainRepository) : ViewMod
         caloriesBurned = 0
         lastCurrentTime = 0L
         _index.postValue(0)
+    }
+
+    fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
+
+    suspend fun insertUserExercise(userActivity: UserActivity) = mainRepository.insertUserExercise(userActivity)
+
+    fun insertRunLocal(run: Run) = viewModelScope.launch {
+        mainRepository.insertRun(run)
+    }
+    fun insertRunRemote(run: Run, userId:Long, userActivitesId:Long) = viewModelScope.launch {
+        mainRepository.insertRunRemote(run, userId, userActivitesId)
     }
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.utils.TrackingUtil
 
 
 class RecyclerViewActivityAdapter(
@@ -59,7 +60,11 @@ class RecyclerViewActivityAdapter(
     override fun onBindViewHolder(holder: ActivityHolder, position: Int) {
         val activity = differ.currentList[position]
         holder.txtNameItem.text = activity.getName()
-        holder.txtTimeSumItem.text = "${activity.getDurationOfWorkouts()} min"
+        var duration = 0L
+        for(i in 0 until activity.getWorkouts().size){
+            duration+= activity.getWorkouts()[i].getDuration()
+        }
+        holder.txtTimeSumItem.text = "${TrackingUtil.getFormattedTimer2(duration, 2)} min"
         if(isHaveImageBackground){
             if(isRunning){
                 holder.linearLayout.setBackgroundResource(R.drawable.activity_background)

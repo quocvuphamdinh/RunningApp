@@ -22,4 +22,10 @@
     <color name="endColor3">#D4AF37</color>
     <color name="red">#E50505</color>
     <color name="grey_80">#B3B1B1</color>
+    <color name="distance_color">#9CB3FF</color>
+    <color name="avg_speed_color">#9CFFC0</color>
+    <color name="calories_color">#FEB137</color>
+    <color name="duration_color">#F02FC2</color>
+    <color name="complete_color">#007AD8</color>
+    <color name="moving_time_color">#51FF15</color>
 </resources>

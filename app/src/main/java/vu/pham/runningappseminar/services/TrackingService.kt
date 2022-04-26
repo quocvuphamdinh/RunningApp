@@ -68,6 +68,11 @@ class TrackingService : LifecycleService() {
         var timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<Polylines>() // ds các đường Polyline
+
+        val timeLeft = MutableLiveData<Long>()
+        fun initTimeLeft(value:Long){
+            timeLeft.postValue(value)
+        }
     }
 
     //cập nhật timer value cho notification
@@ -118,6 +123,9 @@ class TrackingService : LifecycleService() {
                 if(timeRunInMillis.value!! >= lastSecondTimestamp + 1000L){
                     timeRunInSecond.postValue(timeRunInSecond.value!! +1)
                     lastSecondTimestamp += 1000L
+                    if(!isRunOnly){
+                        timeLeft.postValue(timeLeft.value!!- 1000L)
+                    }
                 }
                 delay(TIMER_UPDATE_INTERVAL) // sau 0.05(50L) giây thì update timer lên main thread
             }
@@ -159,6 +167,9 @@ class TrackingService : LifecycleService() {
     }
 
     private fun stopService(){
+        if(!isRunOnly){
+            timeLeft.postValue(0)
+        }
         stopService = true
         isFirstRun = true
         pauseService()

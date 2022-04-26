@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable-v23/bg_spinner.xml" value="0.2169230769230769" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable-v24/custom_line_exercise_run.xml" value="0.133" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/bg_spinner.xml" value="0.2169230769230769" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/circle_progress_run.xml" value="0.2169230769230769" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_background_exercise_run.xml" value="0.133" />
@@ -62,6 +63,7 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_list_exercise.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_login.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_result_exercise_run.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_run.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_set_my_goal.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_signup.xml" value="0.20416666666666666" />
