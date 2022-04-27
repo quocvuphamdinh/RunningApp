@@ -42,7 +42,7 @@ class ExerciseRunViewModel(private val mainRepository: MainRepository) : ViewMod
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
-    suspend fun insertUserExercise(userActivity: UserActivity) = mainRepository.insertUserExercise(userActivity)
+    suspend fun insertUserExercise(userActivity: UserActivity, userId: Long) = mainRepository.insertUserExercise(userActivity, userId)
 
     fun insertRunLocal(run: Run) = viewModelScope.launch {
         mainRepository.insertRun(run)

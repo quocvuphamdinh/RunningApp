@@ -24,6 +24,7 @@ import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapters.RecyclerViewRecentActivitiesAdapter
 import vu.pham.runningappseminar.databinding.FragmentHomeBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.models.UserActivityDetail
 import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
@@ -72,7 +73,7 @@ class HomeFragment : Fragment() {
         subscribeToObservers()
         observeError()
         getListToTraining()
-        initRecentActivities()
+        getListRecentExercise()
         binding.imageViewSetMyGoal.setOnClickListener {
             if(CheckConnection.haveNetworkConnection(requireContext())){
                 clickGoToSetMyGoal()
@@ -131,6 +132,13 @@ class HomeFragment : Fragment() {
         viewModel.getListActivityRun()
         viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
             initActivityList(it)
+        })
+    }
+
+    private fun getListRecentExercise(){
+        viewModel.getListUserExercise(user?.getId()!!)
+        viewModel.recentExercise.observe(viewLifecycleOwner, Observer {
+            initRecentActivities(it)
         })
     }
 
@@ -206,8 +214,9 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_detailExerciseFragment, bundle)
     }
 
-    private fun initRecentActivities() {
+    private fun initRecentActivities(list : List<UserActivityDetail>) {
         adapterRecentActivities = RecyclerViewRecentActivitiesAdapter()
+        adapterRecentActivities.submitList(list)
         binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities
         binding.recyclerViewRecentActiviesHomeFragment.setHasFixedSize(true)

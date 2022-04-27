@@ -18,7 +18,9 @@ class MainRepository(
 ) {
 
     //remote
-    suspend fun insertUserExercise(userActivity: UserActivity) = apiService.insertUserExercise(userActivity)
+    suspend fun getListUserExercise(userId: Long) = apiService.getListUserExercise(userId)
+
+    suspend fun insertUserExercise(userActivity: UserActivity, userId: Long) = apiService.insertUserExercise(userActivity, userId)
 
     suspend fun resetPassword(user: User) = apiService.resetPassword(user)
 

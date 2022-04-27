@@ -84,13 +84,15 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun saveDataExerciseRun(){
         user = viewModel.getUserFromSharedPref()
         val dateTimestamp = Calendar.getInstance().timeInMillis
+        for(polyline in viewModel.pathPoints){
+            viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+        }
         val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
             viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned)
         val userActivity = UserActivity(run, id!!, "", 0)
         lifecycleScope.launch {
             viewModel.insertRunLocal(run)
-            viewModel.insertRunRemote(run, user?.getId()!!, -1L)
-            val result = viewModel.insertUserExercise(userActivity)
+            val result = viewModel.insertUserExercise(userActivity, user?.getId()!!)
             Toast.makeText(requireContext(), "id: ${result.getId()}-activityId: ${result.getActivityId()}-Mood: ${result.getMood()}-Comment: ${result.getComment()}", Toast.LENGTH_LONG).show()
             stopRun()
         }

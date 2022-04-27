@@ -9,24 +9,28 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.models.UserActivity
+import vu.pham.runningappseminar.models.UserActivityDetail
+import vu.pham.runningappseminar.utils.TrackingUtil
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
 
-    val differCallBack = object : DiffUtil.ItemCallback<UserActivity>(){
-        override fun areItemsTheSame(oldItem: UserActivity, newItem: UserActivity): Boolean {
+    val differCallBack = object : DiffUtil.ItemCallback<UserActivityDetail>(){
+        override fun areItemsTheSame(oldItem: UserActivityDetail, newItem: UserActivityDetail): Boolean {
             return oldItem.getId() == newItem.getId()
         }
 
-        override fun areContentsTheSame(oldItem: UserActivity, newItem: UserActivity): Boolean {
+        override fun areContentsTheSame(oldItem: UserActivityDetail, newItem: UserActivityDetail): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
 
     val differ = AsyncListDiffer(this, differCallBack)
 
-    fun submitList(list:List<UserActivity>) = differ.submitList(list)
+    fun submitList(list:List<UserActivityDetail>) = differ.submitList(list)
 
 
     inner class RecentActivitiesHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
@@ -52,24 +56,23 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
         return RecentActivitiesHolder(view)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: RecentActivitiesHolder, position: Int) {
         val userActivity = differ.currentList[position]
-        //holder.txtNameActivity.text = userActivity.getActivity().getName()
+        holder.txtNameActivity.text = userActivity.getActivity()?.getName()
         val calendar = Calendar.getInstance()
-        //calendar.time = userActivity.getRun().getDayOfWeek()
+        calendar.time = Date(userActivity.getRun()?.timestamp!!)
         val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
-        //holder.txtDate.text = "$dayOfWeek ${userActivity.getRun().getDayOfWeek().date}, " +
-                //"${userActivity.getRun().getRunTime().hours}:${userActivity.getRun().getRunTime().minutes}"
-        //holder.txtDistance.text = "${userActivity.getRun().getDistanceInKMH()} km"
+        val date = Date(userActivity.getRun()!!.timestamp)
+        val format = SimpleDateFormat("HH:mm")
+        holder.txtDate.text = "$dayOfWeek ${Date(userActivity.getRun()!!.timestamp).date}, " +
+                format.format(date)
+        holder.txtDistance.text = "${(userActivity.getRun()!!.distanceInKilometers)/1000f} km"
 
-//        val millies = userActivity.getRun().getTimeInMillies().time
-        //val minutes = userActivity.getRun().getTimeInMillies().minutes//((millies / 1000) / 60)
-        //val seconds = userActivity.getRun().getTimeInMillies().seconds//((millies / 1000) % 60)
-        //holder.txtTimeInMillies.text = "$minutes:$seconds"
+        holder.txtTimeInMillies.text = TrackingUtil.getFormattedTimer3(userActivity.getRun()!!.timeInMillis)
 
-        //holder.txtAvgSpeed.text = "${userActivity.getRun().getAvgSpeed()} kph"
-        //holder.txtCaloriesBurned.text = "${userActivity.getRun().getCaloriesBurned()} Kcal"
+        holder.txtAvgSpeed.text = "${userActivity.getRun()!!.averageSpeedInKilometersPerHour} kph"
+        holder.txtCaloriesBurned.text = "${userActivity.getRun()!!.caloriesBurned} Kcal"
     }
 
     override fun getItemCount(): Int {

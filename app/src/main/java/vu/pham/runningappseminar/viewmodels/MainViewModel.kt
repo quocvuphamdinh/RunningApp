@@ -9,10 +9,45 @@ import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.database.local.Run
 import vu.pham.runningappseminar.models.Activity
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.models.UserActivityDetail
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.RunApplication
 
 class MainViewModel(private val mainRepository: MainRepository, private val app:RunApplication) : AndroidViewModel(app) {
+
+    private var _errEvent: MutableLiveData<String> = MutableLiveData<String>()
+    val errEvent: LiveData<String>
+        get() = _errEvent
+
+    private var _listActivityRun:MutableLiveData<List<Activity>> = MutableLiveData()
+    val listActivityRun : LiveData<List<Activity>>
+        get() = _listActivityRun
+
+    private var _listActivityWalk:MutableLiveData<List<Activity>> = MutableLiveData()
+    val listActivityWalk : LiveData<List<Activity>>
+        get() = _listActivityWalk
+
+    private var _userLiveData = MutableLiveData<User>()
+    val userLiveData : LiveData<User>
+        get() = _userLiveData
+
+    private var _recentExercise : MutableLiveData<List<UserActivityDetail>> = MutableLiveData()
+    val recentExercise : LiveData<List<UserActivityDetail>>
+        get() = _recentExercise
+
+    fun getListUserExercise(userId: Long) = viewModelScope.launch {
+        try{
+            if(hasInternetConnection()){
+                _recentExercise.postValue(mainRepository.getListUserExercise(userId))
+                _errEvent.postValue("")
+            }else{
+                _recentExercise.postValue(ArrayList())
+                _errEvent.postValue("Your device does not have internet !")
+            }
+        }catch (e : Exception){
+            _errEvent.postValue("An error has occurred, please check your internet !")
+        }
+    }
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<RunApplication>().getSystemService(
@@ -40,13 +75,6 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         return false
     }
 
-    private var _errEvent: MutableLiveData<String> = MutableLiveData<String>()
-    val errEvent: LiveData<String>
-        get() = _errEvent
-
-    private var _listActivityRun:MutableLiveData<List<Activity>> = MutableLiveData()
-    val listActivityRun : LiveData<List<Activity>>
-    get() = _listActivityRun
     fun getListActivityRun() = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
@@ -62,9 +90,6 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         }
     }
 
-    private var _listActivityWalk:MutableLiveData<List<Activity>> = MutableLiveData()
-    val listActivityWalk : LiveData<List<Activity>>
-        get() = _listActivityWalk
     fun getListActivityWalk() = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
@@ -122,9 +147,6 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
-    private var _userLiveData = MutableLiveData<User>()
-    val userLiveData : LiveData<User>
-    get() = _userLiveData
     fun getUserLiveData(username: String, password: String){
         viewModelScope.launch {
             try{
