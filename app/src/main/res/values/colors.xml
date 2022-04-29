@@ -28,4 +28,5 @@
     <color name="duration_color">#F02FC2</color>
     <color name="complete_color">#007AD8</color>
     <color name="moving_time_color">#51FF15</color>
+    <color name="black_transparent">#66000000</color>
 </resources>

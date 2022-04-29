@@ -34,4 +34,5 @@ object Constants {
     const val TYPE_EXERCISE = "TYPE_EXERCISE"
     const val DURATION_EXERCISE = "DURATION_EXERCISE"
     const val ID_EXERCISE = "ID_EXERCISE"
+    const val ID_USER_RECENT_EXERCISE = "ID_USER_RECENT_EXERCISE"
 }

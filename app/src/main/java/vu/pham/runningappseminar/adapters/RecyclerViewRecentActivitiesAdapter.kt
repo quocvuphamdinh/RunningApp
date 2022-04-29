@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -16,7 +17,7 @@ import java.util.*
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
-class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
+class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
 
     val differCallBack = object : DiffUtil.ItemCallback<UserActivityDetail>(){
         override fun areItemsTheSame(oldItem: UserActivityDetail, newItem: UserActivityDetail): Boolean {
@@ -40,6 +41,7 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
         var txtTimeInMillies:TextView
         var txtAvgSpeed:TextView
         var txtCaloriesBurned:TextView
+        var img:ImageView
 
         init {
             txtNameActivity = itemView.findViewById(R.id.textViewNameRecentActivitiesItem)
@@ -48,6 +50,7 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
             txtTimeInMillies = itemView.findViewById(R.id.textViewTimeInMillies)
             txtAvgSpeed = itemView.findViewById(R.id.textViewAvgSpeed)
             txtCaloriesBurned = itemView.findViewById(R.id.textViewCaloriesBurned)
+            img = itemView.findViewById(R.id.imageViewRecentActivityItem)
         }
     }
 
@@ -59,6 +62,11 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onBindViewHolder(holder: RecentActivitiesHolder, position: Int) {
         val userActivity = differ.currentList[position]
+        if(userActivity.getActivity()?.getType()==0) {
+            holder.img.setImageResource(R.drawable.walking_background)
+        }else{
+            holder.img.setImageResource(R.drawable.activity_background)
+        }
         holder.txtNameActivity.text = userActivity.getActivity()?.getName()
         val calendar = Calendar.getInstance()
         calendar.time = Date(userActivity.getRun()?.timestamp!!)
@@ -76,8 +84,11 @@ class RecyclerViewRecentActivitiesAdapter :RecyclerView.Adapter<RecyclerViewRece
     }
 
     override fun getItemCount(): Int {
-        if(differ.currentList.size > 2 ){
-            return 2
+        if(!isShowAll){
+            if(differ.currentList.size > 2 ){
+                return 2
+            }
+            return differ.currentList.size
         }
         return differ.currentList.size
     }

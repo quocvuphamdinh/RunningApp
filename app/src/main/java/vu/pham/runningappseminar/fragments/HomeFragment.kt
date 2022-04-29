@@ -88,9 +88,22 @@ class HomeFragment : Fragment() {
                 Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
             }
         }
+        binding.textViewMoreRecentTraining.setOnClickListener {
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                goToListRecentTraining()
+            }else{
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            }
+        }
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
         }
+    }
+
+    private fun goToListRecentTraining() {
+        val bundle = Bundle()
+        bundle.putLong(Constants.ID_USER_RECENT_EXERCISE, user?.getId()!!)
+        findNavController().navigate(R.id.action_homeFragment_to_listRecentExerciseFragment, bundle)
     }
 
     private fun goToListExercisePage(titleName:String, typeExercise:Int){
@@ -215,7 +228,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initRecentActivities(list : List<UserActivityDetail>) {
-        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter()
+        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(false)
         adapterRecentActivities.submitList(list)
         binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities

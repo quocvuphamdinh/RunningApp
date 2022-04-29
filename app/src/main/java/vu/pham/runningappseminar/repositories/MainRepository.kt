@@ -18,6 +18,8 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun calculateDataRecentActivity(userId: Long) = apiService.calculateDataRecentActivity(userId)
+
     suspend fun getListUserExercise(userId: Long) = apiService.getListUserExercise(userId)
 
     suspend fun insertUserExercise(userActivity: UserActivity, userId: Long) = apiService.insertUserExercise(userActivity, userId)

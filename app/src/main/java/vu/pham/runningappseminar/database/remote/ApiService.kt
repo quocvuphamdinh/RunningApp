@@ -50,4 +50,7 @@ interface ApiService {
 
     @GET("/user-activity/{userId}")
     suspend fun getListUserExercise(@Path("userId") userId:Long) : List<UserActivityDetail>
+
+    @GET("/user-activity/calculate-recent-activity/{userId}")
+    suspend fun calculateDataRecentActivity(@Path("userId") userId: Long) : HashMap<String, String>
 }
