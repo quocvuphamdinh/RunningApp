@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentProfileBinding
@@ -132,12 +133,12 @@ class ProfileFragment : Fragment() {
         uploadTask?.addOnFailureListener {
             Toast.makeText(context, "Error uploaded avatar !", Toast.LENGTH_SHORT).show()
             Log.d("hivu", it.toString())
-        }?.addOnSuccessListener { taskSnapshot ->
+        }?.addOnSuccessListener { _ ->
             Toast.makeText(context, "Uploaded avatar successfully !", Toast.LENGTH_SHORT).show()
-        }
-        mountainsRef?.downloadUrl?.addOnSuccessListener { uri ->
-            userLocal.setAvartar(uri.toString())
-            viewModel.updateUser(userLocal)
+            mountainsRef.downloadUrl.addOnSuccessListener { uri ->
+                userLocal.setAvartar(uri.toString())
+                viewModel.updateUser(userLocal)
+            }
         }
     }
 
@@ -165,8 +166,8 @@ class ProfileFragment : Fragment() {
     private fun doSyncData() {
         lifecycleScope.launch {
             val listRun = viewModel.getAllRunFromLocal()
-            for (run in listRun){
-                viewModel.insertRunRemote(run, userLocal.getId(), -1L)
+            for (runItem in listRun){
+                viewModel.insertRunRemote(runItem, userLocal.getId(), -1L)
             }
             Toast.makeText(context, "Sync successfully !", Toast.LENGTH_LONG).show()
         }
@@ -209,7 +210,7 @@ class ProfileFragment : Fragment() {
 
     private fun setUpInfoUserProfile() {
         userLocal = viewModel.getUserFromSharedPref()!!
-        if(context?.let { CheckConnection.haveNetworkConnection(it) } == true){
+        if(CheckConnection.haveNetworkConnection(requireContext())){
             setUpUserProfileFromServer()
         }else{
             bindUserDataToView(userLocal)

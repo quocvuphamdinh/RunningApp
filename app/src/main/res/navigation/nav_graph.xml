@@ -142,6 +142,9 @@
             app:popUpToInclusive="true"
             android:id="@+id/action_historyRunFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_historyRunFragment_to_runDetailFragment"
+            app:destination="@id/runDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailExerciseFragment"
@@ -214,4 +217,14 @@
         android:id="@+id/listRecentExerciseFragment"
         android:name="vu.pham.runningappseminar.fragments.ListRecentExerciseFragment"
         android:label="ListRecentExerciseFragment" />
+    <fragment
+        android:id="@+id/runDetailFragment"
+        android:name="vu.pham.runningappseminar.fragments.RunDetailFragment"
+        android:label="RunDetailFragment" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/runDetailFragment"
+            android:id="@+id/action_runDetailFragment_to_historyRunFragment"
+            app:destination="@id/historyRunFragment" />
+    </fragment>
 </navigation>

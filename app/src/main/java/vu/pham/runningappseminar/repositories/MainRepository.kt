@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import vu.pham.runningappseminar.database.remote.ApiService
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.database.local.RunDAO
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.models.UserActivity
@@ -49,6 +49,8 @@ class MainRepository(
     }
 
     //local
+    fun getRunById(id:String) = runDAO.getRunById(id)
+
     suspend fun deleteAllRun() = runDAO.deleteAllRun()
 
     suspend fun getAllRun() = runDAO.getAllRun()

@@ -3,6 +3,7 @@ package vu.pham.runningappseminar.fragments
 import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,30 +17,34 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.databinding.FragmentExerciseRunBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.Workout
+import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.ExerciseRunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ExerciseRunViewModelFactory
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.math.round
 
 class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
-
     private lateinit var binding : FragmentExerciseRunBinding
+    private var map : GoogleMap? = null
     private var isFinishFirstTime = false
     private var user: User? =null
     private var id:Long?=null
@@ -58,16 +63,23 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.mapViewExerciseRun.onCreate(savedInstanceState)
 
         requestGPS()
         subscribeToObservers()
         getDataExerciseAndBindDataToView()
+
+        binding.mapViewExerciseRun.getMapAsync {
+            map = it
+        }
 
         binding.buttonStartExerciseRun.setOnClickListener {
             sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
             toggleRun()
         }
         binding.buttonStopExerciseRun.setOnClickListener {
+            sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
+            zoomToSeeWholeTrack()
             saveDataExerciseRun()
         }
 
@@ -81,20 +93,114 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun saveDataExerciseRun(){
-        user = viewModel.getUserFromSharedPref()
-        val dateTimestamp = Calendar.getInstance().timeInMillis
-        for(polyline in viewModel.pathPoints){
-            viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+    override fun onResume() {
+        super.onResume()
+        binding.mapViewExerciseRun.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.mapViewExerciseRun.onStart()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapViewExerciseRun.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapViewExerciseRun.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapViewExerciseRun.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.mapViewExerciseRun.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.mapViewExerciseRun.onSaveInstanceState(outState)
+    }
+
+    private fun moveCameraToUser(){
+        if(viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().isNotEmpty()){
+            map?.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(viewModel.pathPoints.last().last(), Constants.MAP_ZOOM))
         }
-        val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
-            viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned)
-        val userActivity = UserActivity(run, id!!, "", 0)
-        lifecycleScope.launch {
-            viewModel.insertRunLocal(run)
-            val result = viewModel.insertUserExercise(userActivity, user?.getId()!!)
-            Toast.makeText(requireContext(), "id: ${result.getId()}-activityId: ${result.getActivityId()}-Mood: ${result.getMood()}-Comment: ${result.getComment()}", Toast.LENGTH_LONG).show()
-            stopRun()
+    }
+    // pathpoint gồm những đường(Polyline) được kết nối với nhau bằng những tọa độ(LatLng)
+    //function thêm các đường Polyline vào pathpoint
+    private fun addLatestPolyline(){
+        // nếu đường pathPoints ko rỗng và đường polyline ở trong pathpoints có ít nhất 2 item trở lên
+        if(viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().size > 1) {
+            val preLastLatLng =viewModel.pathPoints.last()[viewModel.pathPoints.last().size - 2]// lấy tọa độ kế cuối trong ds
+            val lastLatLng = viewModel.pathPoints.last().last()// lấy tọa độ cuối cùng
+            val polylineOption = PolylineOptions()
+                .color(Constants.POLYLINE_COLOR) // thêm màu cho đường polyline
+                .width(Constants.POLYLINE_WIDTH) // độ rộng cho đường polyline
+                .add(preLastLatLng)
+                .add(lastLatLng)//kết nối
+            map?.addPolyline(polylineOption)
+        }
+    }
+
+    private fun zoomToSeeWholeTrack(){
+        val bounds = LatLngBounds.Builder()
+        for (polyline in viewModel.pathPoints){
+            for (position in polyline){
+                bounds.include(position)
+            }
+        }
+
+        map?.moveCamera(CameraUpdateFactory.newLatLngBounds(
+            bounds.build(),
+            binding.mapViewExerciseRun.width,
+            binding.mapViewExerciseRun.height,
+            (binding.mapViewExerciseRun.height * 0.05f).toInt()
+        ))
+    }
+
+    private fun uploadImageRunToServer(bitmap: Bitmap, run:Run, userActivity: UserActivity) {
+        val storageRef = viewModel.getFirebaseStorage()?.reference
+        val nameHinh= "image-${run.id}"
+        val nameHinh2= "$nameHinh.png"
+        val mountainsRef = storageRef?.child(nameHinh2)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+        val uploadTask = mountainsRef?.putBytes(data)
+        uploadTask?.addOnFailureListener {
+            Toast.makeText(requireContext(), "Error uploaded image run !", Toast.LENGTH_SHORT).show()
+        }?.addOnSuccessListener { _ ->
+            mountainsRef.downloadUrl.addOnSuccessListener { uri ->
+                lifecycleScope.launch {
+                    run.img = uri.toString()
+                    viewModel.insertRunLocal(run)
+                    val result = viewModel.insertUserExercise(userActivity, user?.getId()!!)
+                    Toast.makeText(requireContext(), "id: ${result.getId()}-activityId: ${result.getActivityId()}-Mood: ${result.getMood()}-Comment: ${result.getComment()}", Toast.LENGTH_LONG).show()
+                    stopRun()
+                }
+            }
+        }
+    }
+
+    private fun saveDataExerciseRun(){
+        map?.snapshot { bitmap ->
+            user = viewModel.getUserFromSharedPref()
+            val dateTimestamp = Calendar.getInstance().timeInMillis
+            for(polyline in viewModel.pathPoints){
+                viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+            }
+            val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
+                viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned, "")
+            val userActivity = UserActivity(run, id!!, "", 0)
+            uploadImageRunToServer(bitmap!!, run, userActivity)
         }
     }
 
@@ -160,6 +266,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
             viewModel.pathPoints = it
+            addLatestPolyline()
+            moveCameraToUser()
             for(polyline in viewModel.pathPoints){
                 viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
             }
@@ -252,7 +360,6 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -275,5 +382,4 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
-
 }

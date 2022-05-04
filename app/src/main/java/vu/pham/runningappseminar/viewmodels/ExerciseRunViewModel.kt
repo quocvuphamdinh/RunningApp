@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.repositories.MainRepository
@@ -39,6 +39,8 @@ class ExerciseRunViewModel(private val mainRepository: MainRepository) : ViewMod
         lastCurrentTime = 0L
         _index.postValue(0)
     }
+
+    fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 

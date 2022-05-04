@@ -5,8 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import java.sql.Date
-import java.util.*
+import vu.pham.runningappseminar.models.Run
 
 
 @Dao
@@ -80,4 +79,7 @@ interface RunDAO {
 
     @Query("DELETE FROM running_table")
     suspend fun deleteAllRun()
+
+    @Query("SELECT * FROM running_table WHERE id = :id")
+    fun getRunById(id:String) : LiveData<Run>
 }

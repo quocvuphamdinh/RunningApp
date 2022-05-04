@@ -6,10 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import vu.pham.runningappseminar.database.local.Run
-import vu.pham.runningappseminar.models.Activity
-import vu.pham.runningappseminar.models.User
-import vu.pham.runningappseminar.models.UserActivityDetail
+import vu.pham.runningappseminar.models.*
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.RunApplication
 
@@ -110,7 +107,7 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         mainRepository.deleteAllRun()
     }
 
-    fun insertRunRemote(run: Run, userId:Long, userActivitesId:Long) = viewModelScope.launch {
+    fun insertRunRemote(run: Run ,userId:Long, userActivitesId:Long) = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
                 mainRepository.insertRunRemote(run, userId, userActivitesId)

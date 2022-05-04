@@ -1,4 +1,4 @@
-package vu.pham.runningappseminar.database.local
+package vu.pham.runningappseminar.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,6 +12,7 @@ class Run {
      var distanceInKilometers:Int=0
      var timeInMillis:Long=0L // chạy trong bao lâu
      var caloriesBurned:Int =0
+    var img: String? = null
 
     constructor(
         id:String,
@@ -20,6 +21,7 @@ class Run {
         distanceInKilometers: Int,
         timeInMillis: Long,
         caloriesBurned: Int,
+        img: String
     ) {
         this.id = id
         this.timestamp = timestamp
@@ -27,5 +29,6 @@ class Run {
         this.distanceInKilometers = distanceInKilometers
         this.timeInMillis = timeInMillis
         this.caloriesBurned = caloriesBurned
+        this.img = img
     }
 }

@@ -1,9 +1,8 @@
 package vu.pham.runningappseminar.models
-import vu.pham.runningappseminar.database.local.Run
 
 class UserActivityDetail() {
     private var id:Long=0L
-    private var run:Run?=null
+    private var run: Run?=null
     private var activity:Activity?=null
     private var comment:String=""
     private var mood:Int=0
@@ -21,7 +20,7 @@ class UserActivityDetail() {
     fun setId(id:Long){
         this.id = id
     }
-    fun getRun():Run?{
+    fun getRun(): Run?{
         return run
     }
     fun setRun(run: Run){

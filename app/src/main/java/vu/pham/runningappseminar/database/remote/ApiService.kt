@@ -2,11 +2,7 @@ package vu.pham.runningappseminar.database.remote
 
 import retrofit2.Call
 import retrofit2.http.*
-import vu.pham.runningappseminar.database.local.Run
-import vu.pham.runningappseminar.models.Activity
-import vu.pham.runningappseminar.models.User
-import vu.pham.runningappseminar.models.UserActivity
-import vu.pham.runningappseminar.models.UserActivityDetail
+import vu.pham.runningappseminar.models.*
 
 
 interface ApiService {

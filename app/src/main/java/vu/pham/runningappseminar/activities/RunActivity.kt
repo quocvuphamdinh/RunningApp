@@ -3,9 +3,11 @@ package vu.pham.runningappseminar.activities
 import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -19,7 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.databinding.ActivityRunBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.services.Polyline
@@ -35,6 +37,7 @@ import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.RunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunViewModelFactory
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.math.round
 
@@ -171,24 +174,45 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun saveRunToDatabase(){
-        var distanceInMeters = 0
-        for(polyline in pathPoints){
-            distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+        googleMap?.snapshot { bitmap ->
+            var distanceInMeters = 0
+            for(polyline in pathPoints){
+                distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
+            }
+            // distanceInMeters / 1000f : chia để lấy km
+            //currentTimeInMillies / 1000f : lấy second
+            // currentTimeInMillies / 1000f / 60 : lấy minute
+            // currentTimeInMillies / 1000f / 60 / 60 : lấy hour
+            // vận tốc bằng quãng đường chia cho chiều cao
+            val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
+            val dateTimestamp = Calendar.getInstance().timeInMillis
+            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+            val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",
+                dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned, "")
+            uploadImageRunToServer(bitmap!!, run)
         }
-        // distanceInMeters / 1000f : chia để lấy km
-        //currentTimeInMillies / 1000f : lấy second
-        // currentTimeInMillies / 1000f / 60 : lấy minute
-        // currentTimeInMillies / 1000f / 60 / 60 : lấy hour
-        // vận tốc bằng quãng đường chia cho chiều cao
-        val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
-        val dateTimestamp = Calendar.getInstance().timeInMillis
-        val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
-        val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned)
+    }
 
-        viewModel.insertRun(run)
-
-        Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
-        stopRun()
+    private fun uploadImageRunToServer(bitmap: Bitmap, run:Run) {
+        val storageRef = viewModel.getFirebaseStorage()?.reference
+        val nameHinh= "image-${run.id}"
+        val nameHinh2= "$nameHinh.png"
+        val mountainsRef = storageRef?.child(nameHinh2)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+        val uploadTask = mountainsRef?.putBytes(data)
+        uploadTask?.addOnFailureListener {
+            Toast.makeText(this@RunActivity, "Error uploaded image run !", Toast.LENGTH_SHORT).show()
+            Log.d("hivu", it.toString())
+        }?.addOnSuccessListener { _ ->
+            mountainsRef.downloadUrl.addOnSuccessListener { uri ->
+                run.img = uri.toString()
+                viewModel.insertRun(run)
+                Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
+                stopRun()
+            }
+        }
     }
 
     //function này để vẽ lại tất cả các đường(Polyline) khi người dùng thoát tạm thời app
@@ -298,8 +322,8 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun clickToClose() {
         binding.imageViewCloseRunningActivity.setOnClickListener {
-            sendCommandToService(ACTION_PAUSE_SERVICE)
             if(currentTimeInMillies > 0){
+                sendCommandToService(ACTION_PAUSE_SERVICE)
                 showCancelRunningDialog()
             }else{
                 finish()

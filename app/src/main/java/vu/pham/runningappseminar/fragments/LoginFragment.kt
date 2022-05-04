@@ -17,7 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activities.MainActivity
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.databinding.FragmentLoginBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.CheckConnection

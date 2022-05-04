@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import vu.pham.runningappseminar.adapters.RecyclerViewHistoryRunAdapter
 import vu.pham.runningappseminar.databinding.FragmentHistoryRunBinding
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.SortType
 import vu.pham.runningappseminar.viewmodels.HistoryRunViewModel
@@ -79,7 +80,11 @@ class HistoryRunFragment : Fragment() {
 
 
     private fun setUpRecyclerView() {
-        runAdapter = RecyclerViewHistoryRunAdapter()
+        runAdapter = RecyclerViewHistoryRunAdapter(object : RecyclerViewHistoryRunAdapter.ClickHistoryRun{
+            override fun clickRunItem(run: Run) {
+
+            }
+        })
         binding.recyclerViewHistoryRun.adapter = runAdapter
         binding.recyclerViewHistoryRun.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewHistoryRun.setHasFixedSize(true)

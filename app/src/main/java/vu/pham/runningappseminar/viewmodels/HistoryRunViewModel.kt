@@ -2,7 +2,7 @@ package vu.pham.runningappseminar.viewmodels
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import vu.pham.runningappseminar.database.local.Run
+import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.SortType
 

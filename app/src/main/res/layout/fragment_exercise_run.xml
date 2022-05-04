@@ -69,7 +69,7 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/line2"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_below="@id/line1"
             android:weightSum="15"
             android:orientation="horizontal"
@@ -170,42 +170,51 @@
 
         <LinearLayout
             android:id="@+id/line3"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:layout_below="@id/line2"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="140dp">
+            android:layout_height="110dp"
+            android:layout_below="@id/line2"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageButton
-                android:src="@drawable/ic_play"
                 android:id="@+id/buttonStartExerciseRun"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_gravity="center"
                 android:background="@drawable/custom_button_circle_2"
                 android:elevation="10dp"
+                android:src="@drawable/ic_play"
                 android:text="Start"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 app:backgroundTint="@null"
-                app:elevation="10dp"/>
+                app:elevation="10dp" />
+
             <ImageButton
-                android:layout_marginStart="30dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_stop"
                 android:id="@+id/buttonStopExerciseRun"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_gravity="center"
+                android:layout_marginStart="30dp"
                 android:background="@drawable/custom_button_circle_2"
                 android:elevation="10dp"
+                android:src="@drawable/ic_stop"
                 android:text="Start"
                 android:textSize="10sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:backgroundTint="@null"
-                app:elevation="10dp"/>
+                app:elevation="10dp" />
         </LinearLayout>
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapViewExerciseRun"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layoutPlayMusic"
+            android:layout_below="@id/line3">
+
+        </com.google.android.gms.maps.MapView>
         <LinearLayout
             android:layout_above="@id/layoutPlayMusic"
             android:background="@android:color/darker_gray"
@@ -231,7 +240,7 @@
                 android:id="@+id/textViewPlayMusic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingVertical="20dp"
+                android:paddingVertical="9dp"
                 android:text="Play music"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
