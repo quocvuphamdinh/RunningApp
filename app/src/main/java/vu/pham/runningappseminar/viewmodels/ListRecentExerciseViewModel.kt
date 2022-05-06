@@ -40,13 +40,11 @@ class ListRecentExerciseViewModel(private val mainRepository: MainRepository, pr
         try{
             if(hasInternetConnection()){
                 _recentExercises.postValue(mainRepository.getListUserExercise(userId))
-                _errEvent.postValue("")
             }else{
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _recentExercises.postValue(ArrayList())
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
     fun calculateDataRecentExercise(userId: Long) = viewModelScope.launch{

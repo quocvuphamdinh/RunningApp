@@ -67,7 +67,7 @@ class SignUpFragment : Fragment() {
             if(CheckConnection.haveNetworkConnection(requireContext())){
                 signUpAccount()
             }else{
-                Toast.makeText(context, "your device does not have internet !", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -106,7 +106,7 @@ class SignUpFragment : Fragment() {
                     getUser(user)
                 }
             }catch (e:Exception){
-                Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "An error has occurred, something happens in server !", Toast.LENGTH_LONG).show()
                 loadingDialog.dismissDialog()
             }
         }
@@ -145,7 +145,7 @@ class SignUpFragment : Fragment() {
                             viewModel.insertUser(user)
                             checkUser(user)
                         }catch (e:Exception){
-                            Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "An error has occurred, something happens in server !", Toast.LENGTH_LONG).show()
                             loadingDialog.dismissDialog()
                         }
                     }

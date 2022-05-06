@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import vu.pham.runningappseminar.adapters.RecyclerViewHistoryRunAdapter
 import vu.pham.runningappseminar.databinding.FragmentHistoryRunBinding
 import vu.pham.runningappseminar.models.Run
+import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.SortType
 import vu.pham.runningappseminar.viewmodels.HistoryRunViewModel
@@ -82,7 +83,9 @@ class HistoryRunFragment : Fragment() {
     private fun setUpRecyclerView() {
         runAdapter = RecyclerViewHistoryRunAdapter(object : RecyclerViewHistoryRunAdapter.ClickHistoryRun{
             override fun clickRunItem(run: Run) {
-
+                val bundle = Bundle()
+                bundle.putString(Constants.ID_RUN_DETAIL, run.id)
+                findNavController().navigate(R.id.action_historyRunFragment_to_runDetailFragment, bundle)
             }
         })
         binding.recyclerViewHistoryRun.adapter = runAdapter

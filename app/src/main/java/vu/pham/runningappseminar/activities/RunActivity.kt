@@ -26,6 +26,7 @@ import vu.pham.runningappseminar.databinding.ActivityRunBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_START_OR_RESUME_SERVICE
@@ -189,7 +190,13 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
             val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",
                 dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned, "")
-            uploadImageRunToServer(bitmap!!, run)
+            if(!CheckConnection.haveNetworkConnection(this@RunActivity)){
+                viewModel.insertRun(run)
+                Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
+                stopRun()
+            }else{
+                uploadImageRunToServer(bitmap!!, run)
+            }
         }
     }
 

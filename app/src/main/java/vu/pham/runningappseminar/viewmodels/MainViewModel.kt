@@ -36,13 +36,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         try{
             if(hasInternetConnection()){
                 _recentExercise.postValue(mainRepository.getListUserExercise(userId))
-                _errEvent.postValue("")
             }else{
-                _recentExercise.postValue(ArrayList())
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
@@ -77,13 +75,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
             if(hasInternetConnection()){
                 val result = mainRepository.getListActivityByType(1)
                 _listActivityRun.postValue(result)
-                _errEvent.postValue("")
             }else{
-                _listActivityRun.postValue(ArrayList())
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
@@ -91,13 +87,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         try{
             if(hasInternetConnection()){
                 _listActivityWalk.postValue(mainRepository.getListActivityByType(0))
-                _errEvent.postValue("")
             }else{
-                _listActivityRun.postValue(ArrayList())
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
@@ -111,12 +105,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         try{
             if(hasInternetConnection()){
                 mainRepository.insertRunRemote(run, userId, userActivitesId)
-                _errEvent.postValue("")
             }else{
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
@@ -125,12 +118,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
             if(hasInternetConnection()){
                 mainRepository.updateUser(user)
                 writePersonalDataToSharedPref(user)
-                _errEvent.postValue("")
             }else{
                 _errEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, please check your internet !")
+            _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
@@ -149,13 +141,11 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
             try{
                 if(hasInternetConnection()){
                     _userLiveData.postValue(mainRepository.getUserLiveData(username, password))
-                    _errEvent.postValue("")
                 }else{
-                    _listActivityRun.postValue(ArrayList())
-                    _errEvent.postValue("Your device does not have internet !")
+                    _userLiveData.postValue(getUserFromSharedPref()!!)
                 }
             }catch (e : Exception){
-                _errEvent.postValue("An error has occurred, please check your internet !")
+                _userLiveData.postValue(getUserFromSharedPref()!!)
             }
         }
     }

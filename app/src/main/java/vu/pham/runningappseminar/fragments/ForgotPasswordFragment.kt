@@ -76,7 +76,7 @@ class ForgotPasswordFragment : Fragment() {
                         Toast.makeText(context, "Account invalid", Toast.LENGTH_SHORT).show()
                     }
                 }catch (e:Exception){
-                    Toast.makeText(requireContext(), "An error has occurred, please check your internet !", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "An error has occurred, something happens in server !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()
                 }
             }

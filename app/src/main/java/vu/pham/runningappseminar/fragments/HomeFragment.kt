@@ -22,7 +22,6 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.activities.SetMyGoalActivity
 import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
 import vu.pham.runningappseminar.adapters.RecyclerViewRecentActivitiesAdapter
-import vu.pham.runningappseminar.databinding.FragmentHomeBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.models.UserActivityDetail
 import vu.pham.runningappseminar.utils.CheckConnection
@@ -31,6 +30,7 @@ import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.MainViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
@@ -52,6 +52,12 @@ class HomeFragment : Fragment() {
             goalValue?.let {
                 val user = viewModel.getUserFromSharedPref()
                 user?.setdistanceGoal(it.toLong())
+                if(binding.progressBar.progress >= ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0){
+                    binding.textViewCongratulation.visibility = View.VISIBLE
+                    binding.textViewCongratulation.text = "Congratulation you passed your distance goal !!"
+                }else{
+                    binding.textViewCongratulation.visibility = View.GONE
+                }
                 viewModel.updateUser(user!!)
             }
         }
@@ -168,6 +174,12 @@ class HomeFragment : Fragment() {
             it?.let {
                 binding.textViewNumberDistance.text = (it/ 1000f).toString()
                 binding.progressBar.progress = (it/100)
+                if(it/100 >= ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0){
+                    binding.textViewCongratulation.visibility = View.VISIBLE
+                    binding.textViewCongratulation.text = "Congratulation you passed your distance goal !!"
+                }else{
+                    binding.textViewCongratulation.visibility = View.GONE
+                }
             }
         })
 
@@ -212,8 +224,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun clickGoToSetMyGoal() {
-        Toast.makeText(requireContext(), binding.progressBar.max.toString(), Toast.LENGTH_SHORT).show()
-        Toast.makeText(requireContext(), binding.progressBar.progress.toString(), Toast.LENGTH_SHORT).show()
         val intent = Intent(context, SetMyGoalActivity::class.java)
         val bundle = Bundle()
         bundle.putLong(Constants.INIT_SET_MYGOAL, user?.getdistanceGoal()!!)
