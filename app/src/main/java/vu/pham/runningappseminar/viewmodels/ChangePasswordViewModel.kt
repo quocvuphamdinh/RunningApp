@@ -14,6 +14,9 @@ class ChangePasswordViewModel(private val mainRepository: MainRepository) : View
     val errEvent: LiveData<String>
         get() = _errEvent
 
+    private var _successChangePassword : MutableLiveData<Boolean> = MutableLiveData()
+    val successChangePassword : LiveData<Boolean>
+    get() = _successChangePassword
     private fun writePersonalDataToSharedPref(user: User){
         mainRepository.writePersonalDataToSharedPref(user)
     }
@@ -29,8 +32,10 @@ class ChangePasswordViewModel(private val mainRepository: MainRepository) : View
         try {
             mainRepository.updateUser(user)
             writePersonalDataToSharedPref(user)
+            _successChangePassword.postValue(true)
         }catch (e:Exception){
             _errEvent.postValue("An error has occurred, something happens in server !")
+            _successChangePassword.postValue(false)
         }
     }
 

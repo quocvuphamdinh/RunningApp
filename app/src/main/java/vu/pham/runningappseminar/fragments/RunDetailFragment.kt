@@ -58,14 +58,8 @@ class RunDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun bindDataToView(run:Run){
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val calendar2 = Calendar.getInstance()
-        calendar2.timeInMillis = run.timestamp
-        binding.textViewTitleRunDetail.text = "Run - ${dateFormat.format(calendar2.time)}"
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = run.timestamp - run.timeInMillis
-        val dateFormat2 = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
-        binding.textViewMovingTimeRunDetail.text = "${dateFormat2.format(calendar.time)} hrs"
+        binding.textViewTitleRunDetail.text = "Run - ${TrackingUtil.getFormattedDate(run.timestamp)}"
+        binding.textViewMovingTimeRunDetail.text = "${TrackingUtil.getFormattedHour(run.timestamp - run.timeInMillis)} hrs"
         binding.textViewDistanceRunDetail.text = "${run.distanceInKilometers / 1000f} km"
         binding.textViewCaloriesBurnedRunDetail.text = "${run.caloriesBurned} Kcal"
         binding.textViewAverageSpeedRunDetail.text = "${run.averageSpeedInKilometersPerHour} km/h"

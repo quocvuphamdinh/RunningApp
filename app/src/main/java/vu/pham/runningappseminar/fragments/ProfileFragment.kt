@@ -19,26 +19,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentProfileBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.*
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.ProfileViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ProfileViewModelFactory
 import java.io.ByteArrayOutputStream
 import kotlin.math.round
 
 class ProfileFragment : Fragment() {
     private lateinit var binding:FragmentProfileBinding
     private lateinit var mActivityResult:ActivityResultLauncher<Intent>
+    private lateinit var loadingDialog: LoadingDialog
 
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
+    private val viewModel : ProfileViewModel by viewModels{
+        ProfileViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
     }
 
     private lateinit var userLocal:User
@@ -55,6 +53,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingDialog = LoadingDialog(requireActivity())
         setUpInfoUserProfile()
 
         binding.imageViewEditProfile.setOnClickListener {
@@ -164,25 +163,12 @@ class ProfileFragment : Fragment() {
     }
 
     private fun doSyncData() {
-        lifecycleScope.launch {
-            val listRun = viewModel.getAllRunFromLocal()
-            for (runItem in listRun){
-                viewModel.insertRunRemote(runItem, userLocal.getId(), -1L)
-            }
-            Toast.makeText(context, "Sync successfully !", Toast.LENGTH_LONG).show()
-        }
+        viewModel.syncData(userLocal.getId())
     }
 
     private fun clickLogout() {
-        lifecycleScope.launch {
-            val listRun = viewModel.getAllRunFromLocal()
-            for (run in listRun){
-                viewModel.insertRunRemote(run, userLocal.getId(), -1L)
-            }
-            viewModel.deleteAllRun()
-            viewModel.removePersonalDataFromSharedPref()
-            findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
-        }
+        loadingDialog.startLoadingDialog()
+        viewModel.logOut(userLocal.getId())
     }
 
     private fun bindUserDataToView(userBind: User?){
@@ -218,6 +204,19 @@ class ProfileFragment : Fragment() {
     }
 
     private fun subscribeToObservers() {
+        viewModel.toastEvent.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        viewModel.success.observe(viewLifecycleOwner, Observer {
+            if(it){
+                loadingDialog.dismissDialog()
+                findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+            }
+        })
+
         viewModel.totalDistance.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.textViewTotalDistanceProfile.text = (it/1000f).toString()

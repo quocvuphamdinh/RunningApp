@@ -4,25 +4,22 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import vu.pham.runningappseminar.models.*
+import vu.pham.runningappseminar.models.Activity
+import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.models.UserActivityDetail
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.RunApplication
 
-class MainViewModel(private val mainRepository: MainRepository, private val app:RunApplication) : AndroidViewModel(app) {
+class HomePageViewModel(private val mainRepository: MainRepository, private val app : RunApplication) : AndroidViewModel(app) {
 
-    private var _errEvent: MutableLiveData<String> = MutableLiveData<String>()
-    val errEvent: LiveData<String>
-        get() = _errEvent
-
-    private var _listActivityRun:MutableLiveData<List<Activity>> = MutableLiveData()
-    val listActivityRun : LiveData<List<Activity>>
-        get() = _listActivityRun
-
-    private var _listActivityWalk:MutableLiveData<List<Activity>> = MutableLiveData()
-    val listActivityWalk : LiveData<List<Activity>>
-        get() = _listActivityWalk
+    private var _toastEvent: MutableLiveData<String> = MutableLiveData<String>()
+    val toastEvent: LiveData<String>
+        get() = _toastEvent
 
     private var _userLiveData = MutableLiveData<User>()
     val userLiveData : LiveData<User>
@@ -32,17 +29,9 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
     val recentExercise : LiveData<List<UserActivityDetail>>
         get() = _recentExercise
 
-    fun getListUserExercise(userId: Long) = viewModelScope.launch {
-        try{
-            if(hasInternetConnection()){
-                _recentExercise.postValue(mainRepository.getListUserExercise(userId))
-            }else{
-                _errEvent.postValue("Your device does not have internet !")
-            }
-        }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, something happens in server !")
-        }
-    }
+    private var _listActivityRun:MutableLiveData<List<Activity>> = MutableLiveData()
+    val listActivityRun : LiveData<List<Activity>>
+        get() = _listActivityRun
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<RunApplication>().getSystemService(
@@ -76,62 +65,23 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
                 val result = mainRepository.getListActivityByType(1)
                 _listActivityRun.postValue(result)
             }else{
-                _errEvent.postValue("Your device does not have internet !")
+                _toastEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, something happens in server !")
+            _toastEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
-    fun getListActivityWalk() = viewModelScope.launch {
+    fun getListUserExercise(userId: Long) = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
-                _listActivityWalk.postValue(mainRepository.getListActivityByType(0))
+                _recentExercise.postValue(mainRepository.getListUserExercise(userId))
             }else{
-                _errEvent.postValue("Your device does not have internet !")
+                _toastEvent.postValue("Your device does not have internet !")
             }
         }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, something happens in server !")
+            _toastEvent.postValue("An error has occurred, something happens in server !")
         }
-    }
-
-    fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
-
-    fun deleteAllRun() = viewModelScope.launch {
-        mainRepository.deleteAllRun()
-    }
-
-    fun insertRunRemote(run: Run ,userId:Long, userActivitesId:Long) = viewModelScope.launch {
-        try{
-            if(hasInternetConnection()){
-                mainRepository.insertRunRemote(run, userId, userActivitesId)
-            }else{
-                _errEvent.postValue("Your device does not have internet !")
-            }
-        }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, something happens in server !")
-        }
-    }
-
-    fun updateUser(user: User) = viewModelScope.launch {
-        try{
-            if(hasInternetConnection()){
-                mainRepository.updateUser(user)
-                writePersonalDataToSharedPref(user)
-            }else{
-                _errEvent.postValue("Your device does not have internet !")
-            }
-        }catch (e : Exception){
-            _errEvent.postValue("An error has occurred, something happens in server !")
-        }
-    }
-
-    private fun writePersonalDataToSharedPref(user: User){
-        mainRepository.writePersonalDataToSharedPref(user)
-    }
-
-    fun removePersonalDataFromSharedPref(){
-        mainRepository.removePersonalDataFromSharedPref()
     }
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
@@ -150,9 +100,22 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
         }
     }
 
-    suspend fun getAllRunFromLocal() = mainRepository.getAllRun()
+    private fun writePersonalDataToSharedPref(user: User){
+        mainRepository.writePersonalDataToSharedPref(user)
+    }
 
-    fun getListDistanceInSpecificDate(date:String) = mainRepository.getListDistanceInSpecificDate(date)
+    fun updateUser(user: User) = viewModelScope.launch {
+        try{
+            if(hasInternetConnection()){
+                mainRepository.updateUser(user)
+                writePersonalDataToSharedPref(user)
+            }else{
+                _toastEvent.postValue("Your device does not have internet !")
+            }
+        }catch (e : Exception){
+            _toastEvent.postValue("An error has occurred, something happens in server !")
+        }
+    }
 
     val totalDistanceWeekly = mainRepository.getTotalDitanceWeekly()
 
@@ -171,12 +134,4 @@ class MainViewModel(private val mainRepository: MainRepository, private val app:
     val maxCaloriesBurned = mainRepository.getMaxCaloriesBurned()
 
     val maxAvgSpeed = mainRepository.getMaxAvgSpeedInKMH()
-
-    val totalDistance = mainRepository.getTotalDistance()
-
-    val totalTimeInMillies = mainRepository.getTotalTimeInMillies()
-
-    val totalCaloriesBurned = mainRepository.getTotalCaloriesBurned()
-
-    val totalAvgSpeed = mainRepository.getTotalAvgSpeedInKMH()
 }

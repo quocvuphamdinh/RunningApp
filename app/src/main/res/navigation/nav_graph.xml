@@ -86,6 +86,9 @@
         <action
             android:id="@+id/action_homeFragment_to_listRecentExerciseFragment"
             app:destination="@id/listRecentExerciseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_resultExerciseRunFragment"
+            app:destination="@id/resultExerciseRunFragment" />
     </fragment>
     <fragment
         android:id="@+id/activityFragment"
@@ -216,7 +219,11 @@
     <fragment
         android:id="@+id/listRecentExerciseFragment"
         android:name="vu.pham.runningappseminar.fragments.ListRecentExerciseFragment"
-        android:label="ListRecentExerciseFragment" />
+        android:label="ListRecentExerciseFragment" >
+        <action
+            android:id="@+id/action_listRecentExerciseFragment_to_resultExerciseRunFragment"
+            app:destination="@id/resultExerciseRunFragment" />
+    </fragment>
     <fragment
         android:id="@+id/runDetailFragment"
         android:name="vu.pham.runningappseminar.fragments.RunDetailFragment"

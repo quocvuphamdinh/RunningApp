@@ -1,15 +1,34 @@
 package vu.pham.runningappseminar.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.squareup.picasso.Picasso
+import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentResultExerciseRunBinding
+import vu.pham.runningappseminar.models.UserActivity
+import vu.pham.runningappseminar.models.UserActivityDetail
+import vu.pham.runningappseminar.utils.Constants
+import vu.pham.runningappseminar.utils.LoadingDialog
+import vu.pham.runningappseminar.utils.RunApplication
+import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.viewmodels.ResultExerciseRunViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ResultExerciseRunViewModelFactory
 
 class ResultExerciseRunFragment : Fragment() {
     private lateinit var binding : FragmentResultExerciseRunBinding
+    private lateinit var loadingDialog: LoadingDialog
+    private var userActivity: UserActivity = UserActivity()
+    private val viewModel : ResultExerciseRunViewModel by viewModels {
+        ResultExerciseRunViewModelFactory((activity?.application as RunApplication).repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,8 +42,116 @@ class ResultExerciseRunFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingDialog = LoadingDialog(requireActivity())
         binding.imageCloseResultExerciseRunFragment.setOnClickListener {
-            findNavController().popBackStack()
+           findNavController().popBackStack()
         }
+        binding.cardViewSave.setOnClickListener {
+            loadingDialog.startLoadingDialog()
+            userActivity.setComment(binding.editTextAddNote.text.toString().trim())
+            viewModel.updateResultRunExercise(userActivity, viewModel.getUserLocal()!!.getId())
+        }
+        binding.cardViewDelete.setOnClickListener {
+
+        }
+        binding.imageButtonEasy.setOnClickListener {
+            viewModel.setUserFeel(1)
+        }
+        binding.imageButtonPerfect.setOnClickListener {
+            viewModel.setUserFeel(2)
+        }
+        binding.imageButtonExhausted.setOnClickListener {
+            viewModel.setUserFeel(3)
+        }
+        subcribeToObservers()
+        getUserActivityData()
+    }
+
+    private fun getUserActivityData() {
+        val bundle = arguments
+        bundle?.let {
+            val id = it.getLong(Constants.ID_RECENT_EXERCISE)
+            viewModel.getUserActivityDetail(id)
+        }
+    }
+
+    private fun subcribeToObservers() {
+        viewModel.userActivityDetail.observe(viewLifecycleOwner, Observer {
+            bindDataToView(it)
+            userActivity.setId(it.getId())
+            userActivity.setRun(it.getRun()!!)
+            userActivity.setActivityId(it.getActivity()!!.getId())
+            userActivity.setMood(it.getMood())
+        })
+
+        viewModel.toast.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        viewModel.success.observe(viewLifecycleOwner, Observer {
+            if(it){
+                loadingDialog.dismissDialog()
+                findNavController().popBackStack()
+            }else{
+                loadingDialog.dismissDialog()
+            }
+        })
+
+        viewModel.userFeel.observe(viewLifecycleOwner, Observer {
+            userActivity.setMood(it)
+            setUpUserFeelToView(it)
+        })
+    }
+
+    private fun setUpUserFeelToView(feel : Int){
+        when(feel){
+            1 -> {
+                binding.layoutEasy.setBackgroundColor(resources.getColor(R.color.grey_80))
+                binding.layoutPerfect.setBackgroundColor(resources.getColor(R.color.white))
+                binding.layoutExhausted.setBackgroundColor(resources.getColor(R.color.white))
+            }
+            2 -> {
+                binding.layoutEasy.setBackgroundColor(resources.getColor(R.color.white))
+                binding.layoutPerfect.setBackgroundColor(resources.getColor(R.color.grey_80))
+                binding.layoutExhausted.setBackgroundColor(resources.getColor(R.color.white))
+            }
+            3 -> {
+                binding.layoutEasy.setBackgroundColor(resources.getColor(R.color.white))
+                binding.layoutPerfect.setBackgroundColor(resources.getColor(R.color.white))
+                binding.layoutExhausted.setBackgroundColor(resources.getColor(R.color.grey_80))
+            }
+        }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun bindDataToView(userActivityDetail: UserActivityDetail){
+        userActivityDetail.getRun()?.let { run ->
+            binding.textViewMovingTimeResultExerRun.text = "${TrackingUtil.getFormattedHour(run.timestamp - run.timeInMillis)} hrs"
+            binding.textViewDistanceResultExerRun.text = "${run.distanceInKilometers / 1000f} km"
+            binding.textViewCaloriesBurnedResultExerRun.text = "${run.caloriesBurned} Kcal"
+            binding.textViewAverageSpeedResultExerRun.text = "${run.averageSpeedInKilometersPerHour} km/h"
+            binding.textViewDurationResultExerRun.text = "${TrackingUtil.getFormattedTimer3(run.timeInMillis)} mins"
+
+            if(run.img!!.isNotEmpty()){
+                Picasso.get().load(run.img)
+                    .error(R.drawable.ic_error_gif)
+                    .placeholder(R.drawable.ic_loading_gif)
+                    .into(binding.imageViewResultExerRun)
+            }else{
+                binding.imageViewResultExerRun.setImageResource(R.drawable.runner2)
+            }
+            userActivityDetail.getActivity()?.let { activity ->
+                binding.textViewTitleResultExerciseRunFragment.text = "${activity.getName()} - " +
+                        "${activity.getDurationOfWorkouts()} mins - ${if(activity.getType()==0) "Walking Exercise" else "Running Exercise"}"
+                if(run.timeInMillis>= activity.getDurationOfWorkouts() * 60000L){
+                    binding.imageViewIsCompletedResultExerRun.setImageResource(R.drawable.ic_completed)
+                }else{
+                    binding.imageViewIsCompletedResultExerRun.setImageResource(R.drawable.ic_not_completed)
+                }
+            }
+        }
+        binding.editTextAddNote.setText(userActivityDetail.getComment())
+        setUpUserFeelToView(userActivityDetail.getMood())
     }
 }

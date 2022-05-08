@@ -36,7 +36,7 @@
                     <TextView
                         android:id="@+id/textViewTitleResultExerciseRunFragment"
                         android:gravity="center_vertical"
-                        android:paddingStart="90dp"
+                        android:paddingStart="10dp"
                         android:layout_weight="9"
                         android:fontFamily="@font/oswald"
                         android:textStyle="bold"
@@ -49,284 +49,352 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_moving_time_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="6"
-                android:textSize="18sp"
-                android:text="Start Time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/textViewMovingTimeResultExerRun"
-                android:textColor="@color/distance_color"
-                android:fontFamily="@font/secular_one_regular"
-                android:textStyle=""
-                android:textSize="18sp"
-                android:gravity="end"
-                android:layout_weight="3"
-                android:text="00:00:00 hrs"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_distance_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="7"
-                android:textSize="18sp"
-                android:text="Distance"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/textViewDistanceResultExerRun"
-                android:textColor="@color/distance_color"
-                android:fontFamily="@font/secular_one_regular"
-                android:textStyle=""
-                android:textSize="18sp"
-                android:gravity="end"
-                android:layout_weight="2"
-                android:text="0.0 km"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_calories_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="7"
-                android:textSize="18sp"
-                android:text="Calories Burned"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/textViewCaloriesBurnedResultExerRun"
-                android:textColor="@color/calories_color"
-                android:fontFamily="@font/secular_one_regular"
-                android:textStyle=""
-                android:textSize="18sp"
-                android:gravity="end"
-                android:layout_weight="2"
-                android:text="0 Kcal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_avg_speed_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="7"
-                android:textSize="18sp"
-                android:text="Average Speed"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/textViewAverageSpeedResultExerRun"
-                android:textColor="@color/avg_speed_color"
-                android:fontFamily="@font/secular_one_regular"
-                android:textStyle=""
-                android:textSize="18sp"
-                android:gravity="end"
-                android:layout_weight="2"
-                android:text="0 km/h"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_duration_color"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="6"
-                android:textSize="18sp"
-                android:text="Duration"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/textViewDurationResultExerRun"
-                android:textColor="@color/duration_color"
-                android:fontFamily="@font/secular_one_regular"
-                android:textStyle=""
-                android:textSize="18sp"
-                android:gravity="end"
-                android:layout_weight="3"
-                android:text="00:00 mins"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:padding="10dp"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_weight="1"
-                android:src="@drawable/ic_complete_run"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginStart="5dp"
-                android:layout_weight="8"
-                android:textSize="18sp"
-                android:text="Completed"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <ImageView
-                android:id="@+id/imageViewIsCompletedResultExerRun"
-                android:src="@drawable/ic_completed"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    <LinearLayout
-        android:background="@drawable/custom_line_exercise_run"
-        android:id="@+id/layoutPlayMusic"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="horizontal"/>
-
-        <TextView
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:text="Add note"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/editTextAddNote"
-            android:layout_marginHorizontal="10dp"
-            android:backgroundTint="@color/grey_80"
-            android:drawableStart="@drawable/ic_add_note"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            android:padding="10dp"
-            android:text="How do you feel ?"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <LinearLayout
-            android:weightSum="15"
-            android:orientation="horizontal"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_weight="5"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
-                    android:id="@+id/imageButtonEasy"
-                    android:background="@color/white"
-                    android:src="@drawable/ic_smiling"
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+                    <pl.droidsonroids.gif.GifImageView
+                        android:scaleType="centerCrop"
+                        android:id="@+id/imageViewResultExerRun"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_moving_time_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:textSize="18sp"
+                        android:text="Start Time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/textViewMovingTimeResultExerRun"
+                        android:textColor="@color/distance_color"
+                        android:fontFamily="@font/secular_one_regular"
+                        android:textStyle=""
+                        android:textSize="18sp"
+                        android:gravity="end"
+                        android:layout_weight="6"
+                        android:text="00:00:00 hrs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_distance_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:textSize="18sp"
+                        android:text="Distance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/textViewDistanceResultExerRun"
+                        android:textColor="@color/distance_color"
+                        android:fontFamily="@font/secular_one_regular"
+                        android:textStyle=""
+                        android:textSize="18sp"
+                        android:gravity="end"
+                        android:layout_weight="6"
+                        android:text="0.0 km"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_calories_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:text="Calories Burned"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/textViewCaloriesBurnedResultExerRun"
+                        android:textColor="@color/calories_color"
+                        android:fontFamily="@font/secular_one_regular"
+                        android:textStyle=""
+                        android:textSize="18sp"
+                        android:gravity="end"
+                        android:layout_weight="5"
+                        android:text="0 Kcal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_avg_speed_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="4"
+                        android:textSize="18sp"
+                        android:text="Average Speed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/textViewAverageSpeedResultExerRun"
+                        android:textColor="@color/avg_speed_color"
+                        android:fontFamily="@font/secular_one_regular"
+                        android:textStyle=""
+                        android:textSize="18sp"
+                        android:gravity="end"
+                        android:layout_weight="5"
+                        android:text="0 km/h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_duration_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="3"
+                        android:textSize="18sp"
+                        android:text="Duration"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/textViewDurationResultExerRun"
+                        android:textColor="@color/duration_color"
+                        android:fontFamily="@font/secular_one_regular"
+                        android:textStyle=""
+                        android:textSize="18sp"
+                        android:gravity="end"
+                        android:layout_weight="6"
+                        android:text="00:00 mins"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:padding="10dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_complete_run"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="8"
+                        android:textSize="18sp"
+                        android:text="Completed"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                    <ImageView
+                        android:id="@+id/imageViewIsCompletedResultExerRun"
+                        android:src="@drawable/ic_completed"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:background="@drawable/custom_line_exercise_run"
+                    android:id="@+id/layoutPlayMusic"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"/>
+
+                <TextView
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:text="Add note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:textSize="19sp"
-                    android:gravity="center"
-                    android:text="Easy"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/imageButtonPerfect"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:src="@drawable/ic_not_smiling" />
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:textSize="19sp"
-                    android:gravity="center"
-                    android:text="Perfect"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/imageButtonExhausted"
-                    android:background="@color/white"
-                    android:src="@drawable/ic_tired"
+                <EditText
+                    android:id="@+id/editTextAddNote"
+                    android:layout_marginHorizontal="10dp"
+                    android:backgroundTint="@color/grey_80"
+                    android:drawableStart="@drawable/ic_add_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
+
                 <TextView
-                    android:layout_marginTop="5dp"
-                    android:textSize="19sp"
-                    android:gravity="center"
-                    android:text="Exhausted"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:text="How do you feel ?"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:layout_marginHorizontal="5dp"
+                    android:weightSum="15"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/layoutEasy"
+                        android:orientation="vertical"
+                        android:layout_weight="5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButtonEasy"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_smiling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:textSize="19sp"
+                            android:gravity="center"
+                            android:text="Easy"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layoutPerfect"
+                        android:orientation="vertical"
+                        android:layout_weight="5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButtonPerfect"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_not_smiling" />
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:textSize="19sp"
+                            android:gravity="center"
+                            android:text="Perfect"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/layoutExhausted"
+                        android:orientation="vertical"
+                        android:layout_weight="5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageButton
+                            android:id="@+id/imageButtonExhausted"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_tired"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_marginTop="5dp"
+                            android:textSize="19sp"
+                            android:gravity="center"
+                            android:text="Exhausted"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewSave"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    app:cardBackgroundColor="@color/grey_80"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Save"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewDelete"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    app:cardBackgroundColor="@color/red"
+                    android:layout_marginVertical="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Delete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>

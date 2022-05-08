@@ -15,6 +15,10 @@ class EditProfileViewModel(private val mainRepository: MainRepository) : ViewMod
     val errEvent: LiveData<String>
         get() = _errEvent
 
+    private var _successEdit : MutableLiveData<Boolean> = MutableLiveData()
+    val successEdit : LiveData<Boolean>
+    get() = _successEdit
+
     private fun writePersonalDataToSharedPref(user: User){
         mainRepository.writePersonalDataToSharedPref(user)
     }
@@ -38,7 +42,9 @@ class EditProfileViewModel(private val mainRepository: MainRepository) : ViewMod
         try {
             mainRepository.updateUser(user)
             writePersonalDataToSharedPref(user)
+            _successEdit.postValue(true)
         }catch (e:Exception){
+            _successEdit.postValue(false)
             _errEvent.postValue("An error has occurred, something happens in server !")
         }
     }

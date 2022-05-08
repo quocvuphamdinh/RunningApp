@@ -18,15 +18,15 @@ import vu.pham.runningappseminar.models.Activity
 import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.ExerciseViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ExerciseViewModelFactory
 
 class ActivityFragment : Fragment() {
     private lateinit var adapterRunning:RecyclerViewActivityAdapter
     private lateinit var adapterWalking:RecyclerViewActivityAdapter
     private lateinit var binding:FragmentActivityBinding
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
+    private val viewModel : ExerciseViewModel by viewModels{
+        ExerciseViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

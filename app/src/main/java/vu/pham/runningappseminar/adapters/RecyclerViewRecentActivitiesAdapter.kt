@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -17,8 +18,11 @@ import java.util.*
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
-class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
+class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean, val clickUserActivity: ClickUserActivity) :RecyclerView.Adapter<RecyclerViewRecentActivitiesAdapter.RecentActivitiesHolder>(){
 
+    interface ClickUserActivity{
+        fun clickItem(userActivityDetail: UserActivityDetail)
+    }
     val differCallBack = object : DiffUtil.ItemCallback<UserActivityDetail>(){
         override fun areItemsTheSame(oldItem: UserActivityDetail, newItem: UserActivityDetail): Boolean {
             return oldItem.getId() == newItem.getId()
@@ -42,6 +46,7 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView
         var txtAvgSpeed:TextView
         var txtCaloriesBurned:TextView
         var img:ImageView
+        var layoutRecent : RelativeLayout
 
         init {
             txtNameActivity = itemView.findViewById(R.id.textViewNameRecentActivitiesItem)
@@ -51,6 +56,7 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView
             txtAvgSpeed = itemView.findViewById(R.id.textViewAvgSpeed)
             txtCaloriesBurned = itemView.findViewById(R.id.textViewCaloriesBurned)
             img = itemView.findViewById(R.id.imageViewRecentActivityItem)
+            layoutRecent = itemView.findViewById(R.id.layoutRecentExercise)
         }
     }
 
@@ -70,10 +76,10 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView
         holder.txtNameActivity.text = userActivity.getActivity()?.getName()
         val calendar = Calendar.getInstance()
         calendar.time = Date(userActivity.getRun()?.timestamp!!)
-        val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())
+        val monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
         val date = Date(userActivity.getRun()!!.timestamp)
         val format = SimpleDateFormat("HH:mm")
-        holder.txtDate.text = "$dayOfWeek ${Date(userActivity.getRun()!!.timestamp).date}, " +
+        holder.txtDate.text = "$monthName ${Date(userActivity.getRun()!!.timestamp).date}, " +
                 format.format(date)
         holder.txtDistance.text = "${(userActivity.getRun()!!.distanceInKilometers)/1000f} km"
 
@@ -81,6 +87,10 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean) :RecyclerView
 
         holder.txtAvgSpeed.text = "${userActivity.getRun()!!.averageSpeedInKilometersPerHour} kph"
         holder.txtCaloriesBurned.text = "${userActivity.getRun()!!.caloriesBurned} Kcal"
+
+        holder.layoutRecent.setOnClickListener {
+            clickUserActivity.clickItem(userActivity)
+        }
     }
 
     override fun getItemCount(): Int {

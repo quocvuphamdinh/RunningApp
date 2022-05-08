@@ -22,8 +22,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentAnalysisBinding
 import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.viewmodelfactories.MainViewModelFactory
+import vu.pham.runningappseminar.viewmodels.AnalysisViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.AnalysisViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,8 +32,8 @@ class AnalysisFragment : Fragment() {
     private lateinit var binding:FragmentAnalysisBinding
     private var date = Date(System.currentTimeMillis())
 
-    private val viewModel : MainViewModel by viewModels{
-        MainViewModelFactory((activity?.application as RunApplication).repository ,activity?.application as RunApplication)
+    private val viewModel : AnalysisViewModel by viewModels{
+        AnalysisViewModelFactory((activity?.application as RunApplication).repository)
     }
 
     override fun onCreateView(

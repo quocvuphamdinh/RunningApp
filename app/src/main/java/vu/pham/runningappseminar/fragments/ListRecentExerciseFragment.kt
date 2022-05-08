@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewRecentActivitiesAdapter
 import vu.pham.runningappseminar.databinding.FragmentListRecentExerciseBinding
 import vu.pham.runningappseminar.models.UserActivityDetail
@@ -39,8 +40,8 @@ class ListRecentExerciseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getData()
         subcribeToObservers()
+        getData()
         binding.imageCloseRecent.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -84,7 +85,13 @@ class ListRecentExerciseFragment : Fragment() {
     }
 
     private fun setUpRecentActivities(list : List<UserActivityDetail>) {
-        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(true)
+        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(true, object : RecyclerViewRecentActivitiesAdapter.ClickUserActivity{
+            override fun clickItem(userActivityDetail: UserActivityDetail) {
+                val bundle = Bundle()
+                bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivityDetail.getId())
+                findNavController().navigate(R.id.action_listRecentExerciseFragment_to_resultExerciseRunFragment, bundle)
+            }
+        })
         adapterRecentActivities.submitList(list)
         binding.rcvMoreRecentExercise.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rcvMoreRecentExercise.adapter = adapterRecentActivities

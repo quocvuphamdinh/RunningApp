@@ -28,6 +28,19 @@ class ExerciseRunViewModel(private val mainRepository: MainRepository) : ViewMod
     val index : LiveData<Int>
     get() = _index
 
+    private var _userActivity : MutableLiveData<UserActivity> = MutableLiveData(UserActivity())
+    val userActivity : LiveData<UserActivity>
+    get() = _userActivity
+
+    private var _toastEvent : MutableLiveData<String> = MutableLiveData()
+    val toastEvent : LiveData<String>
+    get() = _toastEvent
+
+    private var _success : MutableLiveData<Boolean> = MutableLiveData(false)
+    val success : LiveData<Boolean>
+    get() = _success
+
+
     fun updateIndex(){
         _index.postValue(_index.value?.plus(1) ?: 0)
     }
@@ -44,12 +57,22 @@ class ExerciseRunViewModel(private val mainRepository: MainRepository) : ViewMod
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
-    suspend fun insertUserExercise(userActivity: UserActivity, userId: Long) = mainRepository.insertUserExercise(userActivity, userId)
-
-    fun insertRunLocal(run: Run) = viewModelScope.launch {
-        mainRepository.insertRun(run)
+    fun insertUserExercise(userActivity: UserActivity, userId: Long, run: Run) = viewModelScope.launch {
+        try {
+            mainRepository.insertRun(run)
+            _userActivity.postValue(mainRepository.insertUserExercise(userActivity, userId))
+        }catch (e : Exception){
+            _userActivity.postValue(UserActivity())
+            _toastEvent.postValue("An error has occurred, something happens in server !")
+        }
     }
-    fun insertRunRemote(run: Run, userId:Long, userActivitesId:Long) = viewModelScope.launch {
-        mainRepository.insertRunRemote(run, userId, userActivitesId)
+    fun insertRunLocal(run: Run) = viewModelScope.launch {
+        try {
+            mainRepository.insertRun(run)
+            _success.postValue(true)
+        }catch (e : Exception){
+            _toastEvent.postValue("An error has occurred in your device !")
+            _success.postValue(false)
+        }
     }
 }

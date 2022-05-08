@@ -77,25 +77,25 @@ class LoginFragment : Fragment() {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
                 val user = response.body()
                 if(viewModel.checkSameUser(username, password, user)){
-                    lifecycleScope.launch {
-                        viewModel.getAllRunFromRemote(user?.getId()!!).enqueue(object :
-                            Callback<List<Run>> {
-                            override fun onResponse(call: Call<List<Run>>, response: Response<List<Run>>) {
+                    viewModel.getAllRunFromRemote(user?.getId()!!).enqueue(object :
+                        Callback<List<Run>> {
+                        override fun onResponse(call: Call<List<Run>>, response: Response<List<Run>>) {
+                            lifecycleScope.launch {
                                 val listRun = response.body()
                                 for (run in listRun!!){
                                     viewModel.insertRunLocal(run)
                                 }
                                 writePersonalDataToSharedPref(user)
                                 loadingDialog.dismissDialog()
-                                goToHomePage()
                                 Toast.makeText(context, "Login success !", Toast.LENGTH_LONG).show()
+                                goToHomePage()
                             }
-                            override fun onFailure(call: Call<List<Run>>, t: Throwable) {
-                                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
-                                loadingDialog.dismissDialog()
-                            }
-                        })
-                    }
+                        }
+                        override fun onFailure(call: Call<List<Run>>, t: Throwable) {
+                            Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
+                            loadingDialog.dismissDialog()
+                        }
+                    })
                 }else{
                     Toast.makeText(context, "Login failed !", Toast.LENGTH_LONG).show()
                     loadingDialog.dismissDialog()

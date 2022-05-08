@@ -33,9 +33,7 @@ import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.Workout
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
-import vu.pham.runningappseminar.utils.Constants
-import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.ExerciseRunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ExerciseRunViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -44,6 +42,7 @@ import kotlin.math.round
 
 class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding : FragmentExerciseRunBinding
+    private lateinit var loadingDialog: LoadingDialog
     private var map : GoogleMap? = null
     private var isFinishFirstTime = false
     private var user: User? =null
@@ -69,6 +68,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         subscribeToObservers()
         getDataExerciseAndBindDataToView()
 
+        loadingDialog = LoadingDialog(requireActivity())
+
         binding.mapViewExerciseRun.getMapAsync {
             map = it
         }
@@ -78,6 +79,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             toggleRun()
         }
         binding.buttonStopExerciseRun.setOnClickListener {
+            loadingDialog.startLoadingDialog()
             sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
             zoomToSeeWholeTrack()
             saveDataExerciseRun()
@@ -179,15 +181,16 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             Toast.makeText(requireContext(), "Error uploaded image run !", Toast.LENGTH_SHORT).show()
         }?.addOnSuccessListener { _ ->
             mountainsRef.downloadUrl.addOnSuccessListener { uri ->
-                lifecycleScope.launch {
-                    run.img = uri.toString()
-                    viewModel.insertRunLocal(run)
-                    val result = viewModel.insertUserExercise(userActivity, user?.getId()!!)
-                    Toast.makeText(requireContext(), "id: ${result.getId()}-activityId: ${result.getActivityId()}-Mood: ${result.getMood()}-Comment: ${result.getComment()}", Toast.LENGTH_LONG).show()
-                    stopRun()
-                }
+                run.img = uri.toString()
+                viewModel.insertUserExercise(userActivity, user?.getId()!!, run)
             }
         }
+    }
+
+    private fun goToResultRunExercise(userActivity: UserActivity){
+        val bundle = Bundle()
+        bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivity.getId())
+        findNavController().navigate(R.id.action_exerciseRunFragment_to_resultExerciseRunFragment, bundle)
     }
 
     private fun saveDataExerciseRun(){
@@ -200,7 +203,11 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
                 viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned, "")
             val userActivity = UserActivity(run, id!!, "", 0)
-            uploadImageRunToServer(bitmap!!, run, userActivity)
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                uploadImageRunToServer(bitmap!!, run, userActivity)
+            }else{
+                viewModel.insertRunLocal(run)
+            }
         }
     }
 
@@ -225,7 +232,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             .setIcon(R.drawable.ic_warning)
             .setPositiveButton("Yes", object : DialogInterface.OnClickListener{
                 override fun onClick(dialog: DialogInterface?, which: Int) {
-                    stopRun()
+                    loadingDialog.startLoadingDialog()
+                    stopRun(true)
                 }
             })
             .setNegativeButton("No", object : DialogInterface.OnClickListener{
@@ -246,7 +254,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun stopRun() {
+    private fun stopRun(isPop:Boolean) {
         viewModel.resetData()
         binding.textViewTimeCountExerciseRun.text = "00:00"
         binding.textViewDistanceExerciseRun.text = "0"
@@ -254,12 +262,35 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.textViewCaloriesBurnedExerciseRun.text = "0"
         binding.textViewTimeLeftExerciseRun.text = "Time left - 00:00"
         binding.progressBarExerciseRun.progress = 0
+        loadingDialog.dismissDialog()
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
-        findNavController().popBackStack()
+        if(isPop){
+            findNavController().popBackStack()
+        }
     }
 
     // đăng ký observers để lắng nghe sự thay đổi về data
     private fun subscribeToObservers(){
+        viewModel.success.observe(viewLifecycleOwner, Observer {
+            if(it){
+                Toast.makeText(requireContext(), "Save run in local successfully !!", Toast.LENGTH_SHORT).show()
+                stopRun(true)
+            }
+        })
+
+        viewModel.userActivity.observe(viewLifecycleOwner, Observer {
+            if(it.getId()!=0L){
+                stopRun(false)
+                goToResultRunExercise(it)
+            }
+        })
+
+        viewModel.toastEvent.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
         TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
             updateTracking(it)
         })
@@ -301,7 +332,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     }
                     if(it >= viewModel.workours.size && !isFinishFirstTime){
                         isFinishFirstTime = true
-                        stopRun()
+                        loadingDialog.startLoadingDialog()
+                        saveDataExerciseRun()
                     }
                 }
             })

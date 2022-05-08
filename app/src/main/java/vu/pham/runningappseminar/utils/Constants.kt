@@ -36,4 +36,5 @@ object Constants {
     const val ID_EXERCISE = "ID_EXERCISE"
     const val ID_USER_RECENT_EXERCISE = "ID_USER_RECENT_EXERCISE"
     const val ID_RUN_DETAIL = "ID_RUN_DETAIL"
+    const val ID_RECENT_EXERCISE = "ID_RECENT_EXERCISE"
 }

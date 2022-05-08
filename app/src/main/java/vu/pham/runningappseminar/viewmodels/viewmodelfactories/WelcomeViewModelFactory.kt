@@ -3,8 +3,6 @@ package vu.pham.runningappseminar.viewmodels.viewmodelfactories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import vu.pham.runningappseminar.repositories.MainRepository
-import vu.pham.runningappseminar.viewmodels.MainViewModel
-import vu.pham.runningappseminar.viewmodels.RunViewModel
 import vu.pham.runningappseminar.viewmodels.WelcomeViewModel
 
 // class dùng để giúp cho MainViewModel có thể truyền tham số mainRepository vào dc

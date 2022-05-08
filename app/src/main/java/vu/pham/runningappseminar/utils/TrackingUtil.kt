@@ -8,6 +8,8 @@ import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.services.Polyline
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object TrackingUtil {
@@ -106,5 +108,18 @@ object TrackingUtil {
             return f.format(milliseconds)
         }
         return "${f.format(hours)}:${f.format(minutes)}:${f.format(seconds)}:${f.format(milliseconds)}"
+    }
+
+    fun getFormattedDate(date : Long) : String{
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = date
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return dateFormat.format(calendar.time)
+    }
+    fun getFormattedHour(hour : Long) : String{
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = hour
+        val dateFormat = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 }

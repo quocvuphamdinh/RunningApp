@@ -77,6 +77,12 @@ class ChangePasswordFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         })
+
+        viewModel.successChangePassword.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
+            }
+        })
     }
 
     private fun onClickShowPass() {
@@ -128,7 +134,6 @@ class ChangePasswordFragment : Fragment() {
         }else{
             user.setPassword(newPassword)
             viewModel.updateUser(user)
-            findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
         }
     }
 

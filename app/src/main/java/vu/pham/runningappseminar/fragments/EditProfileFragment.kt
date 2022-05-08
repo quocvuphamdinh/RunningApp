@@ -64,6 +64,12 @@ class EditProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         })
+
+        viewModel.successEdit.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+            }
+        })
     }
 
     private fun savePersonalInfor(){
@@ -75,7 +81,6 @@ class EditProfileFragment : Fragment() {
             val userNew = User(username, user.getPassword(), fullname, sex, height.toInt(), weight.toInt(), user.getdistanceGoal(), user.getAvartar())
             userNew.setId(user.getId())
             viewModel.updateUser(userNew)
-            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }else{
             Toast.makeText(requireContext(), "Please enter your information to update account !", Toast.LENGTH_LONG).show()
         }

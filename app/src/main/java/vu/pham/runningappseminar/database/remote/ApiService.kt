@@ -49,4 +49,10 @@ interface ApiService {
 
     @GET("/user-activity/calculate-recent-activity/{userId}")
     suspend fun calculateDataRecentActivity(@Path("userId") userId: Long) : HashMap<String, String>
+
+    @GET("/user-activity/detail/{userActivityId}")
+    suspend fun getUserExerciseDetail(@Path("userActivityId") userActivityId:Long) : UserActivityDetail
+
+    @PUT("/user-activity/{userId}")
+    suspend fun updateUserExercise(@Body userActivity: UserActivity, @Path("userId") userId: Long) : UserActivity
 }

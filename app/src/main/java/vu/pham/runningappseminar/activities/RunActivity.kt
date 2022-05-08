@@ -26,16 +26,13 @@ import vu.pham.runningappseminar.databinding.ActivityRunBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
-import vu.pham.runningappseminar.utils.CheckConnection
-import vu.pham.runningappseminar.utils.Constants
+import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_STOP_SERVICE
 import vu.pham.runningappseminar.utils.Constants.MAP_ZOOM
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_COLOR
 import vu.pham.runningappseminar.utils.Constants.POLYLINE_WIDTH
-import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.viewmodels.RunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -44,6 +41,7 @@ import kotlin.math.round
 
 class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding:ActivityRunBinding
+    private lateinit var loadingDialog: LoadingDialog
     private var googleMap: GoogleMap?=null
     private var currentTimeInMillies=0L
 
@@ -62,6 +60,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //setContentView(R.layout.activity_run)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_run)
 
+        loadingDialog = LoadingDialog(this@RunActivity)
         user = viewModel.getUserFromSharedPref()
         weight = user?.getWeight()?.toFloat() ?: 80f
         //anhXa()
@@ -76,6 +75,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun clickStopRun() {
         binding.textViewStopRun.setOnClickListener {
+            loadingDialog.startLoadingDialog()
             sendCommandToService(ACTION_PAUSE_SERVICE)
             zoomToSeeWholeTrack()
             saveRunToDatabase()
@@ -90,6 +90,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             .setIcon(R.drawable.ic_warning)
             .setPositiveButton("Yes", object : DialogInterface.OnClickListener{
                 override fun onClick(dialog: DialogInterface?, which: Int) {
+                    loadingDialog.startLoadingDialog()
                     stopRun()
                 }
             })
@@ -102,6 +103,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun stopRun() {
+        loadingDialog.dismissDialog()
         sendCommandToService(ACTION_STOP_SERVICE)
         currentTimeInMillies = 0L
         binding.textViewTimeCountRun.text = "00:00:00:00"
@@ -110,6 +112,15 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // đăng ký observers để lắng nghe sự thay đổi về data
     private fun subscribeToObservers(){
+        viewModel.success.observe(this, Observer {
+            if(it){
+                stopRun()
+            }
+        })
+        viewModel.toastEvent.observe(this, Observer {
+            Toast.makeText(this@RunActivity, it, Toast.LENGTH_LONG).show()
+        })
+
         TrackingService.isTracking.observe(this, Observer {
             updateTracking(it)
         })
@@ -192,8 +203,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned, "")
             if(!CheckConnection.haveNetworkConnection(this@RunActivity)){
                 viewModel.insertRun(run)
-                Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
-                stopRun()
             }else{
                 uploadImageRunToServer(bitmap!!, run)
             }

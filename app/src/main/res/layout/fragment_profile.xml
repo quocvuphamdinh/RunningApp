@@ -69,7 +69,7 @@
                     android:layout_below="@id/imageViewAvartarProfileFragment"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
-                    android:text="Vũ Phạm"
+                    android:text="User"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -130,7 +130,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
                                 android:gravity="end"
-                                android:text="Male"
+                                android:text="Sex"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -156,7 +156,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
                                 android:gravity="end"
-                                android:text="10 km"
+                                android:text="0 km"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -182,7 +182,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
                                 android:gravity="end"
-                                android:text="175 cm"
+                                android:text="0 cm"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -208,7 +208,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
                                 android:gravity="end"
-                                android:text="70 kg"
+                                android:text="0 kg"
                                 android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
