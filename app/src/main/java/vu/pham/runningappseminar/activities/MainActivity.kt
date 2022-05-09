@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavHome.setupWithNavController(navController)
+        binding.bottomNavHome.setOnNavigationItemReselectedListener { /*do nothing*/ }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
                 when(destination.id){

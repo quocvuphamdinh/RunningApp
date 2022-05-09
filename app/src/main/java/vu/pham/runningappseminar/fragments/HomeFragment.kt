@@ -37,7 +37,6 @@ class HomeFragment : Fragment() {
     private lateinit var adapterTodayTraining:RecyclerViewActivityAdapter
     private lateinit var adapterRecentActivities:RecyclerViewRecentActivitiesAdapter
     private lateinit var binding:FragmentHomeBinding
-
     private var user:User?=null
     private val viewModel : HomePageViewModel by viewModels{
         HomePageViewModelFactory((activity?.application as RunApplication).repository,
@@ -52,23 +51,11 @@ class HomeFragment : Fragment() {
             goalValue?.let {
                 val user = viewModel.getUserFromSharedPref()
                 user?.setdistanceGoal(it.toLong())
-                showCongratulationDistanceGoal(binding.progressBar.progress, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(1000)) ?: 0)
+                showCongratulationDistanceGoal(binding.progressBar.progress, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0)
                 viewModel.updateUser(user!!)
             }
         }
     }
-    private fun showCongratulationDistanceGoal(progress : Int, max : Int){
-        if(progress==0 && max==0){
-            binding.textViewCongratulation.visibility = View.GONE
-        }
-        if(progress >= max && progress > 0){
-            binding.textViewCongratulation.visibility = View.VISIBLE
-            binding.textViewCongratulation.text = "Congratulation you passed your distance goal !!"
-        }else{
-            binding.textViewCongratulation.visibility = View.GONE
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,6 +98,18 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showCongratulationDistanceGoal(progress : Int, max : Int){
+        if(progress==0 && max==0){
+            binding.linearLayoutCongratulation.visibility = View.GONE
+        }
+        if(progress >= max && progress > 0){
+            binding.linearLayoutCongratulation.visibility = View.VISIBLE
+            binding.textViewCongratulation.text = "Congratulation you passed your distance goal !!"
+        }else{
+            binding.linearLayoutCongratulation.visibility = View.GONE
+        }
+    }
+
     private fun goToListRecentTraining() {
         val bundle = Bundle()
         bundle.putLong(Constants.ID_USER_RECENT_EXERCISE, user?.getId()!!)
@@ -130,7 +129,7 @@ class HomeFragment : Fragment() {
     }
     private fun bindDataToView(user: User?){
         binding.textViewWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
-        binding.progressBar.max = if(user?.getdistanceGoal()==0L) 0 else (user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(1000)!!
+        binding.progressBar.max = if(user?.getdistanceGoal()==0L) 0 else (user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)!!
         val nameUser = "Let's go "
         val text = user.getFullname()
         val text2 = nameUser+text
@@ -174,8 +173,8 @@ class HomeFragment : Fragment() {
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.textViewNumberDistance.text = (it/ 1000f).toString()
-                binding.progressBar.progress = (it/1000)
-                showCongratulationDistanceGoal(it/1000, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(1000)) ?: 0)
+                binding.progressBar.progress = (it/100)
+                showCongratulationDistanceGoal(it/100, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0)
             }
         })
 

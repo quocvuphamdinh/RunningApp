@@ -234,4 +234,12 @@
             android:id="@+id/action_runDetailFragment_to_historyRunFragment"
             app:destination="@id/historyRunFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/historyRunOnlyFragment"
+        android:name="vu.pham.runningappseminar.fragments.HistoryRunOnlyFragment"
+        android:label="HistoryRunOnlyFragment" />
+    <fragment
+        android:id="@+id/historyRunWithExerciseFragment"
+        android:name="vu.pham.runningappseminar.fragments.HistoryRunWithExerciseFragment"
+        android:label="HistoryRunWithExerciseFragment" />
 </navigation>

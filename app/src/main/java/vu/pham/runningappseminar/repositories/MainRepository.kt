@@ -18,6 +18,8 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun deleteRunRemote(run:Run) = apiService.deleteRunRemote(run)
+
     suspend fun updateUserExercise(userActivity: UserActivity, userId: Long) = apiService.updateUserExercise(userActivity, userId)
 
     suspend fun getUserExerciseDetail(userActivityId: Long) = apiService.getUserExerciseDetail(userActivityId)
@@ -103,6 +105,16 @@ class MainRepository(
     fun getAllRunsSortedByCaloriesBurned() = runDAO.getAllRunsSortedByCaloriesBurned()
 
     fun getAllRunsSortedByDistance() = runDAO.getAllRunsSortedByDistance()
+
+    fun getAllRunsWithExerciseSortedByDate() = runDAO.getAllRunsWithExerciseSortedByDate()
+
+    fun getAllRunsWithExerciseSortedByTimeInMillies() = runDAO.getAllRunsWithExerciseSortedByTimeInMillies()
+
+    fun getAllRunsWithExerciseSortedByAvgSpeedInKMH() = runDAO.getAllRunsWithExerciseSortedByAvgSpeedInKMH()
+
+    fun getAllRunsWithExerciseSortedByCaloriesBurned() = runDAO.getAllRunsWithExerciseSortedByCaloriesBurned()
+
+    fun getAllRunsWithExerciseSortedByDistance() = runDAO.getAllRunsWithExerciseSortedByDistance()
 
     fun getTotalTimeInMillies() = runDAO.getTotalTimeInMillies()
 

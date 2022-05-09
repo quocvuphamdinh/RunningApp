@@ -64,6 +64,13 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         super.onViewCreated(view, savedInstanceState)
         binding.mapViewExerciseRun.onCreate(savedInstanceState)
 
+        if(savedInstanceState!=null){
+            val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_RUNNING_DIALOG_TAG) as DialogFragmentRun?
+            dialogFragmentRun?.setClickYes {
+                loadingDialog.startLoadingDialog()
+                stopRun(true)
+            }
+        }
         requestGPS()
         subscribeToObservers()
         getDataExerciseAndBindDataToView()
@@ -181,6 +188,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             Toast.makeText(requireContext(), "Error uploaded image run !", Toast.LENGTH_SHORT).show()
         }?.addOnSuccessListener { _ ->
             mountainsRef.downloadUrl.addOnSuccessListener { uri ->
+                run.isRunWithExercise = 1
                 run.img = uri.toString()
                 viewModel.insertUserExercise(userActivity, user?.getId()!!, run)
             }
@@ -201,7 +209,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
             }
             val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
-                viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned, "")
+                viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned, "", 0)
             val userActivity = UserActivity(run, id!!, "", 0)
             if(CheckConnection.haveNetworkConnection(requireContext())){
                 uploadImageRunToServer(bitmap!!, run, userActivity)
@@ -226,22 +234,12 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun showCancelRunningDialog(){
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setTitle("Cancel the Run ?")
-            .setMessage("Are you sure to cancel this run and the data will be deleted ?")
-            .setIcon(R.drawable.ic_warning)
-            .setPositiveButton("Yes", object : DialogInterface.OnClickListener{
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    loadingDialog.startLoadingDialog()
-                    stopRun(true)
-                }
-            })
-            .setNegativeButton("No", object : DialogInterface.OnClickListener{
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    dialog?.cancel()
-                }
-            })
-        dialog.show()
+        DialogFragmentRun("Cancel the Run ?", "Are you sure to cancel this run and the data will be deleted ?").apply {
+            setClickYes {
+                loadingDialog.startLoadingDialog()
+                stopRun(true)
+            }
+        }.show(parentFragmentManager, Constants.CANCEL_RUNNING_DIALOG_TAG)
     }
 
     private fun toggleRun(){

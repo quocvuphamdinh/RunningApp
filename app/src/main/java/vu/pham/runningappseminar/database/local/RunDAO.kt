@@ -17,20 +17,35 @@ interface RunDAO {
     @Delete
     suspend fun deleteRun(run: Run)
 
-    @Query("SELECT * FROM running_table ORDER BY timestamp DESC")
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 0 ORDER BY timestamp DESC")
     fun getAllRunsSortedByDate():LiveData<List<Run>>
 
-    @Query("SELECT * FROM running_table ORDER BY timeInMillis DESC")
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 0 ORDER BY timeInMillis DESC")
     fun getAllRunsSortedByTimeInMillies():LiveData<List<Run>>
 
-    @Query("SELECT * FROM running_table ORDER BY averageSpeedInKilometersPerHour DESC")
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 0 ORDER BY averageSpeedInKilometersPerHour DESC")
     fun getAllRunsSortedByAvgSpeedInKMH():LiveData<List<Run>>
 
-    @Query("SELECT * FROM running_table ORDER BY caloriesBurned DESC")
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 0 ORDER BY caloriesBurned DESC")
     fun getAllRunsSortedByCaloriesBurned():LiveData<List<Run>>
 
-    @Query("SELECT * FROM running_table ORDER BY distanceInKilometers DESC")
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 0 ORDER BY distanceInKilometers DESC")
     fun getAllRunsSortedByDistance():LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 1 ORDER BY timestamp DESC")
+    fun getAllRunsWithExerciseSortedByDate():LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 1 ORDER BY timeInMillis DESC")
+    fun getAllRunsWithExerciseSortedByTimeInMillies():LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 1 ORDER BY averageSpeedInKilometersPerHour DESC")
+    fun getAllRunsWithExerciseSortedByAvgSpeedInKMH():LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 1 ORDER BY caloriesBurned DESC")
+    fun getAllRunsWithExerciseSortedByCaloriesBurned():LiveData<List<Run>>
+
+    @Query("SELECT * FROM running_table WHERE isRunWithExercise = 1 ORDER BY distanceInKilometers DESC")
+    fun getAllRunsWithExerciseSortedByDistance():LiveData<List<Run>>
 
     @Query("SELECT SUM(timeInMillis) FROM running_table")
     fun getTotalTimeInMillies():LiveData<Long>
@@ -81,5 +96,5 @@ interface RunDAO {
     suspend fun deleteAllRun()
 
     @Query("SELECT * FROM running_table WHERE id = :id")
-    fun getRunById(id:String) : LiveData<Run>
+    fun getRunById(id:String) : LiveData<Run?>
 }

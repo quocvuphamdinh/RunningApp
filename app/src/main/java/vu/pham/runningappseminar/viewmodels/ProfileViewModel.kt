@@ -13,27 +13,31 @@ import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.repositories.MainRepository
 import vu.pham.runningappseminar.utils.RunApplication
 
-class ProfileViewModel(private val mainRepository: MainRepository, private val app : RunApplication) : AndroidViewModel(app) {
+class ProfileViewModel(
+    private val mainRepository: MainRepository,
+    private val app: RunApplication
+) : AndroidViewModel(app) {
 
     private var _toastEvent: MutableLiveData<String> = MutableLiveData<String>()
     val toastEvent: LiveData<String>
         get() = _toastEvent
 
     private var _userLiveData = MutableLiveData<User>()
-    val userLiveData : LiveData<User>
+    val userLiveData: LiveData<User>
         get() = _userLiveData
 
-    private var _success : MutableLiveData<Boolean> = MutableLiveData()
-    val success : LiveData<Boolean>
+    private var _success: MutableLiveData<Boolean> = MutableLiveData()
+    val success: LiveData<Boolean>
         get() = _success
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<RunApplication>().getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
             return when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
@@ -42,7 +46,7 @@ class ProfileViewModel(private val mainRepository: MainRepository, private val a
             }
         } else {
             connectivityManager.activeNetworkInfo?.run {
-                return when(type) {
+                return when (type) {
                     ConnectivityManager.TYPE_WIFI -> true
                     ConnectivityManager.TYPE_MOBILE -> true
                     ConnectivityManager.TYPE_ETHERNET -> true
@@ -92,35 +96,35 @@ class ProfileViewModel(private val mainRepository: MainRepository, private val a
     }
 
     fun updateUser(user: User) = viewModelScope.launch {
-        try{
-            if(hasInternetConnection()){
+        try {
+            if (hasInternetConnection()) {
                 mainRepository.updateUser(user)
                 writePersonalDataToSharedPref(user)
-            }else{
+            } else {
                 _toastEvent.postValue("Your device does not have internet !")
             }
-        }catch (e : Exception){
+        } catch (e: Exception) {
             _toastEvent.postValue("An error has occurred, something happens in server !")
         }
     }
 
-    private fun writePersonalDataToSharedPref(user: User){
+    private fun writePersonalDataToSharedPref(user: User) {
         mainRepository.writePersonalDataToSharedPref(user)
     }
 
     fun getUserFromSharedPref() = mainRepository.getUserFromSharedPref()
 
-    fun getUserLiveData(username: String, password: String){
+    fun getUserLiveData(username: String, password: String) {
         viewModelScope.launch {
-            try{
-                if(hasInternetConnection()){
+            try {
+                if (hasInternetConnection()) {
                     _userLiveData.postValue(mainRepository.getUserLiveData(username, password))
-                }else{
+                } else {
                     _userLiveData.postValue(getUserFromSharedPref()!!)
                 }
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 val user = getUserFromSharedPref()
-                if(user!=null){
+                if (user != null) {
                     _userLiveData.postValue(getUserFromSharedPref()!!)
                 }
             }

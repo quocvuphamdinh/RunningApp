@@ -55,6 +55,8 @@
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
         <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/linearLayoutCongratulation"
             android:background="@drawable/custom_background_congratulation"
             android:orientation="vertical"
             android:layout_width="match_parent"

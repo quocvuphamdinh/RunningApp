@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -13,16 +14,14 @@ import com.squareup.picasso.Picasso
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentRunDetailBinding
 import vu.pham.runningappseminar.models.Run
-import vu.pham.runningappseminar.utils.Constants
-import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.RunDetailViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunDetailViewModelFactory
-import java.text.SimpleDateFormat
-import java.util.*
 
 class RunDetailFragment : Fragment() {
     private lateinit var binding : FragmentRunDetailBinding
+    private var runDelete: Run? = null
+    private lateinit var loadingDialog: LoadingDialog
     private val viewModel : RunDetailViewModel by viewModels {
         RunDetailViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -39,19 +38,68 @@ class RunDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadingDialog = LoadingDialog(requireActivity())
+        if(savedInstanceState!=null){
+            val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_DELETE_RUN_DIALOG_TAG) as DialogFragmentRun?
+            dialogFragmentRun?.setClickYes {
+                deleteRun()
+            }
+        }
+
         getRunDetail()
+        subcribeToObservers()
 
         binding.imageCloseRunDetail.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.imageDeteleRunDetail.setOnClickListener {
+           showDialogCancel()
+        }
+    }
+
+    private fun subcribeToObservers() {
+        viewModel.successDelete.observe(viewLifecycleOwner, Observer {
+            if(it){
+                findNavController().popBackStack()
+            }
+            loadingDialog.dismissDialog()
+        })
+        viewModel.toastEvent.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()){
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun deleteRun() {
+        if(!CheckConnection.haveNetworkConnection(requireContext())){
+            Toast.makeText(requireContext(), "Your device does not have internet. Please connect to the internet so that you can delete this run !", Toast.LENGTH_SHORT).show()
+        }else{
+            loadingDialog.startLoadingDialog()
+            if(runDelete!!.img!!.isNotEmpty()){
+                val storageRef = viewModel.getFirebaseStorage()?.reference
+                val desertRef = storageRef?.child("/image-${runDelete!!.id}.png")
+                desertRef?.delete()?.addOnSuccessListener {
+                    viewModel.deleteRunWithInternet(runDelete!!)
+                }?.addOnFailureListener {
+                    loadingDialog.dismissDialog()
+                    Toast.makeText(requireContext(), "Error: "+it.message.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                viewModel.deleteRunWithInternet(runDelete!!)
+            }
         }
     }
 
     private fun getRunDetail() {
         val bundle = arguments
-        bundle?.let {
-            val id = it.getString(Constants.ID_RUN_DETAIL)
+        bundle?.let { itBundle ->
+            val id = itBundle.getString(Constants.ID_RUN_DETAIL)
             viewModel.getRunDetail(id!!).observe(viewLifecycleOwner, Observer { run ->
-                bindDataToView(run)
+                runDelete = run
+                run?.let {
+                    bindDataToView(it)
+                }
             })
         }
     }
@@ -72,5 +120,13 @@ class RunDetailFragment : Fragment() {
                 .placeholder(R.drawable.ic_loading_gif)
                 .into(binding.imageViewRunDetail)
         }
+    }
+
+    private fun showDialogCancel(){
+        DialogFragmentRun("Delete this Run ?", "Are you sure to delete this run and the exercise related to it will be deleted too ?").apply {
+            setClickYes {
+                deleteRun()
+            }
+        }.show(parentFragmentManager, Constants.CANCEL_DELETE_RUN_DIALOG_TAG)
     }
 }

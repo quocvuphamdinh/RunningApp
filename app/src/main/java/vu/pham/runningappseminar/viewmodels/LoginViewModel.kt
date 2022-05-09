@@ -14,6 +14,9 @@ class LoginViewModel(private val mainRepository: MainRepository) : ViewModel() {
     fun getUser(username:String, password:String) = mainRepository.getUserLogin(username, password)
 
     fun checkSameUser(username:String, password:String, user: User?):Boolean{
+        if(username.isEmpty() || password.isEmpty()){
+            return false
+        }
         if(user?.getUsername()== username && user.getPassword()==password){
             return true
         }

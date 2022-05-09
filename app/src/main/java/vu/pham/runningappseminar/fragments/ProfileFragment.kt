@@ -212,9 +212,9 @@ class ProfileFragment : Fragment() {
 
         viewModel.success.observe(viewLifecycleOwner, Observer {
             if(it){
-                loadingDialog.dismissDialog()
                 findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
             }
+            loadingDialog.dismissDialog()
         })
 
         viewModel.totalDistance.observe(viewLifecycleOwner, Observer {

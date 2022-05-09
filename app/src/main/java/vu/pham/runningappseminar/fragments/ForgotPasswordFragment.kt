@@ -68,9 +68,9 @@ class ForgotPasswordFragment : Fragment() {
 
         viewModel.successResetPassword.observe(viewLifecycleOwner, Observer {
             if(it){
-                loadingDialog.dismissDialog()
                 findNavController().navigate(R.id.action_forgotPasswordFragment_to_loginFragment)
             }
+            loadingDialog.dismissDialog()
         })
     }
 

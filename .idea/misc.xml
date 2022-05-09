@@ -35,6 +35,7 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_star.xml" value="0.2111111111111111" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_stop.xml" value="0.2074074074074074" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_timer.xml" value="0.2169230769230769" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_trash_delete.xml" value="0.133" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/font-v26/font_text.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/font/font_text.xml" value="0.17604166666666668" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/activity_detail_exercise.xml" value="0.25" />
@@ -60,6 +61,8 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_exercise_run.xml" value="0.22" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_forgot_password.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_history_run.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_history_run_only.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_history_run_with_exercise.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_list_exercise.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_list_recent_exercise.xml" value="0.25" />

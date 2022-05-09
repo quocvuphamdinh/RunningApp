@@ -1,6 +1,7 @@
 package vu.pham.runningappseminar.database.remote
 
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 import vu.pham.runningappseminar.models.*
 
@@ -55,4 +56,7 @@ interface ApiService {
 
     @PUT("/user-activity/{userId}")
     suspend fun updateUserExercise(@Body userActivity: UserActivity, @Path("userId") userId: Long) : UserActivity
+
+    @HTTP(method = "DELETE", path = "/run/delete", hasBody = true)
+    suspend fun deleteRunRemote(@Body run: Run) : Response<HashMap<String, String>>
 }

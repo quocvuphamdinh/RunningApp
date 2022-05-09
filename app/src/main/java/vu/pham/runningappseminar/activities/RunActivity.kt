@@ -200,7 +200,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
             val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",
-                dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned, "")
+                dateTimestamp, avgSpeed, distanceInMeters, currentTimeInMillies, caloriesBurned, "", 0)
             if(!CheckConnection.haveNetworkConnection(this@RunActivity)){
                 viewModel.insertRun(run)
             }else{
@@ -225,8 +225,6 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mountainsRef.downloadUrl.addOnSuccessListener { uri ->
                 run.img = uri.toString()
                 viewModel.insertRun(run)
-                Toast.makeText(this@RunActivity, "Run saved successfully !!", Toast.LENGTH_LONG).show()
-                stopRun()
             }
         }
     }
