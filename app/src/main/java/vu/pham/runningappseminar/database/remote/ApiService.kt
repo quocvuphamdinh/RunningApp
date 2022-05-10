@@ -35,8 +35,8 @@ interface ApiService {
     fun getRun(@Path("userId") userId:Long) : Call<List<Run>>
 
     //exercise
-    @GET("/activity/{type}")
-    suspend fun getListActivityByType(@Path("type") type:Int) : List<Activity>
+    @GET("/activity/{type}/{userId}")
+    suspend fun getListActivityByType(@Path("type") type:Int, @Path("userId") userId: Long) : List<Activity>
 
     @GET("/activity/detail/{id}")
     suspend fun getActivityDetail(@Path("id") id:Long) : Activity
@@ -59,4 +59,7 @@ interface ApiService {
 
     @HTTP(method = "DELETE", path = "/run/delete", hasBody = true)
     suspend fun deleteRunRemote(@Body run: Run) : Response<HashMap<String, String>>
+
+    @DELETE("/user-activity/{userActivityId}")
+    suspend fun deleteUserExercise(@Path("userActivityId") userActivityId : Long) : HashMap<String, Boolean>
 }

@@ -1,7 +1,6 @@
 package vu.pham.runningappseminar.fragments
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
@@ -15,23 +14,23 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.adapters.RecyclerViewMusicAdapter
 import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.databinding.FragmentExerciseRunBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.Workout
-import vu.pham.runningappseminar.services.Polyline
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.ExerciseRunViewModel
@@ -91,6 +90,9 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             zoomToSeeWholeTrack()
             saveDataExerciseRun()
         }
+        binding.layoutPlayMusic.setOnClickListener {
+            showBottomSheetMusic()
+        }
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if(viewModel.currentTimeInMillies>0L){
@@ -100,6 +102,23 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 findNavController().popBackStack()
             }
         }
+    }
+
+    private fun showBottomSheetMusic(){
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_music)
+        val rcvMusic = bottomSheetDialog.findViewById<RecyclerView>(R.id.rcvMusic)
+        rcvMusic?.let {
+            setUpRecyclerMusic(rcvMusic)
+        }
+        bottomSheetDialog.show()
+    }
+    private fun setUpRecyclerMusic(rcv:RecyclerView){
+        val musicAdapter = RecyclerViewMusicAdapter()
+        musicAdapter.submitList(DataStore.getListMusicLocal())
+        rcv.layoutManager = LinearLayoutManager(context)
+        rcv.adapter = musicAdapter
+        rcv.setHasFixedSize(true)
     }
 
     override fun onResume() {

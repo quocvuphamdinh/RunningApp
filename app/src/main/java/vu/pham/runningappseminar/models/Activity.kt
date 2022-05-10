@@ -6,13 +6,21 @@ class Activity() {
     private var type:Int=1
     private var durationOfWorkouts:Int=0
     private var workouts:List<Workout> = ArrayList()
+    private var isCompleted:Int = 0
 
-    constructor(name: String, type: Int, workouts: List<Workout>) : this() {
+    constructor(name: String, type: Int, workouts: List<Workout>, isCompleted:Int) : this() {
         this.name = name
         this.type = type
         this.workouts = workouts
+        this.isCompleted = isCompleted
     }
 
+    fun getIsCompleted():Int{
+        return isCompleted
+    }
+    fun setIsCompleted(isCompleted:Int){
+        this.isCompleted = isCompleted
+    }
     fun getId():Long{
         return id
     }

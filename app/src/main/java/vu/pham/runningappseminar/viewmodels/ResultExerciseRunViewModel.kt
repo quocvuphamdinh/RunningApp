@@ -31,6 +31,23 @@ class ResultExerciseRunViewModel(private val mainRepository: MainRepository) : V
         _userFeel.postValue(value)
     }
 
+    fun deleteUserExercise(userActivityId: Long) = viewModelScope.launch {
+        try {
+            val result = mainRepository.deleteUserExercise(userActivityId)
+            val success = result["success"]!!
+            if(success){
+                _toast.postValue("Delete exercise successfully !!")
+                _success.postValue(true)
+            }else{
+                _toast.postValue("Delete exercise failed !!")
+                _success.postValue(false)
+            }
+        }catch (e:Exception){
+            _toast.postValue("An error has occurred !")
+            _success.postValue(false)
+        }
+    }
+
     fun getUserActivityDetail(userActivityId : Long) = viewModelScope.launch {
         try {
             _userActivityDetail.postValue(mainRepository.getUserExerciseDetail(userActivityId))

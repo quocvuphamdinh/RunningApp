@@ -15,10 +15,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.FragmentResultExerciseRunBinding
 import vu.pham.runningappseminar.models.UserActivity
 import vu.pham.runningappseminar.models.UserActivityDetail
-import vu.pham.runningappseminar.utils.Constants
-import vu.pham.runningappseminar.utils.LoadingDialog
-import vu.pham.runningappseminar.utils.RunApplication
-import vu.pham.runningappseminar.utils.TrackingUtil
+import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.ResultExerciseRunViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ResultExerciseRunViewModelFactory
 
@@ -47,12 +44,21 @@ class ResultExerciseRunFragment : Fragment() {
            findNavController().popBackStack()
         }
         binding.cardViewSave.setOnClickListener {
-            loadingDialog.startLoadingDialog()
-            userActivity.setComment(binding.editTextAddNote.text.toString().trim())
-            viewModel.updateResultRunExercise(userActivity, viewModel.getUserLocal()!!.getId())
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                loadingDialog.startLoadingDialog()
+                userActivity.setComment(binding.editTextAddNote.text.toString().trim())
+                viewModel.updateResultRunExercise(userActivity, viewModel.getUserLocal()!!.getId())
+            }else{
+                Toast.makeText(requireContext(), "Your device does not have internet !", Toast.LENGTH_SHORT).show()
+            }
         }
         binding.cardViewDelete.setOnClickListener {
-
+            if(CheckConnection.haveNetworkConnection(requireContext())){
+                loadingDialog.startLoadingDialog()
+                deleteRunExerciseRun()
+            }else{
+                Toast.makeText(requireContext(), "Your device does not have internet !", Toast.LENGTH_SHORT).show()
+            }
         }
         binding.imageButtonEasy.setOnClickListener {
             viewModel.setUserFeel(1)
@@ -65,6 +71,10 @@ class ResultExerciseRunFragment : Fragment() {
         }
         subcribeToObservers()
         getUserActivityData()
+    }
+
+    private fun deleteRunExerciseRun() {
+        viewModel.deleteUserExercise(userActivity.getId())
     }
 
     private fun getUserActivityData() {
@@ -142,9 +152,13 @@ class ResultExerciseRunFragment : Fragment() {
                 binding.imageViewResultExerRun.setImageResource(R.drawable.runner2)
             }
             userActivityDetail.getActivity()?.let { activity ->
+                var duration = 0L
+                for(i in 0 until activity.getWorkouts().size){
+                    duration+= activity.getWorkouts()[i].getDuration()
+                }
                 binding.textViewTitleResultExerciseRunFragment.text = "${activity.getName()} - " +
-                        "${activity.getDurationOfWorkouts()} mins - ${if(activity.getType()==0) "Walking Exercise" else "Running Exercise"}"
-                if(run.timeInMillis>= activity.getDurationOfWorkouts() * 60000L){
+                        "${TrackingUtil.getFormattedTimer2(duration, 2)} mins - ${if(activity.getType()==0) "Walking Exercise" else "Running Exercise"}"
+                if(run.timeInMillis>= duration){
                     binding.imageViewIsCompletedResultExerRun.setImageResource(R.drawable.ic_completed)
                 }else{
                     binding.imageViewIsCompletedResultExerRun.setImageResource(R.drawable.ic_not_completed)

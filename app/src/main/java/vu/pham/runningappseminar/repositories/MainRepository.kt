@@ -18,6 +18,8 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun deleteUserExercise(userActivityId: Long) = apiService.deleteUserExercise(userActivityId)
+
     suspend fun deleteRunRemote(run:Run) = apiService.deleteRunRemote(run)
 
     suspend fun updateUserExercise(userActivity: UserActivity, userId: Long) = apiService.updateUserExercise(userActivity, userId)
@@ -36,7 +38,7 @@ class MainRepository(
 
     suspend fun getActivityDetail(id:Long) = apiService.getActivityDetail(id)
 
-    suspend fun getListActivityByType(type:Int) = apiService.getListActivityByType(type)
+    suspend fun getListActivityByType(type:Int, userId: Long) = apiService.getListActivityByType(type, userId)
 
     fun getFirebaseStorage() = firebaseStorageService
 

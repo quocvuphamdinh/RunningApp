@@ -18,10 +18,12 @@ class ListExerciseViewModel(private val mainRepository: MainRepository) : ViewMo
         get() = _walkingExercises
 
     fun getRunningExercises() = viewModelScope.launch {
-        _runningExercises.postValue(mainRepository.getListActivityByType(1))
+        val user = mainRepository.getUserFromSharedPref()
+        _runningExercises.postValue(mainRepository.getListActivityByType(1, user?.getId()!!))
     }
 
     fun getWalkingExercises() = viewModelScope.launch {
-        _walkingExercises.postValue(mainRepository.getListActivityByType(0))
+        val user = mainRepository.getUserFromSharedPref()
+        _walkingExercises.postValue(mainRepository.getListActivityByType(0, user?.getId()!!))
     }
 }

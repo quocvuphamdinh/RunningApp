@@ -3,6 +3,7 @@ package vu.pham.runningappseminar.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -44,11 +45,13 @@ class RecyclerViewActivityAdapter(
         var txtNameItem : TextView
         var txtTimeSumItem : TextView
         var linearLayout :LinearLayout
+        var imageViewCompleted: ImageView
 
         init {
             txtNameItem = itemView.findViewById(R.id.textViewActivityItemName)
             txtTimeSumItem = itemView.findViewById(R.id.textViewActivityItemTimeSum)
             linearLayout = itemView.findViewById(R.id.linearItemExcersiseLayout)
+            imageViewCompleted = itemView.findViewById(R.id.imageViewCompleted)
         }
     }
 
@@ -71,6 +74,11 @@ class RecyclerViewActivityAdapter(
             }else{
                 holder.linearLayout.setBackgroundResource(R.drawable.walking_background)
             }
+        }
+        if(activity.getIsCompleted()==1){
+            holder.imageViewCompleted.visibility = View.VISIBLE
+        }else{
+            holder.imageViewCompleted.visibility = View.INVISIBLE
         }
 
         holder.txtNameItem.setOnClickListener {

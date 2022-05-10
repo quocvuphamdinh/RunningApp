@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
+import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.ViewPagerHistoryRunAdapter
 import vu.pham.runningappseminar.databinding.FragmentHistoryRunBinding
 import vu.pham.runningappseminar.utils.RunApplication
@@ -36,7 +37,7 @@ class HistoryRunFragment : Fragment() {
         setUpViewPagerWithTabLayout()
 
         binding.textViewBackHistoryRun.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.action_historyRunFragment_to_profileFragment)
         }
     }
     private fun setUpViewPagerWithTabLayout() {

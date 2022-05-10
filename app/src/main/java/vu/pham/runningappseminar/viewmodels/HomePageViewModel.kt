@@ -59,10 +59,10 @@ class HomePageViewModel(private val mainRepository: MainRepository, private val 
         return false
     }
 
-    fun getListActivityRun() = viewModelScope.launch {
+    fun getListActivityRun(userId: Long) = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
-                val result = mainRepository.getListActivityByType(1)
+                val result = mainRepository.getListActivityByType(1, userId)
                 _listActivityRun.postValue(result)
             }else{
                 _toastEvent.postValue("Your device does not have internet !")

@@ -56,7 +56,8 @@ class ExerciseViewModel(private val mainRepository: MainRepository, private val 
     fun getListActivityRun() = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
-                val result = mainRepository.getListActivityByType(1)
+                val user = mainRepository.getUserFromSharedPref()
+                val result = mainRepository.getListActivityByType(1, user?.getId()!!)
                 _listActivityRun.postValue(result)
             }else{
                 _errEvent.postValue("Your device does not have internet !")
@@ -69,7 +70,8 @@ class ExerciseViewModel(private val mainRepository: MainRepository, private val 
     fun getListActivityWalk() = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
-                _listActivityWalk.postValue(mainRepository.getListActivityByType(0))
+                val user = mainRepository.getUserFromSharedPref()
+                _listActivityWalk.postValue(mainRepository.getListActivityByType(0, user?.getId()!!))
             }else{
                 _errEvent.postValue("Your device does not have internet !")
             }

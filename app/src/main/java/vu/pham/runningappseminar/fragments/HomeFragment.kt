@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getListToTraining(){
-        viewModel.getListActivityRun()
+        viewModel.getListActivityRun(user?.getId()!!)
         viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
             initActivityList(it)
         })
