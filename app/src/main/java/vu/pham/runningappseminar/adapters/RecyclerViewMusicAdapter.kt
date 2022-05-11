@@ -3,6 +3,7 @@ package vu.pham.runningappseminar.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -11,8 +12,11 @@ import pl.droidsonroids.gif.GifImageView
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.models.Music
 
-class RecyclerViewMusicAdapter : RecyclerView.Adapter<RecyclerViewMusicAdapter.MusicHolder>() {
+class RecyclerViewMusicAdapter(private val clickMusic: ClickMusic) : RecyclerView.Adapter<RecyclerViewMusicAdapter.MusicHolder>() {
 
+    interface ClickMusic{
+        fun clickItem(music: Music)
+    }
     private val differCallBack = object : DiffUtil.ItemCallback<Music>(){
         override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
             return oldItem.id == newItem.id
@@ -29,6 +33,7 @@ class RecyclerViewMusicAdapter : RecyclerView.Adapter<RecyclerViewMusicAdapter.M
         val txtName: TextView = itemView.findViewById(R.id.textViewNameMusicItem)
         val txtAuthor: TextView = itemView.findViewById(R.id.textViewAuthorMusicItem)
         val imgGif: GifImageView = itemView.findViewById(R.id.imageViewMusicGif)
+        val layout: RelativeLayout = itemView.findViewById(R.id.relativeLayoutMusic)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicHolder {
@@ -44,6 +49,9 @@ class RecyclerViewMusicAdapter : RecyclerView.Adapter<RecyclerViewMusicAdapter.M
         }
         holder.txtName.text = music.name
         holder.txtAuthor.text = music.author
+        holder.layout.setOnClickListener {
+            clickMusic.clickItem(music)
+        }
     }
 
     override fun getItemCount(): Int {

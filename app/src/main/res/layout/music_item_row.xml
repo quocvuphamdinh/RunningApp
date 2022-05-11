@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@color/black"
     android:paddingVertical="10dp"
-    android:paddingHorizontal="20dp">
+    android:paddingHorizontal="20dp"
+    android:id="@+id/relativeLayoutMusic">
     <TextView
         android:id="@+id/textViewNameMusicItem"
         android:textSize="16sp"

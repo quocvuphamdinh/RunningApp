@@ -3,20 +3,23 @@ package vu.pham.runningappseminar.fragments
 import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
@@ -26,11 +29,9 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewMusicAdapter
-import vu.pham.runningappseminar.models.Run
+import vu.pham.runningappseminar.databinding.BottomSheetDialogMusicBinding
 import vu.pham.runningappseminar.databinding.FragmentExerciseRunBinding
-import vu.pham.runningappseminar.models.User
-import vu.pham.runningappseminar.models.UserActivity
-import vu.pham.runningappseminar.models.Workout
+import vu.pham.runningappseminar.models.*
 import vu.pham.runningappseminar.services.TrackingService
 import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.ExerciseRunViewModel
@@ -41,7 +42,13 @@ import kotlin.math.round
 
 class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding : FragmentExerciseRunBinding
+    private lateinit var bindingBottomSheet : BottomSheetDialogMusicBinding
+    private lateinit var musicAdapter: RecyclerViewMusicAdapter
     private lateinit var loadingDialog: LoadingDialog
+    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var runnable: Runnable
+    private var handler = Handler()
     private var map : GoogleMap? = null
     private var isFinishFirstTime = false
     private var user: User? =null
@@ -62,7 +69,6 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mapViewExerciseRun.onCreate(savedInstanceState)
-
         if(savedInstanceState!=null){
             val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_RUNNING_DIALOG_TAG) as DialogFragmentRun?
             dialogFragmentRun?.setClickYes {
@@ -73,7 +79,12 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         requestGPS()
         subscribeToObservers()
         getDataExerciseAndBindDataToView()
-
+        //music
+        initMusicAdapter(viewModel.musicList.value!!)
+        setUpBottomSheetMusic()
+        initMediaPlayer(viewModel.musicList.value!![viewModel.positionMusic].file)
+        setUpSeekBar()
+        //
         loadingDialog = LoadingDialog(requireActivity())
 
         binding.mapViewExerciseRun.getMapAsync {
@@ -91,7 +102,23 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             saveDataExerciseRun()
         }
         binding.layoutPlayMusic.setOnClickListener {
-            showBottomSheetMusic()
+            bottomSheetDialog.show()
+        }
+        bindingBottomSheet.imagePlayMusic.setOnClickListener {
+            if(!mediaPlayer.isPlaying){
+                viewModel.initMusicIsPlaying()
+                mediaPlayer.start()
+                bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_pause_2)
+            }else{
+                mediaPlayer.pause()
+                bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_play)
+            }
+        }
+        bindingBottomSheet.imageSkipNextMusic.setOnClickListener {
+            goToNextSong(true)
+        }
+        bindingBottomSheet.imageSkipPreviousMusic.setOnClickListener {
+            goToNextSong(false)
         }
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -99,26 +126,102 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
                 showCancelRunningDialog()
             }else{
+                if(mediaPlayer.isPlaying){
+                    mediaPlayer.stop()
+                }
                 findNavController().popBackStack()
             }
         }
     }
-
-    private fun showBottomSheetMusic(){
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_music)
-        val rcvMusic = bottomSheetDialog.findViewById<RecyclerView>(R.id.rcvMusic)
-        rcvMusic?.let {
-            setUpRecyclerMusic(rcvMusic)
+    private fun goToNextSong(option:Boolean){
+        if(option){
+            bindingBottomSheet.seekBarMusic.progress = bindingBottomSheet.seekBarMusic.progress +5000
+            if(bindingBottomSheet.seekBarMusic.progress >= bindingBottomSheet.seekBarMusic.max){
+                bindingBottomSheet.seekBarMusic.progress = 0
+                viewModel.positionMusic++
+                if(viewModel.positionMusic > viewModel.musicList.value!!.size-1){
+                    viewModel.positionMusic = 0
+                }
+                viewModel.goNextMusic(viewModel.positionMusic)
+            }
+        }else{
+            bindingBottomSheet.seekBarMusic.progress = bindingBottomSheet.seekBarMusic.progress - 5000
+            if(bindingBottomSheet.seekBarMusic.progress <=0){
+                viewModel.positionMusic--
+                if(viewModel.positionMusic < 0){
+                    viewModel.positionMusic = 0
+                }
+                viewModel.goNextMusic(viewModel.positionMusic)
+            }
         }
-        bottomSheetDialog.show()
+        mediaPlayer.seekTo(bindingBottomSheet.seekBarMusic.progress)
+        bindingBottomSheet.textViewStartTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
     }
-    private fun setUpRecyclerMusic(rcv:RecyclerView){
-        val musicAdapter = RecyclerViewMusicAdapter()
-        musicAdapter.submitList(DataStore.getListMusicLocal())
-        rcv.layoutManager = LinearLayoutManager(context)
-        rcv.adapter = musicAdapter
-        rcv.setHasFixedSize(true)
+
+    private fun setUpSeekBar() {
+        bindingBottomSheet.seekBarMusic.progress = 0
+        bindingBottomSheet.seekBarMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if(fromUser){
+                    mediaPlayer.seekTo(progress)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+        runnable = Runnable {
+            bindingBottomSheet.seekBarMusic.progress = mediaPlayer.currentPosition
+            bindingBottomSheet.textViewStartTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
+            handler.postDelayed(runnable, 1000)
+            mediaPlayer.setOnCompletionListener {
+                bindingBottomSheet.seekBarMusic.progress = 0
+                viewModel.positionMusic++
+                if(viewModel.positionMusic > viewModel.musicList.value!!.size-1){
+                    viewModel.positionMusic = 0
+                }
+                viewModel.goNextMusic(viewModel.positionMusic)
+            }
+        }
+        handler.postDelayed(runnable, 1000)
+    }
+
+    private fun initMediaPlayer(file:Int) {
+        mediaPlayer = MediaPlayer.create(requireContext(), file)
+        bindingBottomSheet.textViewEndTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.duration)
+        bindingBottomSheet.seekBarMusic.max = mediaPlayer.duration
+        bindingBottomSheet.textViewMusicName.text = viewModel.musicList.value!![viewModel.positionMusic].name
+    }
+
+    private fun initMusicAdapter(list:List<Music>){
+        musicAdapter = RecyclerViewMusicAdapter(object : RecyclerViewMusicAdapter.ClickMusic{
+            override fun clickItem(music: Music) {
+                val position = viewModel.getMusicPosition(music)
+                if(position!=viewModel.positionMusic){
+                    viewModel.positionMusic = position
+                    viewModel.goNextMusic(viewModel.positionMusic)
+                    if(!mediaPlayer.isPlaying) {
+                        bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_pause_2)
+                    }
+                }
+            }
+        })
+        musicAdapter.submitList(list)
+    }
+
+    private fun setUpBottomSheetMusic(){
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bindingBottomSheet = DataBindingUtil.inflate(layoutInflater, R.layout.bottom_sheet_dialog_music, null, false)
+        bottomSheetDialog.setContentView(bindingBottomSheet.root)
+        setUpRecyclerMusic()
+    }
+
+    private fun setUpRecyclerMusic(){
+        bindingBottomSheet.rcvMusic.layoutManager = LinearLayoutManager(context)
+        bindingBottomSheet.rcvMusic.adapter = musicAdapter
+        bindingBottomSheet.rcvMusic.setHasFixedSize(true)
     }
 
     override fun onResume() {
@@ -279,6 +382,9 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.textViewCaloriesBurnedExerciseRun.text = "0"
         binding.textViewTimeLeftExerciseRun.text = "Time left - 00:00"
         binding.progressBarExerciseRun.progress = 0
+        if(mediaPlayer.isPlaying){
+            mediaPlayer.stop()
+        }
         loadingDialog.dismissDialog()
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
         if(isPop){
@@ -288,6 +394,18 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     // đăng ký observers để lắng nghe sự thay đổi về data
     private fun subscribeToObservers(){
+        viewModel.musicList.observe(viewLifecycleOwner, Observer {
+            musicAdapter.submitList(it)
+            setUpRecyclerMusic()
+        })
+        viewModel.music.observe(viewLifecycleOwner, Observer {
+            bindingBottomSheet.textViewMusicName.text = it.name
+            if(mediaPlayer.isPlaying){
+                mediaPlayer.stop()
+            }
+            initMediaPlayer(it.file)
+            mediaPlayer.start()
+        })
         viewModel.success.observe(viewLifecycleOwner, Observer {
             if(it){
                 Toast.makeText(requireContext(), "Save run in local successfully !!", Toast.LENGTH_SHORT).show()

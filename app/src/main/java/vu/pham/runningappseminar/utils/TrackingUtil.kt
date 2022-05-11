@@ -1,6 +1,7 @@
 package vu.pham.runningappseminar.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.os.Build
@@ -121,5 +122,10 @@ object TrackingUtil {
         calendar.timeInMillis = hour
         val dateFormat = SimpleDateFormat("hh:mm:ss", Locale.getDefault())
         return dateFormat.format(calendar.time)
+    }
+    @SuppressLint("SimpleDateFormat")
+    fun getFormattedDurationMusic(value:Int):String{
+        val simpleDateFormat = SimpleDateFormat("mm:ss")
+        return simpleDateFormat.format(value)
     }
 }
