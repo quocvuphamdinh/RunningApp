@@ -56,6 +56,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var weight:Float = 80f
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_RunningAppSeminar)
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_run)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_run)

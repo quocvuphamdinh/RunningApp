@@ -152,22 +152,7 @@
     <fragment
         android:id="@+id/detailExerciseFragment"
         android:name="vu.pham.runningappseminar.fragments.DetailExerciseFragment"
-        android:label="DetailExerciseFragment" >
-        <action
-            app:popUpTo="@id/detailExerciseFragment"
-            app:popUpToInclusive="true"
-            android:id="@+id/action_detailExerciseFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
-            app:popUpTo="@id/detailExerciseFragment"
-            app:popUpToInclusive="true"
-            android:id="@+id/action_detailExerciseFragment_to_activityFragment"
-            app:destination="@id/activityFragment" />
-        <action
-            app:popUpToInclusive="true"
-            app:popUpTo="@id/detailExerciseFragment"
-            android:id="@+id/action_detailExerciseFragment_to_listExerciseFragment"
-            app:destination="@id/listExerciseFragment" />
+        android:label="DetailExerciseFragment">
         <action
             app:popUpTo="@id/detailExerciseFragment"
             app:popUpToInclusive="true"
@@ -178,16 +163,6 @@
         android:id="@+id/listExerciseFragment"
         android:name="vu.pham.runningappseminar.fragments.ListExerciseFragment"
         android:label="ListExerciseFragment" >
-        <action
-            app:popUpTo="@id/listExerciseFragment"
-            app:popUpToInclusive="true"
-            android:id="@+id/action_listExerciseFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
-            app:popUpTo="@id/listExerciseFragment"
-            app:popUpToInclusive="true"
-            android:id="@+id/action_listExerciseFragment_to_activityFragment"
-            app:destination="@id/activityFragment" />
         <action
             android:id="@+id/action_listExerciseFragment_to_detailExerciseFragment"
             app:destination="@id/detailExerciseFragment" />

@@ -12,6 +12,7 @@ import vu.pham.runningappseminar.utils.Constants
 class SetMyGoalActivity : AppCompatActivity() {
     private lateinit var binding:ActivitySetMyGoalBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_RunningAppSeminar)
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_set_my_goal)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_set_my_goal)

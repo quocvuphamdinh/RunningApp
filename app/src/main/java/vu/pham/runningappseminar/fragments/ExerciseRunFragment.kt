@@ -46,6 +46,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var musicAdapter: RecyclerViewMusicAdapter
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayerNotifi: MediaPlayer
+    private lateinit var mediaPlayerFinish: MediaPlayer
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var runnable: Runnable
     private var handler = Handler()
@@ -80,6 +82,8 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         subscribeToObservers()
         getDataExerciseAndBindDataToView()
         //music
+        mediaPlayerNotifi = MediaPlayer.create(requireContext(), R.raw.notification)
+        mediaPlayerFinish = MediaPlayer.create(requireContext(), R.raw.finish)
         initMusicAdapter(viewModel.musicList.value!!)
         setUpBottomSheetMusic()
         initMediaPlayer(viewModel.musicList.value!![viewModel.positionMusic].file)
@@ -385,8 +389,12 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if(mediaPlayer.isPlaying){
             mediaPlayer.stop()
         }
+        if(mediaPlayerNotifi.isPlaying){
+            mediaPlayerNotifi.stop()
+        }
         loadingDialog.dismissDialog()
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
+        mediaPlayerFinish.start()
         if(isPop){
             findNavController().popBackStack()
         }
@@ -462,12 +470,16 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                         binding.textViewNumberExerciseRun.text = "${it+1}/${viewModel.workours.size}"
                     }
                     if(it< viewModel.workours.size && viewModel.currentTimeInMillies >= (viewModel.workours[it].getDuration()+viewModel.lastCurrentTime)){
+                        if(it <viewModel.workours.size-1){
+                            mediaPlayerNotifi.start()
+                        }
                         viewModel.lastCurrentTime += viewModel.workours[it].getDuration()
                         viewModel.updateIndex()
                     }
                     if(it >= viewModel.workours.size && !isFinishFirstTime){
                         isFinishFirstTime = true
                         loadingDialog.startLoadingDialog()
+                        sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
                         saveDataExerciseRun()
                     }
                 }

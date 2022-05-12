@@ -29,6 +29,10 @@ class ListExerciseFragment : Fragment() {
     private val viewModel : ListExerciseViewModel by viewModels{
         ListExerciseViewModelFactory((activity?.application as RunApplication).repository)
     }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
