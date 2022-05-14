@@ -53,6 +53,8 @@ class ExerciseViewModel(private val mainRepository: MainRepository, private val 
         return false
     }
 
+    fun clearToast() = _errEvent.postValue("")
+
     fun getListActivityRun() = viewModelScope.launch {
         try{
             if(hasInternetConnection()){

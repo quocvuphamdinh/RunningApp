@@ -46,6 +46,8 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean, val clickUser
         var txtAvgSpeed:TextView
         var txtCaloriesBurned:TextView
         var img:ImageView
+        var imgFeel:ImageView
+        var txtComment:TextView
         var layoutRecent : RelativeLayout
 
         init {
@@ -56,6 +58,8 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean, val clickUser
             txtAvgSpeed = itemView.findViewById(R.id.textViewAvgSpeed)
             txtCaloriesBurned = itemView.findViewById(R.id.textViewCaloriesBurned)
             img = itemView.findViewById(R.id.imageViewRecentActivityItem)
+            imgFeel = itemView.findViewById(R.id.imageViewFeelRecentActivitiesItem)
+            txtComment = itemView.findViewById(R.id.textViewCommentRecentActivitiesItem)
             layoutRecent = itemView.findViewById(R.id.layoutRecentExercise)
         }
     }
@@ -79,6 +83,21 @@ class RecyclerViewRecentActivitiesAdapter(val isShowAll : Boolean, val clickUser
         val monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
         val date = Date(userActivity.getRun()!!.timestamp)
         val format = SimpleDateFormat("HH:mm")
+        if(userActivity.getMood()< 1){
+            holder.imgFeel.visibility = View.GONE
+        }else{
+            holder.imgFeel.visibility = View.VISIBLE
+            userActivity.getMood().let {
+                holder.imgFeel.setImageResource(if(it==1) R.drawable.ic_smiling else if(it==2) R.drawable.ic_not_smiling else R.drawable.ic_tired)
+            }
+        }
+        if(userActivity.getComment().isNotEmpty()){
+            holder.txtComment.visibility = View.VISIBLE
+            holder.txtComment.text = if(userActivity.getComment().length >=60) "${userActivity.getComment().substring(0, 59)}..." else userActivity.getComment()
+        }else{
+            holder.txtComment.visibility = View.GONE
+        }
+
         holder.txtDate.text = "$monthName ${Date(userActivity.getRun()!!.timestamp).date}, " +
                 format.format(date)
         holder.txtDistance.text = "${(userActivity.getRun()!!.distanceInKilometers)/1000f} km"

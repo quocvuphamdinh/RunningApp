@@ -40,6 +40,7 @@ class ListRecentExerciseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpRecentActivities()
         subcribeToObservers()
         getData()
         binding.imageCloseRecent.setOnClickListener {
@@ -49,7 +50,7 @@ class ListRecentExerciseFragment : Fragment() {
 
     private fun subcribeToObservers() {
         viewModel.recentExercises.observe(viewLifecycleOwner, Observer {
-            setUpRecentActivities(it)
+            adapterRecentActivities.submitList(it)
         })
 
         viewModel.totalDistance.observe(viewLifecycleOwner, Observer {
@@ -84,18 +85,17 @@ class ListRecentExerciseFragment : Fragment() {
         }
     }
 
-    private fun setUpRecentActivities(list : List<UserActivityDetail>) {
+    private fun setUpRecentActivities() {
         adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(true, object : RecyclerViewRecentActivitiesAdapter.ClickUserActivity{
             override fun clickItem(userActivityDetail: UserActivityDetail) {
+                viewModel.clearToast()
                 val bundle = Bundle()
                 bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivityDetail.getId())
                 findNavController().navigate(R.id.action_listRecentExerciseFragment_to_resultExerciseRunFragment, bundle)
             }
         })
-        adapterRecentActivities.submitList(list)
         binding.rcvMoreRecentExercise.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rcvMoreRecentExercise.adapter = adapterRecentActivities
-        binding.rcvMoreRecentExercise.setHasFixedSize(true)
         binding.rcvMoreRecentExercise.isNestedScrollingEnabled = false
     }
 }

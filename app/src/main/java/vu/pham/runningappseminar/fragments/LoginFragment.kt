@@ -1,5 +1,6 @@
 package vu.pham.runningappseminar.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -16,6 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activities.HomeActivity
 import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.models.Run
 import vu.pham.runningappseminar.databinding.FragmentLoginBinding
@@ -110,7 +112,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToHomePage(){
-        findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+        startActivity(Intent(context, HomeActivity::class.java))
     }
     private fun goBack() {
         findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)

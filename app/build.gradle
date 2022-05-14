@@ -99,7 +99,7 @@ dependencies {
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     //fragment component
-    def nav_version = "2.4.1"
+    def nav_version = "2.5.0-alpha03"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 

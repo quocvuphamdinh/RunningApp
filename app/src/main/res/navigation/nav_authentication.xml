@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_authentication"
+    app:startDestination="@id/welcomeFragment">
+
+        <fragment
+            android:id="@+id/welcomeFragment"
+            android:name="vu.pham.runningappseminar.fragments.WelcomeFragment"
+            android:label="WelcomeFragment" >
+            <action
+                app:popUpToInclusive="true"
+                app:popUpTo="@id/welcomeFragment"
+                android:id="@+id/action_welcomeFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+            <action
+                app:popUpToInclusive="true"
+                app:popUpTo="@id/welcomeFragment"
+                android:id="@+id/action_welcomeFragment_to_signUpFragment"
+                app:destination="@id/signUpFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/loginFragment"
+            android:name="vu.pham.runningappseminar.fragments.LoginFragment"
+            android:label="LoginFragment" >
+            <action
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true"
+                android:id="@+id/action_loginFragment_to_welcomeFragment"
+                app:destination="@id/welcomeFragment" />
+            <action
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true"
+                android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
+                app:destination="@id/forgotPasswordFragment" />
+    <!--        <action-->
+    <!--            app:popUpTo="@id/loginFragment"-->
+    <!--            app:popUpToInclusive="true"-->
+    <!--            android:id="@+id/action_loginFragment_to_homeFragment"-->
+    <!--            app:destination="@+id/home" />-->
+        </fragment>
+        <fragment
+            android:id="@+id/signUpFragment"
+            android:name="vu.pham.runningappseminar.fragments.SignUpFragment"
+            android:label="SignUpFragment" >
+            <action
+                app:popUpTo="@id/signUpFragment"
+                app:popUpToInclusive="true"
+                android:id="@+id/action_signUpFragment_to_welcomeFragment"
+                app:destination="@id/welcomeFragment" />
+            <action
+                app:popUpTo="@id/signUpFragment"
+                app:popUpToInclusive="true"
+                android:id="@+id/action_signUpFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/forgotPasswordFragment"
+            android:name="vu.pham.runningappseminar.fragments.ForgotPasswordFragment"
+            android:label="ForgotPasswordFragment" >
+            <action
+                app:popUpTo="@id/forgotPasswordFragment"
+                app:popUpToInclusive="true"
+                android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        </fragment>
+</navigation>

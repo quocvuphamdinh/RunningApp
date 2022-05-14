@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <ScrollView android:layout_width="match_parent"
+    <ScrollView
+        android:id="@+id/scrollViewLoginFragment"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -83,16 +85,6 @@
                 android:text="Sign in"
                 android:textColor="@color/white"
                 app:backgroundTint="@null" />
-            <!--        <Button-->
-            <!--            android:id="@+id/buttonSignIn"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_below="@id/frame_layout"-->
-            <!--            android:layout_marginHorizontal="50dp"-->
-            <!--            android:layout_marginTop="20dp"-->
-            <!--            android:background="@drawable/custom_button"-->
-            <!--            android:text="Sign in"-->
-            <!--            android:textColor="@color/white" />-->
 
             <TextView
                 android:id="@+id/textViewForgotPassword"

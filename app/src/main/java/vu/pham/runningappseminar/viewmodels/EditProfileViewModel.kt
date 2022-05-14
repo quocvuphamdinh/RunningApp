@@ -42,10 +42,11 @@ class EditProfileViewModel(private val mainRepository: MainRepository) : ViewMod
         try {
             mainRepository.updateUser(user)
             writePersonalDataToSharedPref(user)
+            _errEvent.postValue("Edit profile successfully !")
             _successEdit.postValue(true)
         }catch (e:Exception){
-            _successEdit.postValue(false)
             _errEvent.postValue("An error has occurred, something happens in server !")
+            _successEdit.postValue(false)
         }
     }
 }

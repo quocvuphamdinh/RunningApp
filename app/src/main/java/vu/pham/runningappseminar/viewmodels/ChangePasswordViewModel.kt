@@ -32,6 +32,7 @@ class ChangePasswordViewModel(private val mainRepository: MainRepository) : View
         try {
             mainRepository.updateUser(user)
             writePersonalDataToSharedPref(user)
+            _errEvent.postValue("Change password successfully !")
             _successChangePassword.postValue(true)
         }catch (e:Exception){
             _errEvent.postValue("An error has occurred, something happens in server !")

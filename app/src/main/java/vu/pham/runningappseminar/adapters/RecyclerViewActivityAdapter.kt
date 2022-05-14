@@ -26,21 +26,6 @@ class RecyclerViewActivityAdapter(
         fun clickItem(activity: Activity)
     }
 
-    val differCallBack = object : DiffUtil.ItemCallback<Activity>(){
-
-        override fun areItemsTheSame(oldItem: Activity, newItem: Activity): Boolean {
-            return oldItem.getId() == newItem.getId()
-        }
-
-        override fun areContentsTheSame(oldItem: Activity, newItem: Activity): Boolean {
-            return oldItem.equals(newItem)
-        }
-    }
-
-    val differ = AsyncListDiffer(this, differCallBack)
-
-    fun submitList(list:List<Activity>) = differ.submitList(list)
-
     inner class ActivityHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         var txtNameItem : TextView
         var txtTimeSumItem : TextView
@@ -55,9 +40,25 @@ class RecyclerViewActivityAdapter(
         }
     }
 
+    val differCallBack = object : DiffUtil.ItemCallback<Activity>(){
+
+        override fun areItemsTheSame(oldItem: Activity, newItem: Activity): Boolean {
+            return oldItem.getId() == newItem.getId()
+        }
+
+        override fun areContentsTheSame(oldItem: Activity, newItem: Activity): Boolean {
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+
+    val differ = AsyncListDiffer(this, differCallBack)
+
+    fun submitList(list:List<Activity>) = differ.submitList(list)
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityHolder {
-       val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
-        return ActivityHolder(view)
+       return ActivityHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false))
     }
 
     override fun onBindViewHolder(holder: ActivityHolder, position: Int) {

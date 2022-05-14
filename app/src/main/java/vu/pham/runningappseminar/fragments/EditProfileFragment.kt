@@ -67,7 +67,7 @@ class EditProfileFragment : Fragment() {
 
         viewModel.successEdit.observe(viewLifecycleOwner, Observer {
             if(it){
-                findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                findNavController().popBackStack()
             }
         })
     }
@@ -114,6 +114,6 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun onClickCancel() {
-        findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+        findNavController().popBackStack()
     }
 }

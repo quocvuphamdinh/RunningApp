@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_analysis"
+    app:startDestination="@id/analysisFragment">
+
+    <fragment
+        android:id="@+id/analysisFragment"
+        android:name="vu.pham.runningappseminar.fragments.AnalysisFragment"
+        android:label="AnalysisFragment" >
+    </fragment>
+</navigation>

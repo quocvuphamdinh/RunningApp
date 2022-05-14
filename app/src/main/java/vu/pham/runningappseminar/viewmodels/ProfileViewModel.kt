@@ -57,6 +57,7 @@ class ProfileViewModel(
         return false
     }
 
+    fun clearToast() = _toastEvent.postValue("")
     fun getFirebaseStorage() = mainRepository.getFirebaseStorage()
 
     fun syncData(userId: Long) = viewModelScope.launch {
@@ -100,6 +101,7 @@ class ProfileViewModel(
             if (hasInternetConnection()) {
                 mainRepository.updateUser(user)
                 writePersonalDataToSharedPref(user)
+                _toastEvent.postValue("")
             } else {
                 _toastEvent.postValue("Your device does not have internet !")
             }

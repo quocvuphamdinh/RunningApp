@@ -36,6 +36,8 @@ class ListRecentExerciseViewModel(private val mainRepository: MainRepository, pr
     val totalAvgSpeed: LiveData<Float>
         get() = _totalAvgSpeed
 
+    fun clearToast() = _errEvent.postValue("")
+
     fun getListRecentExercises(userId:Long) = viewModelScope.launch {
         try{
             if(hasInternetConnection()){

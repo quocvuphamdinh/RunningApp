@@ -86,6 +86,5 @@ class HistoryRunOnlyFragment : Fragment() {
         })
         binding.recyclerViewHistoryRun.adapter = runAdapter
         binding.recyclerViewHistoryRun.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewHistoryRun.setHasFixedSize(true)
     }
 }

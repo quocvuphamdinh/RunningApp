@@ -1,6 +1,5 @@
 package vu.pham.runningappseminar.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +12,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.adapters.RecyclerViewActivityAdapter
-import vu.pham.runningappseminar.databinding.FragmentListExerciseBinding
 import vu.pham.runningappseminar.models.Activity
 import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.ListExerciseViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ListExerciseViewModelFactory
+import vu.pham.runningappseminar.databinding.FragmentListExerciseBinding
+
 
 class ListExerciseFragment : Fragment() {
     private lateinit var binding : FragmentListExerciseBinding
@@ -28,10 +28,6 @@ class ListExerciseFragment : Fragment() {
     private var type=-1
     private val viewModel : ListExerciseViewModel by viewModels{
         ListExerciseViewModelFactory((activity?.application as RunApplication).repository)
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -47,7 +43,7 @@ class ListExerciseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         getData()
-        getListExercise()
+        getListExerciseAndSetUpRecyclerview()
         registerObserver()
 
         binding.imageViewBackListExercise.setOnClickListener {
@@ -64,21 +60,23 @@ class ListExerciseFragment : Fragment() {
         }
     }
 
-    private fun getListExercise(){
+    private fun getListExerciseAndSetUpRecyclerview(){
         if(type==0){
+            setUpRecyclerView(false, R.layout.walking_item_row)
             viewModel.getWalkingExercises()
         }else{
+            setUpRecyclerView(true, R.layout.running_item_row)
             viewModel.getRunningExercises()
         }
     }
     private fun registerObserver() {
         if(type==0){
             viewModel.walkingExercises.observe(viewLifecycleOwner, Observer {
-                setUpRecyclerViewRunning(it, false, R.layout.walking_item_row)
+                exerciseAdapter.submitList(it)
             })
         }else{
             viewModel.runningExercises.observe(viewLifecycleOwner, Observer {
-                setUpRecyclerViewRunning(it, true, R.layout.running_item_row)
+                exerciseAdapter.submitList(it)
             })
         }
     }
@@ -89,7 +87,7 @@ class ListExerciseFragment : Fragment() {
         findNavController().navigate(R.id.action_listExerciseFragment_to_detailExerciseFragment, bundle)
     }
 
-    private fun setUpRecyclerViewRunning(list:List<Activity>, isRunning:Boolean, layout:Int) {
+    private fun setUpRecyclerView(isRunning:Boolean, layout:Int) {
         exerciseAdapter = RecyclerViewActivityAdapter(layout, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: Activity) {
                 if(CheckConnection.haveNetworkConnection(requireContext())){
@@ -99,9 +97,7 @@ class ListExerciseFragment : Fragment() {
                 }
             }
         }, true, isRunning, false)
-        exerciseAdapter.submitList(list)
-        binding.rcvExerciseWeightLoss.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rcvExerciseWeightLoss.adapter = exerciseAdapter
-        binding.rcvExerciseWeightLoss.setHasFixedSize(true)
+        binding.rcvExerciseWeightLoss.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 }

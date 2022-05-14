@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:id="@+id/layoutRecentExercise">
 
     <FrameLayout
@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/textViewDateRecentActivitiesItem"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
         android:layout_marginTop="10dp"
@@ -45,6 +45,15 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/imageViewFeelRecentActivitiesItem"
+        android:visibility="gone"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_smiling"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
 
     <TextView
         android:id="@+id/textViewDistanceRecentActivitiesItem"
@@ -60,6 +69,7 @@
         android:textSize="20sp"
         android:textStyle="italic|bold" />
     <LinearLayout
+        android:id="@+id/linearRecent"
         android:weightSum="12"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
@@ -94,4 +104,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCommentRecentActivitiesItem"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearRecent"
+        android:layout_marginStart="13dp"
+        android:layout_toEndOf="@id/frame_layout_recentActivities"
+        android:padding="5dp"
+        android:text="@string/app_name" />
 </RelativeLayout>

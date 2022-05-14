@@ -59,11 +59,14 @@ class HomePageViewModel(private val mainRepository: MainRepository, private val 
         return false
     }
 
+    fun clearToast() = _toastEvent.postValue("")
+
     fun getListActivityRun(userId: Long) = viewModelScope.launch {
         try{
             if(hasInternetConnection()){
                 val result = mainRepository.getListActivityByType(1, userId)
                 _listActivityRun.postValue(result)
+                _toastEvent.postValue("")
             }else{
                 _toastEvent.postValue("Your device does not have internet !")
             }
@@ -76,6 +79,7 @@ class HomePageViewModel(private val mainRepository: MainRepository, private val 
         try{
             if(hasInternetConnection()){
                 _recentExercise.postValue(mainRepository.getListUserExercise(userId))
+                _toastEvent.postValue("")
             }else{
                 _toastEvent.postValue("Your device does not have internet !")
             }
@@ -109,6 +113,7 @@ class HomePageViewModel(private val mainRepository: MainRepository, private val 
             if(hasInternetConnection()){
                 mainRepository.updateUser(user)
                 writePersonalDataToSharedPref(user)
+                _toastEvent.postValue("")
             }else{
                 _toastEvent.postValue("Your device does not have internet !")
             }

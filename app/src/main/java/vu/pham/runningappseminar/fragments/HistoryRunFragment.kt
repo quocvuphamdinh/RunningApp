@@ -37,7 +37,7 @@ class HistoryRunFragment : Fragment() {
         setUpViewPagerWithTabLayout()
 
         binding.textViewBackHistoryRun.setOnClickListener {
-            findNavController().navigate(R.id.action_historyRunFragment_to_profileFragment)
+            findNavController().popBackStack()
         }
     }
     private fun setUpViewPagerWithTabLayout() {

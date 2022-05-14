@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="vu.pham.runningappseminar">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -23,6 +23,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:launchMode="singleTask"
+            android:name=".activities.HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.RunActivity"
             android:exported="false"
             android:launchMode="singleTop" />
@@ -30,6 +34,7 @@
             android:name=".activities.SetMyGoalActivity"
             android:exported="false" />
         <activity
+            android:noHistory="true"
             android:name=".activities.MainActivity"
             android:exported="true"
             android:launchMode="singleTask">

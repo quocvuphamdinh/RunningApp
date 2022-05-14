@@ -45,6 +45,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <ScrollView
+            android:id="@+id/scrollViewProfileFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/appBarProfileFragment">

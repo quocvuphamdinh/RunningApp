@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,8 +69,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUserInfo()
         subscribeToObservers()
+        initUserInfo()
+        setUpRecyclerViewActivity()
+        setUpRecyclerViewRecentActivities()
         getListToTraining()
         getListRecentExercise()
         binding.imageViewSetMyGoal.setOnClickListener {
@@ -117,6 +120,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun goToListExercisePage(titleName:String, typeExercise:Int){
+        viewModel.clearToast()
         val bundle = Bundle()
         bundle.putString(Constants.TITLE_NAME, titleName)
         bundle.putInt(Constants.TYPE_EXERCISE, typeExercise)
@@ -145,19 +149,21 @@ class HomeFragment : Fragment() {
 
     private fun getListToTraining(){
         viewModel.getListActivityRun(user?.getId()!!)
-        viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
-            initActivityList(it)
-        })
     }
 
     private fun getListRecentExercise(){
         viewModel.getListUserExercise(user?.getId()!!)
-        viewModel.recentExercise.observe(viewLifecycleOwner, Observer {
-            initRecentActivities(it)
-        })
     }
 
     private fun subscribeToObservers(){
+        viewModel.recentExercise.observe(viewLifecycleOwner, Observer {
+            adapterRecentActivities.submitList(it)
+        })
+
+        viewModel.listActivityRun.observe(viewLifecycleOwner, Observer {
+            adapterTodayTraining.submitList(it)
+        })
+
         viewModel.userLiveData.observe(viewLifecycleOwner, Observer {
             user = it
             viewModel.getUserLiveData(user!!.getUsername(), user!!.getPassword())
@@ -219,6 +225,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun clickGoToSetMyGoal() {
+        viewModel.clearToast()
         val intent = Intent(context, SetMyGoalActivity::class.java)
         val bundle = Bundle()
         bundle.putLong(Constants.INIT_SET_MYGOAL, user?.getdistanceGoal()!!)
@@ -227,15 +234,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun goToActivityDetailPage(id:Long){
+        viewModel.clearToast()
         val bundle = Bundle()
         bundle.putLong(Constants.DETAIL_EXERCISE_ID, id)
         findNavController().navigate(R.id.action_homeFragment_to_detailExerciseFragment, bundle)
     }
 
-    private fun initRecentActivities(list : List<UserActivityDetail>) {
+    private fun setUpRecyclerViewRecentActivities() {
         adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(false, object : RecyclerViewRecentActivitiesAdapter.ClickUserActivity{
             override fun clickItem(userActivityDetail: UserActivityDetail) {
                 if (CheckConnection.haveNetworkConnection(requireContext())){
+                    viewModel.clearToast()
                     val bundle = Bundle()
                     bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivityDetail.getId())
                     findNavController().navigate(R.id.action_homeFragment_to_resultExerciseRunFragment, bundle)
@@ -244,14 +253,12 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-        adapterRecentActivities.submitList(list)
         binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities
-        binding.recyclerViewRecentActiviesHomeFragment.setHasFixedSize(true)
         binding.recyclerViewRecentActiviesHomeFragment.isNestedScrollingEnabled = false
     }
 
-    private fun initActivityList(list: List<vu.pham.runningappseminar.models.Activity>) {
+    private fun setUpRecyclerViewActivity() {
         adapterTodayTraining = RecyclerViewActivityAdapter(R.layout.activity_item_row, object : RecyclerViewActivityAdapter.ClickItem{
             override fun clickItem(activity: vu.pham.runningappseminar.models.Activity) {
                 if(CheckConnection.haveNetworkConnection(requireContext())){
@@ -261,9 +268,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }, false, true, true)
-        adapterTodayTraining.submitList(list)
-        binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining
-        binding.recyclerViewActivityHomeFragment.setHasFixedSize(true)
+        binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 }

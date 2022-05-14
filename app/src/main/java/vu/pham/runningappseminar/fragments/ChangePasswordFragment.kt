@@ -57,7 +57,7 @@ class ChangePasswordFragment : Fragment() {
         }
 
         binding.textViewCancelChangePassword.setOnClickListener {
-            findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
+            findNavController().popBackStack()
         }
 
         observeError()
@@ -80,7 +80,7 @@ class ChangePasswordFragment : Fragment() {
 
         viewModel.successChangePassword.observe(viewLifecycleOwner, Observer {
             if(it){
-                findNavController().navigate(R.id.action_changePasswordFragment_to_profileFragment)
+                findNavController().popBackStack()
             }
         })
     }

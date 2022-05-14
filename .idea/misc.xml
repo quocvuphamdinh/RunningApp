@@ -63,6 +63,7 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/bottom_sheet_dialog_music.xml" value="0.22" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/custom_dialog_loading.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_activity.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_analysis.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_change_password.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_detail_exercise.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20416666666666666" />
@@ -87,7 +88,7 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/item_workout_row.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/music_item_row.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/profile_fragment.xml" value="0.25" />
-        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/recent_activities_item_row.xml" value="0.33" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/recent_activities_item_row.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/running_item_row.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/walking_item_row.xml" value="0.2" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/wheel_item_row.xml" value="0.20416666666666666" />

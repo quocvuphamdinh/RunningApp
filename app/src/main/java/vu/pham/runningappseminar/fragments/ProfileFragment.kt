@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.activities.MainActivity
 import vu.pham.runningappseminar.databinding.FragmentProfileBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.*
@@ -115,6 +116,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun goToChangePassword() {
+        viewModel.clearToast()
         val bundle = Bundle()
         bundle.putSerializable(Constants.CHANGE_PASSWORD, userLocal)
         findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment, bundle)
@@ -212,7 +214,10 @@ class ProfileFragment : Fragment() {
 
         viewModel.success.observe(viewLifecycleOwner, Observer {
             if(it){
-                findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                val i = Intent(context, MainActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(i)
+                activity?.overridePendingTransition(0,0)
             }
             loadingDialog.dismissDialog()
         })
@@ -245,10 +250,12 @@ class ProfileFragment : Fragment() {
     }
 
     private fun goToHistoryRun() {
+        viewModel.clearToast()
        findNavController().navigate(R.id.action_profileFragment_to_historyRunFragment)
     }
 
     private fun goToEditProfile() {
+        viewModel.clearToast()
         val bundle = Bundle()
         bundle.putSerializable(Constants.EDIT_USER, userLocal)
         findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)

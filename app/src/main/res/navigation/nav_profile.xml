@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_profile"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="vu.pham.runningappseminar.fragments.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_historyRunFragment"
+            app:destination="@id/historyRunFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="vu.pham.runningappseminar.fragments.EditProfileFragment"
+        android:label="EditProfileFragment" >
+        <action
+            app:popUpTo="@id/editProfileFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyRunFragment"
+        android:name="vu.pham.runningappseminar.fragments.HistoryRunFragment"
+        android:label="HistoryRunFragment" >
+        <action
+            app:popUpTo="@id/historyRunFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_historyRunFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_historyRunFragment_to_runDetailFragment"
+            app:destination="@id/runDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="vu.pham.runningappseminar.fragments.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" >
+        <action
+            app:popUpTo="@id/changePasswordFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_changePasswordFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/runDetailFragment"
+        android:name="vu.pham.runningappseminar.fragments.RunDetailFragment"
+        android:label="RunDetailFragment" >
+        <action
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/runDetailFragment"
+            android:id="@+id/action_runDetailFragment_to_historyRunFragment"
+            app:destination="@id/historyRunFragment" />
+    </fragment>
+
+</navigation>
