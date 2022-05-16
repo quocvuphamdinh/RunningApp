@@ -113,6 +113,8 @@ class LoginFragment : Fragment() {
 
     private fun goToHomePage(){
         startActivity(Intent(context, HomeActivity::class.java))
+        activity?.finish()
+        activity?.overridePendingTransition(0, 0)
     }
     private fun goBack() {
         findNavController().navigate(R.id.action_loginFragment_to_welcomeFragment)
