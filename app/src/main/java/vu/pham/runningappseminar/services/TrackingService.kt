@@ -28,8 +28,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.activities.MainActivity
-import vu.pham.runningappseminar.activities.RunActivity
+import vu.pham.runningappseminar.ui.activities.MainActivity
+import vu.pham.runningappseminar.ui.activities.RunActivity
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
 import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_EXERCISE_RUN_FRAGMENT
 import vu.pham.runningappseminar.utils.Constants.ACTION_SHOW_TRACKING_ACTIVITY

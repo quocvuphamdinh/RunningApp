@@ -24,17 +24,17 @@
         tools:targetApi="m">
         <activity
             android:launchMode="singleTask"
-            android:name=".activities.HomeActivity"
+            android:name="vu.pham.runningappseminar.ui.activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RunActivity"
+            android:name="vu.pham.runningappseminar.ui.activities.RunActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activities.SetMyGoalActivity"
+            android:name="vu.pham.runningappseminar.ui.activities.SetMyGoalActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name="vu.pham.runningappseminar.ui.activities.MainActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>

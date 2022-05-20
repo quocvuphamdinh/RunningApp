@@ -10,10 +10,10 @@ interface ApiService {
 
     //user
     @GET("/user/{userName}-{passWord}")
-    suspend fun getUserLiveData(@Path("userName") username:String?, @Path("passWord") password:String?): User
+    suspend fun getUserLiveData(@Path("userName") userName: String, @Path("passWord") passWord: String): User
 
     @GET("/user/{userName}-{passWord}")
-    fun getUserLogin(@Path("userName") username:String?, @Path("passWord") password:String?): Call<User>
+    fun getUserLogin(@Path("userName") userName: String, @Path("passWord") passWord: String): Call<User>
 
     @POST("/user")
     suspend fun insertUser(@Body user: User?)

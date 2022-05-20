@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="vu.pham.runningappseminar.fragments.ProfileFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="vu.pham.runningappseminar.fragments.EditProfileFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.EditProfileFragment"
         android:label="EditProfileFragment" >
         <action
             app:popUpTo="@id/editProfileFragment"
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/historyRunFragment"
-        android:name="vu.pham.runningappseminar.fragments.HistoryRunFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.HistoryRunFragment"
         android:label="HistoryRunFragment" >
         <action
             app:popUpTo="@id/historyRunFragment"
@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="vu.pham.runningappseminar.fragments.ChangePasswordFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ChangePasswordFragment"
         android:label="ChangePasswordFragment" >
         <action
             app:popUpTo="@id/changePasswordFragment"
@@ -57,7 +57,7 @@
 
     <fragment
         android:id="@+id/runDetailFragment"
-        android:name="vu.pham.runningappseminar.fragments.RunDetailFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.RunDetailFragment"
         android:label="RunDetailFragment" >
         <action
             app:popUpToInclusive="true"

@@ -9,7 +9,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".activities.SignUpActivity"
+            tools:context=".ui.activities.SignUpActivity"
             android:orientation="vertical">
 
             <TextView

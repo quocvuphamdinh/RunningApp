@@ -6,7 +6,7 @@
 
         <fragment
             android:id="@+id/welcomeFragment"
-            android:name="vu.pham.runningappseminar.fragments.WelcomeFragment"
+            android:name="vu.pham.runningappseminar.ui.fragments.WelcomeFragment"
             android:label="WelcomeFragment" >
             <action
                 app:popUpToInclusive="true"
@@ -21,7 +21,7 @@
         </fragment>
         <fragment
             android:id="@+id/loginFragment"
-            android:name="vu.pham.runningappseminar.fragments.LoginFragment"
+            android:name="vu.pham.runningappseminar.ui.fragments.LoginFragment"
             android:label="LoginFragment" >
             <action
                 app:popUpTo="@id/loginFragment"
@@ -41,7 +41,7 @@
         </fragment>
         <fragment
             android:id="@+id/signUpFragment"
-            android:name="vu.pham.runningappseminar.fragments.SignUpFragment"
+            android:name="vu.pham.runningappseminar.ui.fragments.SignUpFragment"
             android:label="SignUpFragment" >
             <action
                 app:popUpTo="@id/signUpFragment"
@@ -56,7 +56,7 @@
         </fragment>
         <fragment
             android:id="@+id/forgotPasswordFragment"
-            android:name="vu.pham.runningappseminar.fragments.ForgotPasswordFragment"
+            android:name="vu.pham.runningappseminar.ui.fragments.ForgotPasswordFragment"
             android:label="ForgotPasswordFragment" >
             <action
                 app:popUpTo="@id/forgotPasswordFragment"

@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="vu.pham.runningappseminar.fragments.HomeFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_listExerciseFragment"
@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/listExerciseFragment"
-        android:name="vu.pham.runningappseminar.fragments.ListExerciseFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ListExerciseFragment"
         android:label="ListExerciseFragment" >
         <action
             android:id="@+id/action_listExerciseFragment_to_detailExerciseFragment"
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/detailExerciseFragment"
-        android:name="vu.pham.runningappseminar.fragments.DetailExerciseFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.DetailExerciseFragment"
         android:label="DetailExerciseFragment">
         <action
             app:popUpTo="@id/detailExerciseFragment"
@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/listRecentExerciseFragment"
-        android:name="vu.pham.runningappseminar.fragments.ListRecentExerciseFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ListRecentExerciseFragment"
         android:label="ListRecentExerciseFragment" >
         <action
             android:id="@+id/action_listRecentExerciseFragment_to_resultExerciseRunFragment"
@@ -57,12 +57,12 @@
 
     <fragment
         android:id="@+id/resultExerciseRunFragment"
-        android:name="vu.pham.runningappseminar.fragments.ResultExerciseRunFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ResultExerciseRunFragment"
         android:label="ResultExerciseRunFragment" />
 
     <fragment
         android:id="@+id/exerciseRunFragment"
-        android:name="vu.pham.runningappseminar.fragments.ExerciseRunFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.ExerciseRunFragment"
         android:label="ExerciseRunFragment" >
         <action
             app:popUpTo="@id/exerciseRunFragment"

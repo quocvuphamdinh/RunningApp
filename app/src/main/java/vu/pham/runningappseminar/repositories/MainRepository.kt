@@ -46,9 +46,9 @@ class MainRepository(
 
     suspend fun insertUser(user: User)= apiService.insertUser(user)
 
-    suspend fun getUserLiveData(username:String, password:String) = apiService.getUserLiveData(username, password)
+    suspend fun getUserLiveData(userName: String, passWord: String) = apiService.getUserLiveData(userName, passWord)
 
-    fun getUserLogin(username: String, password: String) = apiService.getUserLogin(username, password)
+    fun getUserLogin(userName: String, passWord: String) = apiService.getUserLogin(userName, passWord)
 
     suspend fun updateUser(user: User) = apiService.updateUser(user, user.getId())
 

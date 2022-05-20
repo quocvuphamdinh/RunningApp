@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/analysisFragment"
-        android:name="vu.pham.runningappseminar.fragments.AnalysisFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.AnalysisFragment"
         android:label="AnalysisFragment" >
     </fragment>
 </navigation>
