@@ -76,7 +76,6 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         if(savedInstanceState!=null){
             val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_RUNNING_DIALOG_TAG) as DialogFragmentRun?
             dialogFragmentRun?.setClickYes {
-                showLoadingDialog()
                 stopRun(true)
             }
         }
@@ -367,7 +366,6 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private fun showCancelRunningDialog(){
         DialogFragmentRun("Cancel the Run ?", "Are you sure to cancel this run and the data will be deleted ?").apply {
             setClickYes {
-                showLoadingDialog()
                 stopRun(true)
             }
         }.show(parentFragmentManager, Constants.CANCEL_RUNNING_DIALOG_TAG)
@@ -399,7 +397,9 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
         loadingDialog.dismissDialog()
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
-        mediaPlayerFinish.start()
+        if(!isPop){
+            mediaPlayerFinish.start()
+        }
         if(isPop){
             findNavController().popBackStack()
         }
