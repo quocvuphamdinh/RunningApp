@@ -270,4 +270,9 @@ class HomeFragment : Fragment() {
         binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining
         binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.clearToast()
+    }
 }

@@ -1,10 +1,16 @@
 package vu.pham.runningappseminar.ui.activities
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
@@ -13,11 +19,19 @@ import androidx.navigation.NavController
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivityHomeBinding
 import vu.pham.runningappseminar.ui.utils.setupWithNavController
+import vu.pham.runningappseminar.utils.CheckConnection
 import vu.pham.runningappseminar.utils.Constants
+import vu.pham.runningappseminar.utils.RunApplication
+import vu.pham.runningappseminar.viewmodels.HomeActivityViewModel
+import vu.pham.runningappseminar.viewmodels.viewmodelfactories.HomeActivityViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private var currentNavController: LiveData<NavController>? = null
+    private lateinit var boardcastReceiver: BroadcastReceiver
+    private val viewModel: HomeActivityViewModel by viewModels {
+        HomeActivityViewModelFactory((application as RunApplication).repository)
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +45,29 @@ class HomeActivity : AppCompatActivity() {
         binding.floatingButtonRun.setOnClickListener {
             clickRun()
         }
+        boardcastReceiver = object : BroadcastReceiver(){
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if(ConnectivityManager.CONNECTIVITY_ACTION == intent?.action){
+                    if(CheckConnection.haveNetworkConnection(context!!)){
+                        if(viewModel.isDisconnectedFirstTime){
+                            Toast.makeText(context, "Your internet is on !!", Toast.LENGTH_LONG).show()
+                            viewModel.syncDataRunToServer()
+                        }
+                    }else{
+                        Toast.makeText(context, "Your internet is off !!", Toast.LENGTH_LONG).show()
+                        viewModel.isDisconnectedFirstTime = true
+                    }
+                }
+            }
+        }
+
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(boardcastReceiver, intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(boardcastReceiver)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

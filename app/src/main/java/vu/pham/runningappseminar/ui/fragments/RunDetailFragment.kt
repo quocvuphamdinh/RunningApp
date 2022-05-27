@@ -23,7 +23,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.RunDetailViewMode
 class RunDetailFragment : Fragment() {
     private lateinit var binding : FragmentRunDetailBinding
     private var runDelete: Run? = null
-    private lateinit var loadingDialog: LoadingDialog
+    private  val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private val viewModel : RunDetailViewModel by viewModels {
         RunDetailViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -40,7 +40,6 @@ class RunDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadingDialog = LoadingDialog()
         if(savedInstanceState!=null){
             val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_DELETE_RUN_DIALOG_TAG) as DialogFragmentRun?
             dialogFragmentRun?.setClickYes {

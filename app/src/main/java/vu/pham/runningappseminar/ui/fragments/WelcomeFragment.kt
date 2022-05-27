@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.ui.activities.HomeActivity
@@ -19,7 +17,6 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.WelcomeViewModelF
 
 class WelcomeFragment : Fragment() {
     private lateinit var binding:FragmentWelcomeBinding
-    private var currentNavController: LiveData<NavController>? = null
     private val viewModel : WelcomeViewModel by viewModels{
         WelcomeViewModelFactory((activity?.application as RunApplication).repository)
     }

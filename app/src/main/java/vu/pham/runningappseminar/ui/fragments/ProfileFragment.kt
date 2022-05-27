@@ -25,6 +25,7 @@ import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.ui.activities.MainActivity
 import vu.pham.runningappseminar.databinding.FragmentProfileBinding
 import vu.pham.runningappseminar.models.User
+import vu.pham.runningappseminar.ui.utils.DialogFragmentRun
 import vu.pham.runningappseminar.ui.utils.LoadingDialog
 import vu.pham.runningappseminar.utils.*
 import vu.pham.runningappseminar.viewmodels.ProfileViewModel
@@ -35,7 +36,7 @@ import kotlin.math.round
 class ProfileFragment : Fragment() {
     private lateinit var binding:FragmentProfileBinding
     private lateinit var mActivityResult:ActivityResultLauncher<Intent>
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
 
     private val viewModel : ProfileViewModel by viewModels{
         ProfileViewModelFactory((activity?.application as RunApplication).repository,  activity?.application as RunApplication)
@@ -55,7 +56,12 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadingDialog = LoadingDialog()
+        if(savedInstanceState!=null){
+            val logoutDialogFragment = parentFragmentManager.findFragmentByTag(Constants.LOGOUT_DIALOG_TAG) as DialogFragmentRun?
+            logoutDialogFragment?.setClickYes {
+                clickLogout()
+            }
+        }
         setUpInfoUserProfile()
 
         binding.imageViewEditProfile.setOnClickListener {
@@ -68,7 +74,7 @@ class ProfileFragment : Fragment() {
 
         binding.cardViewLogout.setOnClickListener {
             if(CheckConnection.haveNetworkConnection(requireContext())){
-                clickLogout()
+                showAlertDialog()
             }else{
                 Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
             }
@@ -114,6 +120,14 @@ class ProfileFragment : Fragment() {
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
         }
+    }
+
+    private fun showAlertDialog() {
+        DialogFragmentRun("Log out ?", "Do you want to log out this account ?").apply {
+            setClickYes {
+                clickLogout()
+            }
+        }.show(parentFragmentManager, Constants.LOGOUT_DIALOG_TAG)
     }
 
     private fun showLoadingDialog(){
@@ -264,5 +278,10 @@ class ProfileFragment : Fragment() {
         val bundle = Bundle()
         bundle.putSerializable(Constants.EDIT_USER, userLocal)
         findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.clearToast()
     }
 }

@@ -22,7 +22,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ForgotPasswordVie
 class ForgotPasswordFragment : Fragment() {
 
     private lateinit var binding:FragmentForgotPasswordBinding
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
 
     private val viewModel : ForgotPasswordViewModel by viewModels{
         ForgotPasswordViewModelFactory((activity?.application as RunApplication).repository)
@@ -39,8 +39,6 @@ class ForgotPasswordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        loadingDialog = LoadingDialog()
 
         subcribeToObservers()
 

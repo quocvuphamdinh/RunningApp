@@ -46,7 +46,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding : FragmentExerciseRunBinding
     private lateinit var bindingBottomSheet : BottomSheetDialogMusicBinding
     private lateinit var musicAdapter: RecyclerViewMusicAdapter
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var mediaPlayerNotifi: MediaPlayer
     private lateinit var mediaPlayerFinish: MediaPlayer
@@ -90,7 +90,6 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         initMediaPlayer(viewModel.musicList.value!![viewModel.positionMusic].file)
         setUpSeekBar()
         //
-        loadingDialog = LoadingDialog()
 
         binding.mapViewExerciseRun.getMapAsync {
             map = it

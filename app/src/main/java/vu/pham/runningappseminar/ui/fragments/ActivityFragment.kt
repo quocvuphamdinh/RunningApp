@@ -120,4 +120,9 @@ class ActivityFragment : Fragment() {
         binding.recyclerViewRunningActivity.adapter = adapterRunning
         binding.recyclerViewRunningActivity.isNestedScrollingEnabled = false
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.clearToast()
+    }
 }

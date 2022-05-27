@@ -32,7 +32,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.LoginViewModelFac
 class LoginFragment : Fragment() {
     private lateinit var binding:FragmentLoginBinding
     private var showPass = false
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private val viewModel : LoginViewModel by viewModels{
         LoginViewModelFactory((activity?.application as RunApplication).repository)
     }
@@ -48,7 +48,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadingDialog = LoadingDialog()
         binding.textViewBackWelComeScreen2.setOnClickListener {
             goBack()
         }

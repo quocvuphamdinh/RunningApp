@@ -22,7 +22,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.ResultExerciseRun
 
 class ResultExerciseRunFragment : Fragment() {
     private lateinit var binding : FragmentResultExerciseRunBinding
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private var userActivity: UserActivity = UserActivity()
     private val viewModel : ResultExerciseRunViewModel by viewModels {
         ResultExerciseRunViewModelFactory((activity?.application as RunApplication).repository)
@@ -40,7 +40,6 @@ class ResultExerciseRunFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadingDialog = LoadingDialog()
         binding.imageCloseResultExerciseRunFragment.setOnClickListener {
            findNavController().popBackStack()
         }

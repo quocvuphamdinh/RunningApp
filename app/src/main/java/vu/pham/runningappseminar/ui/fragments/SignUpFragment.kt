@@ -32,7 +32,7 @@ import vu.pham.runningappseminar.viewmodels.viewmodelfactories.SignUpViewModelFa
 class SignUpFragment : Fragment() {
     private lateinit var binding : FragmentSignupBinding
     private lateinit var adapterSpinner: ArrayAdapter<String>
-    private lateinit var loadingDialog: LoadingDialog
+    private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private var showPass = false
     private var showPass2 = false
     var sex = ""
@@ -53,8 +53,6 @@ class SignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initSpinner()
-        loadingDialog = LoadingDialog()
-
         binding.textViewGoBackWelcomeScreen.setOnClickListener {
             goBack()
         }

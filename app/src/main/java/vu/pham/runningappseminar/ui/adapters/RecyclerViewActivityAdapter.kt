@@ -58,7 +58,11 @@ class RecyclerViewActivityAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityHolder {
-       return ActivityHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false))
+        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
+        if(isHaveImageBackground){
+            view.layoutParams.width = (parent.measuredWidth * 0.7).toInt()
+        }
+       return ActivityHolder(view)
     }
 
     override fun onBindViewHolder(holder: ActivityHolder, position: Int) {

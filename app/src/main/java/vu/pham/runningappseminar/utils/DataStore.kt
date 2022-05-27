@@ -6,7 +6,7 @@ import vu.pham.runningappseminar.models.Music
 object DataStore {
     fun getListMusicLocal(): List<Music>{
         return listOf(
-            Music(1, "Kataware Doki (Your name)", "Radwimps", R.raw.your_name_lofi, false),
+            Music(1, "Kataware Doki", "Radwimps", R.raw.your_name_lofi, false),
             Music(2, "Call of Silence", "Sawano Hiroyuki", R.raw.call_of_silence_lofi, false),
             Music(3, "Tanjirō no Uta", "Shiina Go", R.raw.demon_slayer_lofi, false),
             Music(4, "Hikaru Nara", "Goose house", R.raw.hikaru_nara_lofi, false),
