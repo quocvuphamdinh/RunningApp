@@ -64,6 +64,15 @@
             app:popUpTo="@id/runDetailFragment"
             android:id="@+id/action_runDetailFragment_to_historyRunFragment"
             app:destination="@id/historyRunFragment" />
+        <action
+            android:id="@+id/action_runDetailFragment_to_fullScreenImageFragment2"
+            app:destination="@id/fullScreenImageFragment2"
+            app:enterAnim="@anim/zoom_in"
+            app:popExitAnim="@anim/zoom_out" />
     </fragment>
+    <fragment
+        android:id="@+id/fullScreenImageFragment2"
+        android:name="vu.pham.runningappseminar.ui.fragments.FullScreenImageFragment"
+        android:label="FullScreenImageFragment" />
 
 </navigation>

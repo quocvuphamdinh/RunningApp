@@ -58,7 +58,13 @@
     <fragment
         android:id="@+id/resultExerciseRunFragment"
         android:name="vu.pham.runningappseminar.ui.fragments.ResultExerciseRunFragment"
-        android:label="ResultExerciseRunFragment" />
+        android:label="ResultExerciseRunFragment" >
+        <action
+            android:id="@+id/action_resultExerciseRunFragment_to_fullScreenImageFragment"
+            app:destination="@id/fullScreenImageFragment"
+            app:enterAnim="@anim/zoom_in"
+            app:popExitAnim="@anim/zoom_out" />
+    </fragment>
 
     <fragment
         android:id="@+id/exerciseRunFragment"
@@ -70,5 +76,9 @@
             android:id="@+id/action_exerciseRunFragment_to_resultExerciseRunFragment"
             app:destination="@id/resultExerciseRunFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/fullScreenImageFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.FullScreenImageFragment"
+        android:label="FullScreenImageFragment" />
 
 </navigation>

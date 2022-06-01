@@ -56,7 +56,19 @@ class RunDetailFragment : Fragment() {
         binding.imageDeteleRunDetail.setOnClickListener {
            showDialogCancel()
         }
+        binding.imageViewRunDetail.setOnClickListener {
+            clickFullScreenImage()
+        }
     }
+
+    private fun clickFullScreenImage() {
+        if(runDelete!!.img!!.isNotEmpty()){
+            val bundle = Bundle()
+            bundle.putString(Constants.URL_IMAGE, runDelete!!.img)
+            findNavController().navigate(R.id.action_runDetailFragment_to_fullScreenImageFragment2, bundle)
+        }
+    }
+
     private fun showLoadingDialog(){
         loadingDialog.show(parentFragmentManager, Constants.LOADING_DIALOG_TAG)
     }

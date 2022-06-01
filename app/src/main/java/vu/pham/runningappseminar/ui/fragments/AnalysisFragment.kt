@@ -20,16 +20,16 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.databinding.FragmentAnalysisBinding
 import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.AnalysisViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.AnalysisViewModelFactory
+import vu.pham.runningappseminar.databinding.FragmentAnalysisBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AnalysisFragment : Fragment() {
 
-    private lateinit var binding:FragmentAnalysisBinding
+    private lateinit var binding: FragmentAnalysisBinding
     private var date = Date(System.currentTimeMillis())
 
     private val viewModel : AnalysisViewModel by viewModels{
@@ -63,7 +63,7 @@ class AnalysisFragment : Fragment() {
        val bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog)
         val datePicker = bottomSheetDialog.findViewById<DatePicker>(R.id.datePicker)
-        datePicker?.setOnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
+        datePicker?.setOnDateChangedListener { _, year, monthOfYear, dayOfMonth ->
             date.year = year - 1900
             date.month = monthOfYear
             date.date = dayOfMonth
@@ -75,16 +75,26 @@ class AnalysisFragment : Fragment() {
     @SuppressLint("SimpleDateFormat")
     private fun setUpDataToBarEntries() {
         val dateDate = SimpleDateFormat("yyyy-MM-dd")
+        val dateDate2 = SimpleDateFormat("dd/MM/yyyy")
         viewModel.getListDistanceInSpecificDate(dateDate.format(date)).observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                binding.textViewNoData1.visibility = View.GONE
+                binding.textViewNoData2.visibility = View.GONE
+                binding.textViewNoData3.visibility = View.GONE
+            }else{
+                binding.textViewNoData1.visibility = View.VISIBLE
+                binding.textViewNoData2.visibility = View.VISIBLE
+                binding.textViewNoData3.visibility = View.VISIBLE
+            }
             val allDistance = it.indices.map { i-> BarEntry(i.toFloat(), it[i].distanceInKilometers.toFloat()) }
             val allDuration = it.indices.map { i-> BarEntry(i.toFloat(), it[i].timeInMillis.toFloat()) }
             val allCaloriesBurned = it.indices.map { i-> BarEntry(i.toFloat(), it[i].caloriesBurned.toFloat()) }
             initBarChart(binding.barChar1, resources.getColor(R.color.startColor), resources.getColor(R.color.endColor),
-                resources.getStringArray(R.array.analysisLabel)[0], allDistance, dateDate.format(date))
+                resources.getStringArray(R.array.analysisLabel)[0], allDistance, dateDate2.format(date))
             initBarChart(binding.barChar2, resources.getColor(R.color.startColor2), resources.getColor(R.color.endColor2),
-                resources.getStringArray(R.array.analysisLabel)[1], allDuration, dateDate.format(date))
+                resources.getStringArray(R.array.analysisLabel)[1], allDuration, dateDate2.format(date))
             initBarChart(binding.barChar3, resources.getColor(R.color.startColor3), resources.getColor(R.color.endColor3),
-                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, dateDate.format(date))
+                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, dateDate2.format(date))
         })
     }
 
@@ -97,6 +107,7 @@ class AnalysisFragment : Fragment() {
         barChart.data = BarData(barDataSet)
         val description = Description()
         description.text = label2
+        description.textSize = 14F
         barChart.description = description
         val xAxis = barChart.xAxis
         xAxis.position = XAxis.XAxisPosition.TOP

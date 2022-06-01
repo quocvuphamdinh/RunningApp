@@ -6,16 +6,20 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
-import android.widget.Toast
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.google.android.material.snackbar.Snackbar
 import vu.pham.runningappseminar.R
 import vu.pham.runningappseminar.databinding.ActivityHomeBinding
 import vu.pham.runningappseminar.ui.utils.setupWithNavController
@@ -25,10 +29,13 @@ import vu.pham.runningappseminar.utils.RunApplication
 import vu.pham.runningappseminar.viewmodels.HomeActivityViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.HomeActivityViewModelFactory
 
+
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private var currentNavController: LiveData<NavController>? = null
     private lateinit var boardcastReceiver: BroadcastReceiver
+    private lateinit var snackbar: Snackbar
+    private lateinit var snackBarView: View
     private val viewModel: HomeActivityViewModel by viewModels {
         HomeActivityViewModelFactory((application as RunApplication).repository)
     }
@@ -45,16 +52,18 @@ class HomeActivity : AppCompatActivity() {
         binding.floatingButtonRun.setOnClickListener {
             clickRun()
         }
+
+        setUpSnackBar()
         boardcastReceiver = object : BroadcastReceiver(){
             override fun onReceive(context: Context?, intent: Intent?) {
                 if(ConnectivityManager.CONNECTIVITY_ACTION == intent?.action){
                     if(CheckConnection.haveNetworkConnection(context!!)){
                         if(viewModel.isDisconnectedFirstTime){
-                            Toast.makeText(context, "Your internet is on !!", Toast.LENGTH_LONG).show()
+                            showSnackBarOn()
                             viewModel.syncDataRunToServer()
                         }
                     }else{
-                        Toast.makeText(context, "Your internet is off !!", Toast.LENGTH_LONG).show()
+                        showSnackBarOff()
                         viewModel.isDisconnectedFirstTime = true
                     }
                 }
@@ -63,6 +72,28 @@ class HomeActivity : AppCompatActivity() {
 
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(boardcastReceiver, intentFilter)
+    }
+
+    private fun setUpSnackBar() {
+        snackbar = Snackbar.make(binding.navHostFragmentHome, "", Snackbar.LENGTH_LONG)
+        snackbar.anchorView = binding.floatingButtonRun
+        snackBarView = snackbar.view
+        val params: CoordinatorLayout.LayoutParams = snackBarView.layoutParams as CoordinatorLayout.LayoutParams
+        params.gravity = Gravity.TOP
+        snackBarView.layoutParams = params
+    }
+
+    private fun showSnackBarOn(){
+        snackbar.setText("Your internet is on !!")
+        val txtSnackbar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackbar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_wifi,0)
+        snackbar.show()
+    }
+    private fun showSnackBarOff(){
+        snackbar.setText("Your internet is off !!")
+        val txtSnackbar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackbar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_no_wifi,0)
+        snackbar.show()
     }
 
     override fun onDestroy() {

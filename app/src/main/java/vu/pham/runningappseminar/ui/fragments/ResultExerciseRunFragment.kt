@@ -69,9 +69,21 @@ class ResultExerciseRunFragment : Fragment() {
         binding.imageButtonExhausted.setOnClickListener {
             viewModel.setUserFeel(3)
         }
+        binding.imageViewResultExerRun.setOnClickListener {
+            clickShowFullScreenImage()
+        }
         subcribeToObservers()
         getUserActivityData()
     }
+
+    private fun clickShowFullScreenImage() {
+        if(userActivity.getRun()!!.img!!.isNotEmpty()){
+            val bundle = Bundle()
+            bundle.putString(Constants.URL_IMAGE, userActivity.getRun()!!.img)
+            findNavController().navigate(R.id.action_resultExerciseRunFragment_to_fullScreenImageFragment, bundle)
+        }
+    }
+
     private fun showLoadingDialog(){
         loadingDialog.show(parentFragmentManager, Constants.LOADING_DIALOG_TAG)
     }

@@ -52,7 +52,7 @@ class RecyclerViewActivityAdapter(
     }
 
 
-    val differ = AsyncListDiffer(this, differCallBack)
+    private val differ = AsyncListDiffer(this, differCallBack)
 
     fun submitList(list:List<Activity>) = differ.submitList(list)
 
@@ -60,7 +60,7 @@ class RecyclerViewActivityAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityHolder {
         val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
         if(isHaveImageBackground){
-            view.layoutParams.width = (parent.measuredWidth * 0.7).toInt()
+            view.layoutParams.width = (parent.measuredWidth * 0.8).toInt()
         }
        return ActivityHolder(view)
     }
