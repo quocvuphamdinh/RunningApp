@@ -61,10 +61,13 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/analysis_fragment.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/bottom_sheet_dialog_2.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/bottom_sheet_dialog_music.xml" value="0.22" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/custom_dialog_loading.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_activity.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_analysis.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_analysis_day.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_analysis_month.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_change_password.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_detail_exercise.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20416666666666666" />

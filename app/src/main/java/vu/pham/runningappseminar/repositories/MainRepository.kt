@@ -57,6 +57,18 @@ class MainRepository(
     }
 
     //local
+    fun getTotalCaloriesBurnedInEachMonth(date: Long) = runDAO.getTotalCaloriesBurnedInEachMonth(date)
+
+    fun getTotalDurationInEachMonth(date: Long) = runDAO.getTotalDurationInEachMonth(date)
+
+    fun getTotalDistanceInEachMonth(date: Long) = runDAO.getTotalDistanceInEachMonth(date)
+
+    fun getTotalDistanceInEachDay(date: Long) = runDAO.getTotalDistanceInEachDay(date)
+
+    fun getTotalDurationInEachDay(date: Long) = runDAO.getTotalDurationInEachDay(date)
+
+    fun getTotalCaloriesBurnedInEachDay(date: Long) = runDAO.getTotalCaloriesBurnedInEachDay(date)
+
     fun getRunById(id:String) = runDAO.getRunById(id)
 
     suspend fun deleteAllRun() = runDAO.deleteAllRun()
@@ -95,8 +107,6 @@ class MainRepository(
     suspend fun deleteRun(run: Run){
         runDAO.deleteRun(run)
     }
-
-    fun getListDistanceInSpecificDate(date:String) = runDAO.getListDistanceInSpecificDate(date)
 
     fun getAllRunsSortedByDate() = runDAO.getAllRunsSortedByDate()
 
