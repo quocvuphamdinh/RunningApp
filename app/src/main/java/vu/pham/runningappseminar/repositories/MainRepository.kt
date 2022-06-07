@@ -57,6 +57,10 @@ class MainRepository(
     }
 
     //local
+    fun getTotalAvgSpeedInEachMonth(date: Long) = runDAO.getTotalAvgSpeedInEachMonth(date)
+
+    fun getTotalAvgSpeedInEachDay(date: Long) = runDAO.getTotalAvgSpeedInEachDay(date)
+
     fun getTotalCaloriesBurnedInEachMonth(date: Long) = runDAO.getTotalCaloriesBurnedInEachMonth(date)
 
     fun getTotalDurationInEachMonth(date: Long) = runDAO.getTotalDurationInEachMonth(date)

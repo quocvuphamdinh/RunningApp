@@ -174,6 +174,32 @@ interface RunDAO {
     fun getTotalDistanceInEachDay(date: Long): LiveData<List<Int>>
 
     @Query("with \n" +
+            " days as (\n" +
+            "    select 1 nr, 'Monday' day union all\n" +
+            "    select 2, 'Tuesday' union all\n" +
+            "    select 3, 'Wednesday' union all\n" +
+            "    select 4, 'Thursday' union all\n" +
+            "    select 5, 'Friday' union all\n" +
+            "    select 6, 'Saturday' union all\n" +
+            "    select 7, 'Sunday'\n" +
+            "  ),\n" +
+            "  weekMonday as (\n" +
+            "    select date(\n" +
+            "        strftime('%Y-%m-%d', :date / 1000, 'unixepoch'), \n" +
+            "        case when strftime('%w', strftime('%Y-%m-%d', :date / 1000, 'unixepoch')) <> '1' then '-7 day' else '0 day' end, \n" +
+            "        'weekday 1'\n" +
+            "      ) monday\n" +
+            "  )\n" +
+            "select coalesce(sum(averageSpeedInKilometersPerHour), 0)\n" +
+            "from days d cross join weekMonday wm\n" +
+            "left join running_table\n" +
+            "on strftime('%w', strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch')) + 0 = d.nr % 7\n" +
+            "and date(strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch')) between wm.monday and date(wm.monday, '6 day')\n" +
+            "group by d.nr\n" +
+            "order by d.nr")
+    fun getTotalAvgSpeedInEachDay(date: Long): LiveData<List<Float>>
+
+    @Query("with \n" +
             "  months as (\n" +
             "    select 1 nr, 'JAN' month union all\n" +
             "    select 2 nr, 'FEB' union all\n" +
@@ -244,4 +270,28 @@ interface RunDAO {
             "group by m.nr, m.month\n" +
             "order by m.nr")
     fun getTotalCaloriesBurnedInEachMonth(date: Long): LiveData<List<Int>>
+
+    @Query("with \n" +
+            "  months as (\n" +
+            "    select 1 nr, 'JAN' month union all\n" +
+            "    select 2 nr, 'FEB' union all\n" +
+            "    select 3 nr, 'MAR' union all\n" +
+            "    select 4 nr, 'APR' union all\n" +
+            "    select 5 nr, 'MAY' union all\n" +
+            "    select 6 nr, 'JUN' union all\n" +
+            "    select 7 nr, 'JUL' union all\n" +
+            "    select 8 nr, 'AUG' union all\n" +
+            "    select 9 nr, 'SEP' union all\n" +
+            "    select 10 nr, 'OCT' union all\n" +
+            "    select 11 nr, 'NOV' union all\n" +
+            "    select 12 nr, 'DEC'\n" +
+            "  )\n" +
+            "select coalesce(sum(averageSpeedInKilometersPerHour), 0)\n" +
+            "from months m\n" +
+            "left join running_table\n" +
+            "on strftime('%m', strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch')) + 0 = m.nr\n" +
+            "and date(strftime('%Y-%m-%d', timestamp / 1000, 'unixepoch')) between date(strftime('%Y-%m-%d', :date / 1000, 'unixepoch'),'start of year') and date(strftime('%Y-%m-%d', :date / 1000, 'unixepoch'),'start of year', '1 year', '-1 day')\n" +
+            "group by m.nr, m.month\n" +
+            "order by m.nr")
+    fun getTotalAvgSpeedInEachMonth(date: Long): LiveData<List<Float>>
 }

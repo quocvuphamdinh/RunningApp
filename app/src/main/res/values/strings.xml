@@ -30,9 +30,10 @@
     </string-array>
 
     <string-array name="analysisLabel">
-        <item>Your Distance progress(meter)</item>
-        <item>Your Duration progress(milisecond)</item>
-        <item>Your Calories Burned progress(kcal)</item>
+        <item>Your Distance progress (meter)</item>
+        <item>Your Duration progress (milisecond)</item>
+        <item>Your Calories Burned progress (kcal)</item>
+        <item>Your Average Speed progress (km/h)</item>
     </string-array>
 
     <string-array name="analysis_option">
