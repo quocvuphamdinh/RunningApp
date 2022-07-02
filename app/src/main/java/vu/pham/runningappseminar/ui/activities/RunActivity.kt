@@ -331,7 +331,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //currentTimeInMillies / 1000f : lấy second
             // currentTimeInMillies / 1000f / 60 : lấy minute
             // currentTimeInMillies / 1000f / 60 / 60 : lấy hour
-            // vận tốc bằng quãng đường chia cho chiều cao
+            // vận tốc bằng quãng đường chia cho thời gian
             val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()

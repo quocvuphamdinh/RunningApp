@@ -209,7 +209,7 @@ class TrackingService : LifecycleService() {
         if(isTracking){
             if (TrackingUtil.hasLocationPermissions(this@TrackingService)){
                 val request = LocationRequest().apply {
-                    interval= LOCATION_UPDATE_INTERVAL
+                    interval= LOCATION_UPDATE_INTERVAL // lấy tọa độ liên tục mỗi lần 5s
                     fastestInterval = FASTEST_LOCATION_INTERVAL
                     priority = PRIORITY_HIGH_ACCURACY // muốn nhận kết quả location chính xác nhất
                 }

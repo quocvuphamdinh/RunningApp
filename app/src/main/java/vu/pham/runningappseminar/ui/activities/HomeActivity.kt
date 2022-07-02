@@ -85,14 +85,14 @@ class HomeActivity : AppCompatActivity() {
 
     private fun showSnackBarOn(){
         snackbar.setText("Your internet is on !!")
-        val txtSnackbar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        txtSnackbar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_wifi,0)
+        val txtSnackBar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_wifi,0)
         snackbar.show()
     }
     private fun showSnackBarOff(){
         snackbar.setText("Your internet is off !!")
-        val txtSnackbar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        txtSnackbar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_no_wifi,0)
+        val txtSnackBar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_no_wifi,0)
         snackbar.show()
     }
 

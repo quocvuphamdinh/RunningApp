@@ -25,12 +25,13 @@ import vu.pham.runningappseminar.viewmodels.AnalysisViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.AnalysisViewModelFactory
 import java.text.SimpleDateFormat
 import androidx.lifecycle.Observer
+import vu.pham.runningappseminar.ui.utils.CustomMarkerView
 import java.util.*
 
-class AnalysisDayFragment: Fragment() {
+class AnalysisDayFragment : Fragment() {
     private lateinit var binding: FragmentAnalysisDayBinding
     private var date = Date(System.currentTimeMillis())
-    private val viewModel : AnalysisViewModel by viewModels{
+    private val viewModel: AnalysisViewModel by viewModels {
         AnalysisViewModelFactory((activity?.application as RunApplication).repository)
     }
 
@@ -70,54 +71,103 @@ class AnalysisDayFragment: Fragment() {
     private fun setUpDataToBarEntries() {
         val dateDate2 = SimpleDateFormat("dd/MM/yyyy")
         viewModel.getTotalDistanceInEachDay(date.time).observe(viewLifecycleOwner, Observer {
-            if(it.all { item-> item == 0 }){
+            if (it.all { item -> item == 0 }) {
                 binding.textViewNoData1.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.textViewNoData1.visibility = View.GONE
             }
-            val allDistance = it.indices.map { i-> BarEntry(i.toFloat(), it[i].toFloat()) }
-            initBarChart(binding.barChar1, resources.getColor(R.color.startColor), resources.getColor(
-                R.color.endColor),
-                resources.getStringArray(R.array.analysisLabel)[0], allDistance, dateDate2.format(date))
+            val allDistance = it.indices.map { i -> BarEntry(i.toFloat(), it[i].toFloat()) }
+            initBarChart(
+                it,
+                "Total Distance",
+                "meters",
+                binding.barChar1,
+                resources.getColor(R.color.startColor),
+                resources.getColor(
+                    R.color.endColor
+                ),
+                resources.getStringArray(R.array.analysisLabel)[0],
+                allDistance,
+                dateDate2.format(date)
+            )
         })
         viewModel.getTotalDurationInEachDay(date.time).observe(viewLifecycleOwner, Observer {
-            if(it.all { item-> item == 0L }){
+            if (it.all { item -> item == 0L }) {
                 binding.textViewNoData2.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.textViewNoData2.visibility = View.GONE
             }
-            val allDuration = it.indices.map { i-> BarEntry(i.toFloat(), it[i].toFloat()) }
-            initBarChart(binding.barChar2, resources.getColor(R.color.startColor2), resources.getColor(
-                R.color.endColor2),
-                resources.getStringArray(R.array.analysisLabel)[1], allDuration, dateDate2.format(date))
+            val allDuration = it.indices.map { i -> BarEntry(i.toFloat(), it[i].toFloat()) }
+            initBarChart(
+                it,
+                "Total Duration",
+                "ms",
+                binding.barChar2,
+                resources.getColor(R.color.startColor2),
+                resources.getColor(
+                    R.color.endColor2
+                ),
+                resources.getStringArray(R.array.analysisLabel)[1],
+                allDuration,
+                dateDate2.format(date)
+            )
         })
         viewModel.getTotalCaloriesBurnedInEachDay(date.time).observe(viewLifecycleOwner, Observer {
-            if(it.all { item-> item == 0 }){
+            if (it.all { item -> item == 0 }) {
                 binding.textViewNoData3.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.textViewNoData3.visibility = View.GONE
             }
-            val allCaloriesBurned = it.indices.map { i-> BarEntry(i.toFloat(), it[i].toFloat()) }
-            initBarChart(binding.barChar3, resources.getColor(R.color.calories_color), resources.getColor(
-                R.color.yellow),
-                resources.getStringArray(R.array.analysisLabel)[2], allCaloriesBurned, dateDate2.format(date))
+            val allCaloriesBurned = it.indices.map { i -> BarEntry(i.toFloat(), it[i].toFloat()) }
+            initBarChart(
+                it,
+                "Total Calories Burned",
+                "kcal",
+                binding.barChar3,
+                resources.getColor(R.color.calories_color),
+                resources.getColor(
+                    R.color.yellow
+                ),
+                resources.getStringArray(R.array.analysisLabel)[2],
+                allCaloriesBurned,
+                dateDate2.format(date)
+            )
         })
         viewModel.getTotalAvgSpeedInEachDay(date.time).observe(viewLifecycleOwner, Observer {
-            if(it.all { item-> item == 0F }){
+            if (it.all { item -> item == 0F }) {
                 binding.textViewNoData4.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.textViewNoData4.visibility = View.GONE
             }
-            val allAvgSpeed = it.indices.map { i-> BarEntry(i.toFloat(), it[i])}
-            initBarChart(binding.barChar4, resources.getColor(R.color.avg_speed_color), resources.getColor(R.color.teal_200),
-            resources.getStringArray(R.array.analysisLabel)[3], allAvgSpeed, dateDate2.format(date))
+            val allAvgSpeed = it.indices.map { i -> BarEntry(i.toFloat(), it[i]) }
+            initBarChart(
+                it,
+                "Total Average Speed",
+                "km/h",
+                binding.barChar4,
+                resources.getColor(R.color.avg_speed_color),
+                resources.getColor(R.color.teal_200),
+                resources.getStringArray(R.array.analysisLabel)[3],
+                allAvgSpeed,
+                dateDate2.format(date)
+            )
         })
     }
 
-    private fun initBarChart(barChart: BarChart, startColor:Int, endColor:Int, label:String, barEntry: List<BarEntry>, label2:String) {
+    private fun initBarChart(
+        value: List<Any>,
+        title: String,
+        type: String,
+        barChart: BarChart,
+        startColor: Int,
+        endColor: Int,
+        label: String,
+        barEntry: List<BarEntry>,
+        label2: String
+    ) {
         val barDataSet = BarDataSet(barEntry, label)
         barDataSet.setColors(endColor)
-        barDataSet.formLineWidth= 10f
+        barDataSet.formLineWidth = 10f
         barDataSet.setGradientColor(startColor, endColor)
         barChart.data = BarData(barDataSet)
         val description = Description()
@@ -131,6 +181,8 @@ class AnalysisDayFragment: Fragment() {
         xAxis.setDrawAxisLine(false)
         xAxis.granularity = 1f
         barChart.animateY(2000)
+        barChart.marker =
+            CustomMarkerView(value, title, type, requireContext(), R.layout.marker_view)
         barChart.invalidate()
     }
 }
