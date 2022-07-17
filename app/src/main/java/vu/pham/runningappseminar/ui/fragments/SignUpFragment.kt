@@ -19,7 +19,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import vu.pham.runningappseminar.R
-import vu.pham.runningappseminar.ui.activities.MainActivity
 import vu.pham.runningappseminar.databinding.FragmentSignupBinding
 import vu.pham.runningappseminar.models.User
 import vu.pham.runningappseminar.utils.CheckConnection
@@ -114,26 +113,6 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun checkUser(user: User){
-        viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?> {
-            override fun onResponse(call: Call<User?>, response: Response<User?>) {
-                val user3 = response.body()
-                if(viewModel.checkSameUser(user3?.getUsername()!!, user3.getPassword(), user)){
-                    Toast.makeText(context, "Sign up success !", Toast.LENGTH_LONG).show()
-                    loadingDialog.dismissDialog()
-                    goToLogin()
-                }else{
-                    Toast.makeText(context, "Sign up failed !", Toast.LENGTH_LONG).show()
-                    loadingDialog.dismissDialog()
-                }
-            }
-
-            override fun onFailure(call: Call<User?>, t: Throwable) {
-                Toast.makeText(context, "Error: $t !", Toast.LENGTH_LONG).show()
-                loadingDialog.dismissDialog()
-            }
-        })
-    }
     private fun getUser(user: User){
         viewModel.getUser(user.getUsername(), user.getPassword()).enqueue(object : Callback<User?> {
             override fun onResponse(call: Call<User?>, response: Response<User?>) {
@@ -144,8 +123,14 @@ class SignUpFragment : Fragment() {
                 }else{
                     lifecycleScope.launch {
                         try {
-                            viewModel.insertUser(user)
-                            checkUser(user)
+                            val message = viewModel.checkEmailExists(user.getUsername())["message"]
+                            if(message!!.contains("Failed")){
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                                loadingDialog.dismissDialog()
+                            }else{
+                                loadingDialog.dismissDialog()
+                                goToVerification(user)
+                            }
                         }catch (e:Exception){
                             Toast.makeText(requireContext(), "An error has occurred, something happens in server !", Toast.LENGTH_LONG).show()
                             loadingDialog.dismissDialog()
@@ -161,8 +146,10 @@ class SignUpFragment : Fragment() {
         })
     }
 
-    private fun goToLogin() {
-        findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
+    private fun goToVerification(user: User) {
+        val bundle = Bundle()
+        bundle.putSerializable("userSignUp", user)
+        findNavController().navigate(R.id.action_signUpFragment_to_verificationFragment, bundle)
     }
 
     private fun initSpinner(){

@@ -51,8 +51,8 @@
             <action
                 app:popUpTo="@id/signUpFragment"
                 app:popUpToInclusive="true"
-                android:id="@+id/action_signUpFragment_to_loginFragment"
-                app:destination="@id/loginFragment" />
+                android:id="@+id/action_signUpFragment_to_verificationFragment"
+                app:destination="@id/verificationFragment" />
         </fragment>
         <fragment
             android:id="@+id/forgotPasswordFragment"
@@ -64,4 +64,19 @@
                 android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
                 app:destination="@id/loginFragment" />
         </fragment>
+    <fragment
+        android:id="@+id/verificationFragment"
+        android:name="vu.pham.runningappseminar.ui.fragments.VerificationFragment"
+        android:label="VerificationFragment" >
+        <action
+            app:popUpTo="@id/signUpFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_verificationFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            app:popUpTo="@id/verificationFragment"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_verificationFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
 </navigation>

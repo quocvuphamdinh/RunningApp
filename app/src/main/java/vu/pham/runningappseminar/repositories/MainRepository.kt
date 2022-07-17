@@ -18,6 +18,10 @@ class MainRepository(
 ) {
 
     //remote
+    suspend fun checkOTPCode(otpCode: String) = apiService.checkOTPCode(otpCode)
+
+    suspend fun checkEmailExists(email: String) = apiService.checkEmailExists(email)
+
     suspend fun deleteUserExercise(userActivityId: Long) = apiService.deleteUserExercise(userActivityId)
 
     suspend fun deleteRunRemote(run:Run) = apiService.deleteRunRemote(run)

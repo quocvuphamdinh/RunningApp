@@ -6,6 +6,8 @@ import vu.pham.runningappseminar.repositories.MainRepository
 
 class SignUpViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
+    suspend fun checkEmailExists(email: String) = mainRepository.checkEmailExists(email)
+
     suspend fun checkEmailAccount(userName:String) = mainRepository.checkEmailAccount(userName)
 
     fun checkSameUser(username:String, password:String, user: User?):Boolean{
@@ -16,8 +18,6 @@ class SignUpViewModel(private val mainRepository: MainRepository) : ViewModel() 
     }
 
     fun getUser(username:String, password:String) = mainRepository.getUserLogin(username, password)
-
-    suspend fun insertUser(user: User) = mainRepository.insertUser(user)
 
     fun checkInfoUser(username: String, password: String, password2: String, fullname:String, height:String, weight:String):Boolean{
         val usernameValid = checkInfo(username) && checkEmailIsValid(username)

@@ -27,6 +27,12 @@ interface ApiService {
     @PUT("/user/resetpassword")
     suspend fun resetPassword(@Body user: User):HashMap<String, String>
 
+    @POST("/user/checkemailexist/{email}")
+    suspend fun checkEmailExists(@Path("email") email: String): HashMap<String, String>
+
+    @POST("/user/checkotpcode/{otp}")
+    suspend fun checkOTPCode(@Path("otp") otpCode: String): HashMap<String, String>
+
     //run
     @POST("/run/{userId}/{userActivitesId}")
     suspend fun insertRun(@Body run: Run, @Path("userId") userId: Long, @Path("userActivitesId") userActivitesId:Long)

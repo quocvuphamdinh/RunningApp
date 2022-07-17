@@ -17,6 +17,8 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_layout_border_container_2.xml" value="0.133" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_progress_exercise_run.xml" value="0.133" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_spinner.xml" value="0.1325" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_verifi_focus.xml" value="0.1235" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/custom_verifi_not_focus.xml" value="0.1235" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_arrow_back.xml" value="0.2169230769230769" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_arrow_back_2.xml" value="0.1245" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.1325" />
@@ -87,6 +89,7 @@
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_run_detail.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_set_my_goal.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_signup.xml" value="0.20416666666666666" />
+        <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_verification.xml" value="0.2" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/fragment_welcome.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/history_run_item.xml" value="0.25" />
         <entry key="..\:/AndroidCode/RunningAppSeminar/app/src/main/res/layout/home_fragment.xml" value="0.25" />
