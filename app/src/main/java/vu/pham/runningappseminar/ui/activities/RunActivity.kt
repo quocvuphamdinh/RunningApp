@@ -407,6 +407,7 @@ class RunActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onResume() {
         super.onResume()
         binding.mapView.onResume()
+        initGoogleMap()
     }
 
     override fun onStart() {

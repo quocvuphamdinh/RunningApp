@@ -26,7 +26,7 @@ object Constants {
     const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"
     const val KEY_USER = "KEY_USER"
     const val URL_FIREBASE = "gs://runningappseminar.appspot.com"
-    const val BASE_URL2 = "http://192.168.0.102:8087"//192.168.0.106
+    const val BASE_URL2 = "http://172.20.10.5:8087"//192.168.0.102
     const val EDIT_USER = "EDIT_USER"
     const val CHANGE_PASSWORD = "CHANGE_PASSWORD"
     const val REQUEST_CODE_IMAGE_UPLOAD=10

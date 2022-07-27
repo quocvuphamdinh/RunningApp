@@ -54,15 +54,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         setUpSnackBar()
-        boardcastReceiver = object : BroadcastReceiver(){
+        boardcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if(ConnectivityManager.CONNECTIVITY_ACTION == intent?.action){
-                    if(CheckConnection.haveNetworkConnection(context!!)){
-                        if(viewModel.isDisconnectedFirstTime){
+                if (ConnectivityManager.CONNECTIVITY_ACTION == intent?.action) {
+                    if (CheckConnection.haveNetworkConnection(context!!)) {
+                        if (viewModel.isDisconnectedFirstTime) {
                             showSnackBarOn()
                             viewModel.syncDataRunToServer()
                         }
-                    }else{
+                    } else {
                         showSnackBarOff()
                         viewModel.isDisconnectedFirstTime = true
                     }
@@ -78,21 +78,25 @@ class HomeActivity : AppCompatActivity() {
         snackbar = Snackbar.make(binding.navHostFragmentHome, "", Snackbar.LENGTH_LONG)
         snackbar.anchorView = binding.floatingButtonRun
         snackBarView = snackbar.view
-        val params: CoordinatorLayout.LayoutParams = snackBarView.layoutParams as CoordinatorLayout.LayoutParams
+        val params: CoordinatorLayout.LayoutParams =
+            snackBarView.layoutParams as CoordinatorLayout.LayoutParams
         params.gravity = Gravity.TOP
         snackBarView.layoutParams = params
     }
 
-    private fun showSnackBarOn(){
+    private fun showSnackBarOn() {
         snackbar.setText("Your internet is on !!")
-        val txtSnackBar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_wifi,0)
+        val txtSnackBar =
+            snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_wifi, 0)
         snackbar.show()
     }
-    private fun showSnackBarOff(){
+
+    private fun showSnackBarOff() {
         snackbar.setText("Your internet is off !!")
-        val txtSnackBar = snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0,R.drawable.ic_no_wifi,0)
+        val txtSnackBar =
+            snackBarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        txtSnackBar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_no_wifi, 0)
         snackbar.show()
     }
 
@@ -103,7 +107,12 @@ class HomeActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun setupBottomNavigationBar() {
-        val navGraphIds = listOf(R.navigation.nav_home, R.navigation.nav_exercise, R.navigation.nav_analysis, R.navigation.nav_profile)
+        val navGraphIds = listOf(
+            R.navigation.nav_home,
+            R.navigation.nav_exercise,
+            R.navigation.nav_analysis,
+            R.navigation.nav_profile
+        )
 
         val controller = binding.bottomNavHome.setupWithNavController(
             navGraphIds,
@@ -114,7 +123,7 @@ class HomeActivity : AppCompatActivity() {
 
         controller.observe(this, Observer { navController ->
             navController.addOnDestinationChangedListener { _, destination, _ ->
-                when(destination.id){
+                when (destination.id) {
                     R.id.homeFragment, R.id.activityFragment, R.id.analysisFragment, R.id.profileFragment -> {
                         binding.bottomNavHome.visibility = View.VISIBLE
                         binding.bottomAppBar.visibility = View.VISIBLE
@@ -137,20 +146,15 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        goToRunActivityIfNeeded(intent)
-        goToExerciseRunFragmentIfNeeded(intent)
+        goToRunActivityOrExerciseRunFragmentIfNeeded(intent)
     }
 
-    private fun goToExerciseRunFragmentIfNeeded(intent: Intent?){
-        if(intent?.action == Constants.ACTION_SHOW_EXERCISE_RUN_FRAGMENT){
-            currentNavController?.value?.navigate(R.id.action_global_exerciseRunFragment)
-        }
-    }
-
-    private fun goToRunActivityIfNeeded(intent: Intent?){
-        if(intent?.action== Constants.ACTION_SHOW_TRACKING_ACTIVITY){
+    private fun goToRunActivityOrExerciseRunFragmentIfNeeded(intent: Intent?) {
+        if (intent?.action == Constants.ACTION_SHOW_TRACKING_ACTIVITY) {
             val intent2 = Intent(this@HomeActivity, RunActivity::class.java)
             startActivity(intent2)
+        }else if (intent?.action == Constants.ACTION_SHOW_EXERCISE_RUN_FRAGMENT) {
+            currentNavController?.value?.navigate(R.id.action_global_exerciseRunFragment)
         }
     }
 

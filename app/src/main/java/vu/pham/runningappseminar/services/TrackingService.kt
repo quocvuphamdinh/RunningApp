@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import vu.pham.runningappseminar.R
+import vu.pham.runningappseminar.ui.activities.HomeActivity
 import vu.pham.runningappseminar.ui.activities.MainActivity
 import vu.pham.runningappseminar.ui.activities.RunActivity
 import vu.pham.runningappseminar.utils.Constants.ACTION_PAUSE_SERVICE
@@ -281,7 +282,7 @@ class TrackingService : LifecycleService() {
         return PendingIntent.getActivity(
             this@TrackingService,
             0,
-            Intent(this@TrackingService, if(isRunOnly) RunActivity::class.java else MainActivity::class.java)
+            Intent(this@TrackingService, if(isRunOnly) RunActivity::class.java else HomeActivity::class.java)
                 .also {
                     it.action = if(isRunOnly) ACTION_SHOW_TRACKING_ACTIVITY else ACTION_SHOW_EXERCISE_RUN_FRAGMENT
                 }, FLAG_UPDATE_CURRENT) // FLAG_UPDATE_CURRENT là khi pendingintent đã tồn tại rồi nó sẽ khởi động hoặc update lại mà ko tạo cái mới

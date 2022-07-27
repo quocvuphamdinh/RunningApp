@@ -43,8 +43,8 @@ import java.util.*
 import kotlin.math.round
 
 class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
-    private lateinit var binding : FragmentExerciseRunBinding
-    private lateinit var bindingBottomSheet : BottomSheetDialogMusicBinding
+    private lateinit var binding: FragmentExerciseRunBinding
+    private lateinit var bindingBottomSheet: BottomSheetDialogMusicBinding
     private lateinit var musicAdapter: RecyclerViewMusicAdapter
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog() }
     private lateinit var mediaPlayer: MediaPlayer
@@ -53,11 +53,11 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var runnable: Runnable
     private var handler = Handler()
-    private var map : GoogleMap? = null
+    private var map: GoogleMap? = null
     private var isFinishFirstTime = false
-    private var user: User? =null
-    private var id:Long?=null
-    private val viewModel : ExerciseRunViewModel by viewModels{
+    private var user: User? = null
+    private var id: Long? = null
+    private val viewModel: ExerciseRunViewModel by viewModels {
         ExerciseRunViewModelFactory((activity?.application as RunApplication).repository)
     }
 
@@ -73,8 +73,9 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mapViewExerciseRun.onCreate(savedInstanceState)
-        if(savedInstanceState!=null){
-            val dialogFragmentRun = parentFragmentManager.findFragmentByTag(Constants.CANCEL_RUNNING_DIALOG_TAG) as DialogFragmentRun?
+        if (savedInstanceState != null) {
+            val dialogFragmentRun =
+                parentFragmentManager.findFragmentByTag(Constants.CANCEL_RUNNING_DIALOG_TAG) as DialogFragmentRun?
             dialogFragmentRun?.setClickYes {
                 stopRun(true)
             }
@@ -93,6 +94,7 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         binding.mapViewExerciseRun.getMapAsync {
             map = it
+            addAllPolylines()
         }
 
         binding.buttonStartExerciseRun.setOnClickListener {
@@ -109,11 +111,11 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             bottomSheetDialog.show()
         }
         bindingBottomSheet.imagePlayMusic.setOnClickListener {
-            if(!mediaPlayer.isPlaying){
+            if (!mediaPlayer.isPlaying) {
                 viewModel.initMusicIsPlaying()
                 mediaPlayer.start()
                 bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_pause_2)
-            }else{
+            } else {
                 mediaPlayer.pause()
                 bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_play)
             }
@@ -126,53 +128,70 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if(viewModel.currentTimeInMillies>0L){
+            if (viewModel.currentTimeInMillies > 0L) {
                 sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
                 showCancelRunningDialog()
-            }else{
-                if(mediaPlayer.isPlaying){
+            } else {
+                if (mediaPlayer.isPlaying) {
                     mediaPlayer.stop()
                 }
                 findNavController().popBackStack()
             }
         }
     }
-    private fun showLoadingDialog(){
+
+    private fun addAllPolylines() {
+        for (polyline in viewModel.pathPoints) {
+            val polylineOptions = PolylineOptions()
+                .color(Constants.POLYLINE_COLOR)
+                .width(Constants.POLYLINE_WIDTH)
+                .addAll(polyline)
+            map?.addPolyline(polylineOptions)
+        }
+    }
+
+    private fun showLoadingDialog() {
         loadingDialog.show(parentFragmentManager, Constants.LOADING_DIALOG_TAG)
     }
-    private fun goToNextSong(option:Boolean){
-        if(option){
-            bindingBottomSheet.seekBarMusic.progress = bindingBottomSheet.seekBarMusic.progress +5000
-            if(bindingBottomSheet.seekBarMusic.progress >= bindingBottomSheet.seekBarMusic.max){
+
+    private fun goToNextSong(option: Boolean) {
+        if (option) {
+            bindingBottomSheet.seekBarMusic.progress =
+                bindingBottomSheet.seekBarMusic.progress + 5000
+            if (bindingBottomSheet.seekBarMusic.progress >= bindingBottomSheet.seekBarMusic.max) {
                 bindingBottomSheet.seekBarMusic.progress = 0
                 viewModel.positionMusic++
-                if(viewModel.positionMusic > viewModel.musicList.value!!.size-1){
+                if (viewModel.positionMusic > viewModel.musicList.value!!.size - 1) {
                     viewModel.positionMusic = 0
                 }
                 viewModel.goNextMusic(viewModel.positionMusic)
             }
-        }else{
-            bindingBottomSheet.seekBarMusic.progress = bindingBottomSheet.seekBarMusic.progress - 5000
-            if(bindingBottomSheet.seekBarMusic.progress <=0){
+        } else {
+            bindingBottomSheet.seekBarMusic.progress =
+                bindingBottomSheet.seekBarMusic.progress - 5000
+            if (bindingBottomSheet.seekBarMusic.progress <= 0) {
                 viewModel.positionMusic--
-                if(viewModel.positionMusic < 0){
+                if (viewModel.positionMusic < 0) {
                     viewModel.positionMusic = 0
                 }
                 viewModel.goNextMusic(viewModel.positionMusic)
             }
         }
         mediaPlayer.seekTo(bindingBottomSheet.seekBarMusic.progress)
-        bindingBottomSheet.textViewStartTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
+        bindingBottomSheet.textViewStartTimeMusic.text =
+            TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
     }
 
     private fun setUpSeekBar() {
         bindingBottomSheet.seekBarMusic.progress = 0
-        bindingBottomSheet.seekBarMusic.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        bindingBottomSheet.seekBarMusic.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser){
+                if (fromUser) {
                     mediaPlayer.seekTo(progress)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -181,12 +200,13 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         })
         runnable = Runnable {
             bindingBottomSheet.seekBarMusic.progress = mediaPlayer.currentPosition
-            bindingBottomSheet.textViewStartTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
+            bindingBottomSheet.textViewStartTimeMusic.text =
+                TrackingUtil.getFormattedDurationMusic(mediaPlayer.currentPosition)
             handler.postDelayed(runnable, 1000)
             mediaPlayer.setOnCompletionListener {
                 bindingBottomSheet.seekBarMusic.progress = 0
                 viewModel.positionMusic++
-                if(viewModel.positionMusic > viewModel.musicList.value!!.size-1){
+                if (viewModel.positionMusic > viewModel.musicList.value!!.size - 1) {
                     viewModel.positionMusic = 0
                 }
                 viewModel.goNextMusic(viewModel.positionMusic)
@@ -195,21 +215,23 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         handler.postDelayed(runnable, 1000)
     }
 
-    private fun initMediaPlayer(file:Int) {
+    private fun initMediaPlayer(file: Int) {
         mediaPlayer = MediaPlayer.create(requireContext(), file)
-        bindingBottomSheet.textViewEndTimeMusic.text = TrackingUtil.getFormattedDurationMusic(mediaPlayer.duration)
+        bindingBottomSheet.textViewEndTimeMusic.text =
+            TrackingUtil.getFormattedDurationMusic(mediaPlayer.duration)
         bindingBottomSheet.seekBarMusic.max = mediaPlayer.duration
-        bindingBottomSheet.textViewMusicName.text = viewModel.musicList.value!![viewModel.positionMusic].name
+        bindingBottomSheet.textViewMusicName.text =
+            viewModel.musicList.value!![viewModel.positionMusic].name
     }
 
-    private fun initMusicAdapter(list:List<Music>){
-        musicAdapter = RecyclerViewMusicAdapter(object : RecyclerViewMusicAdapter.ClickMusic{
+    private fun initMusicAdapter(list: List<Music>) {
+        musicAdapter = RecyclerViewMusicAdapter(object : RecyclerViewMusicAdapter.ClickMusic {
             override fun clickItem(music: Music) {
                 val position = viewModel.getMusicPosition(music)
-                if(position!=viewModel.positionMusic){
+                if (position != viewModel.positionMusic) {
                     viewModel.positionMusic = position
                     viewModel.goNextMusic(viewModel.positionMusic)
-                    if(!mediaPlayer.isPlaying) {
+                    if (!mediaPlayer.isPlaying) {
                         bindingBottomSheet.imagePlayMusic.setImageResource(R.drawable.ic_pause_2)
                     }
                 }
@@ -218,14 +240,15 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         musicAdapter.submitList(list)
     }
 
-    private fun setUpBottomSheetMusic(){
+    private fun setUpBottomSheetMusic() {
         bottomSheetDialog = BottomSheetDialog(requireContext())
-        bindingBottomSheet = DataBindingUtil.inflate(layoutInflater, R.layout.bottom_sheet_dialog_music, null, false)
+        bindingBottomSheet =
+            DataBindingUtil.inflate(layoutInflater, R.layout.bottom_sheet_dialog_music, null, false)
         bottomSheetDialog.setContentView(bindingBottomSheet.root)
         setUpRecyclerMusic()
     }
 
-    private fun setUpRecyclerMusic(){
+    private fun setUpRecyclerMusic() {
         bindingBottomSheet.rcvMusic.layoutManager = LinearLayoutManager(context)
         bindingBottomSheet.rcvMusic.adapter = musicAdapter
         bindingBottomSheet.rcvMusic.setHasFixedSize(true)
@@ -234,6 +257,10 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onResume() {
         super.onResume()
         binding.mapViewExerciseRun.onResume()
+        binding.mapViewExerciseRun.getMapAsync {
+            map = it
+            addAllPolylines()
+        }
     }
 
     override fun onStart() {
@@ -266,18 +293,24 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.mapViewExerciseRun.onSaveInstanceState(outState)
     }
 
-    private fun moveCameraToUser(){
-        if(viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().isNotEmpty()){
+    private fun moveCameraToUser() {
+        if (viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().isNotEmpty()) {
             map?.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(viewModel.pathPoints.last().last(), Constants.MAP_ZOOM))
+                CameraUpdateFactory.newLatLngZoom(
+                    viewModel.pathPoints.last().last(),
+                    Constants.MAP_ZOOM
+                )
+            )
         }
     }
+
     // pathpoint gồm những đường(Polyline) được kết nối với nhau bằng những tọa độ(LatLng)
     //function thêm các đường Polyline vào pathpoint
-    private fun addLatestPolyline(){
+    private fun addLatestPolyline() {
         // nếu đường pathPoints ko rỗng và đường polyline ở trong pathpoints có ít nhất 2 item trở lên
-        if(viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().size > 1) {
-            val preLastLatLng =viewModel.pathPoints.last()[viewModel.pathPoints.last().size - 2]// lấy tọa độ kế cuối trong ds
+        if (viewModel.pathPoints.isNotEmpty() && viewModel.pathPoints.last().size > 1) {
+            val preLastLatLng =
+                viewModel.pathPoints.last()[viewModel.pathPoints.last().size - 2]// lấy tọa độ kế cuối trong ds
             val lastLatLng = viewModel.pathPoints.last().last()// lấy tọa độ cuối cùng
             val polylineOption = PolylineOptions()
                 .color(Constants.POLYLINE_COLOR) // thêm màu cho đường polyline
@@ -288,33 +321,36 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun zoomToSeeWholeTrack(){
+    private fun zoomToSeeWholeTrack() {
         val bounds = LatLngBounds.Builder()
-        for (polyline in viewModel.pathPoints){
-            for (position in polyline){
+        for (polyline in viewModel.pathPoints) {
+            for (position in polyline) {
                 bounds.include(position)
             }
         }
 
-        map?.moveCamera(CameraUpdateFactory.newLatLngBounds(
-            bounds.build(),
-            binding.mapViewExerciseRun.width,
-            binding.mapViewExerciseRun.height,
-            (binding.mapViewExerciseRun.height * 0.05f).toInt()
-        ))
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(),
+                binding.mapViewExerciseRun.width,
+                binding.mapViewExerciseRun.height,
+                (binding.mapViewExerciseRun.height * 0.05f).toInt()
+            )
+        )
     }
 
-    private fun uploadImageRunToServer(bitmap: Bitmap, run:Run, userActivity: UserActivity) {
+    private fun uploadImageRunToServer(bitmap: Bitmap, run: Run, userActivity: UserActivity) {
         val storageRef = viewModel.getFirebaseStorage()?.reference
-        val nameHinh= "image-${run.id}"
-        val nameHinh2= "$nameHinh.png"
+        val nameHinh = "image-${run.id}"
+        val nameHinh2 = "$nameHinh.png"
         val mountainsRef = storageRef?.child(nameHinh2)
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val data = baos.toByteArray()
         val uploadTask = mountainsRef?.putBytes(data)
         uploadTask?.addOnFailureListener {
-            Toast.makeText(requireContext(), "Error uploaded image run !", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error uploaded image run !", Toast.LENGTH_SHORT)
+                .show()
         }?.addOnSuccessListener { _ ->
             mountainsRef.downloadUrl.addOnSuccessListener { uri ->
                 run.isRunWithExercise = 1
@@ -324,25 +360,36 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun goToResultRunExercise(userActivity: UserActivity){
+    private fun goToResultRunExercise(userActivity: UserActivity) {
         val bundle = Bundle()
         bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivity.getId())
-        findNavController().navigate(R.id.action_exerciseRunFragment_to_resultExerciseRunFragment, bundle)
+        findNavController().navigate(
+            R.id.action_exerciseRunFragment_to_resultExerciseRunFragment,
+            bundle
+        )
     }
 
-    private fun saveDataExerciseRun(){
+    private fun saveDataExerciseRun() {
         map?.snapshot { bitmap ->
             user = viewModel.getUserFromSharedPref()
             val dateTimestamp = Calendar.getInstance().timeInMillis
-            for(polyline in viewModel.pathPoints){
+            for (polyline in viewModel.pathPoints) {
                 viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
             }
-            val run = Run("${user?.getUsername()}${user?.getPassword()}${dateTimestamp}", dateTimestamp, viewModel.averageSpeed,
-                viewModel.distanceInMeters, viewModel.currentTimeInMillies, viewModel.caloriesBurned, "", 0)
+            val run = Run(
+                "${user?.getUsername()}${user?.getPassword()}${dateTimestamp}",
+                dateTimestamp,
+                viewModel.averageSpeed,
+                viewModel.distanceInMeters,
+                viewModel.currentTimeInMillies,
+                viewModel.caloriesBurned,
+                "",
+                0
+            )
             val userActivity = UserActivity(run, id!!, "", 0)
-            if(CheckConnection.haveNetworkConnection(requireContext())){
+            if (CheckConnection.haveNetworkConnection(requireContext())) {
                 uploadImageRunToServer(bitmap!!, run, userActivity)
-            }else{
+            } else {
                 viewModel.insertRunLocal(run)
             }
         }
@@ -353,87 +400,94 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         viewModel.workours = bundle?.getParcelableArrayList<Workout>(Constants.DURATION_EXERCISE)!!
         id = bundle.getLong(Constants.ID_EXERCISE)
         var duration = 0L
-        for (i in 0 until viewModel.workours.size){
-            duration +=viewModel.workours[i].getDuration()
+        for (i in 0 until viewModel.workours.size) {
+            duration += viewModel.workours[i].getDuration()
         }
 
         TrackingService.initTimeLeft(duration)
-        binding.progressBarExerciseRun.max = (duration.toInt()/100)
+        binding.progressBarExerciseRun.max = (duration.toInt() / 100)
         binding.textViewNumberExerciseRun.text = "1/${viewModel.workours.size}"
     }
 
-    private fun showCancelRunningDialog(){
-        DialogFragmentRun("Cancel the Run ?", "Are you sure to cancel this run and the data will be deleted ?").apply {
+    private fun showCancelRunningDialog() {
+        DialogFragmentRun(
+            "Cancel the Run ?",
+            "Are you sure to cancel this run and the data will be deleted ?"
+        ).apply {
             setClickYes {
                 stopRun(true)
             }
         }.show(parentFragmentManager, Constants.CANCEL_RUNNING_DIALOG_TAG)
     }
 
-    private fun toggleRun(){
-        if (viewModel.isTracking){
+    private fun toggleRun() {
+        if (viewModel.isTracking) {
             //nếu đang tracking mà bất nút run thì sẽ pause service lại
             sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
-        }else{
+        } else {
             // còn nếu ko tracking mà bất nút run thì sẽ start hoặc resume service
             sendCommandToService(Constants.ACTION_START_OR_RESUME_SERVICE)
         }
     }
 
-    private fun stopRun(isPop:Boolean) {
+    private fun stopRun(isPop: Boolean) {
         viewModel.resetData()
         binding.textViewTimeCountExerciseRun.text = "00:00"
         binding.textViewDistanceExerciseRun.text = "0"
-        binding.textViewAverageSpeedExerciseRun.text ="0.00"
+        binding.textViewAverageSpeedExerciseRun.text = "0.00"
         binding.textViewCaloriesBurnedExerciseRun.text = "0"
         binding.textViewTimeLeftExerciseRun.text = "Time left - 00:00"
         binding.progressBarExerciseRun.progress = 0
-        if(mediaPlayer.isPlaying){
+        if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }
-        if(mediaPlayerNotifi.isPlaying){
+        if (mediaPlayerNotifi.isPlaying) {
             mediaPlayerNotifi.stop()
         }
         loadingDialog.dismissDialog()
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
-        if(!isPop){
+        if (!isPop) {
             mediaPlayerFinish.start()
         }
-        if(isPop){
+        if (isPop) {
             findNavController().popBackStack()
         }
     }
 
     // đăng ký observers để lắng nghe sự thay đổi về data
-    private fun subscribeToObservers(){
+    private fun subscribeToObservers() {
         viewModel.musicList.observe(viewLifecycleOwner, Observer {
             musicAdapter.submitList(it)
             setUpRecyclerMusic()
         })
         viewModel.music.observe(viewLifecycleOwner, Observer {
             bindingBottomSheet.textViewMusicName.text = it.name
-            if(mediaPlayer.isPlaying){
+            if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
             }
             initMediaPlayer(it.file)
             mediaPlayer.start()
         })
         viewModel.success.observe(viewLifecycleOwner, Observer {
-            if(it){
-                Toast.makeText(requireContext(), "Save run in local successfully !!", Toast.LENGTH_SHORT).show()
+            if (it) {
+                Toast.makeText(
+                    requireContext(),
+                    "Save run in local successfully !!",
+                    Toast.LENGTH_SHORT
+                ).show()
                 stopRun(true)
             }
         })
 
         viewModel.userActivity.observe(viewLifecycleOwner, Observer {
-            if(it.getId()!=0L){
+            if (it.getId() != 0L) {
                 stopRun(false)
                 goToResultRunExercise(it)
             }
         })
 
         viewModel.toastEvent.observe(viewLifecycleOwner, Observer {
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         })
@@ -446,41 +500,47 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             viewModel.pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
-            for(polyline in viewModel.pathPoints){
+            for (polyline in viewModel.pathPoints) {
                 viewModel.distanceInMeters += TrackingUtil.calculatePolylineLength(polyline).toInt()
             }
-            viewModel.caloriesBurned = ((viewModel.distanceInMeters / 1000f) * viewModel.weight).toInt()
-            viewModel.averageSpeed = round((viewModel.distanceInMeters / 1000f) / (viewModel.currentTimeInMillies / 1000f / 60 / 60) *10) / 10f
-            if(viewModel.distanceInMeters!=0){
+            viewModel.caloriesBurned =
+                ((viewModel.distanceInMeters / 1000f) * viewModel.weight).toInt()
+            viewModel.averageSpeed =
+                round((viewModel.distanceInMeters / 1000f) / (viewModel.currentTimeInMillies / 1000f / 60 / 60) * 10) / 10f
+            if (viewModel.distanceInMeters != 0) {
                 binding.textViewAverageSpeedExerciseRun.text = viewModel.averageSpeed.toString()
-                binding.textViewDistanceExerciseRun.text = (viewModel.distanceInMeters / 1000f).toString()
+                binding.textViewDistanceExerciseRun.text =
+                    (viewModel.distanceInMeters / 1000f).toString()
                 binding.textViewCaloriesBurnedExerciseRun.text = viewModel.caloriesBurned.toString()
             }
             viewModel.distanceInMeters = 0
         })
 
-        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {times->
-            if(viewModel.isTracking){
+        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer { times ->
+            if (viewModel.isTracking) {
                 viewModel.currentTimeInMillies = times
-                val formattedTimer = TrackingUtil.getFormattedTimer3(viewModel.currentTimeInMillies, false)
+                val formattedTimer =
+                    TrackingUtil.getFormattedTimer3(viewModel.currentTimeInMillies, false)
                 binding.textViewTimeCountExerciseRun.text = formattedTimer
-                binding.progressBarExerciseRun.progress = (times.toInt()/100)
+                binding.progressBarExerciseRun.progress = (times.toInt() / 100)
             }
 
             viewModel.index.observe(viewLifecycleOwner, Observer {
-                if(viewModel.isTracking){
-                    if(it <viewModel.workours.size){
-                        binding.textViewNameEachExercise.text = "${viewModel.workours[it].getName().toUpperCase()}"
-                        binding.textViewNumberExerciseRun.text = "${it+1}/${viewModel.workours.size}"
+                if (viewModel.isTracking) {
+                    if (it < viewModel.workours.size) {
+                        binding.textViewNameEachExercise.text =
+                            "${viewModel.workours[it].getName().toUpperCase()}"
+                        binding.textViewNumberExerciseRun.text =
+                            "${it + 1}/${viewModel.workours.size}"
                     }
-                    if(it< viewModel.workours.size && viewModel.currentTimeInMillies >= (viewModel.workours[it].getDuration()+viewModel.lastCurrentTime)){
-                        if(it <viewModel.workours.size-1){
+                    if (it < viewModel.workours.size && viewModel.currentTimeInMillies >= (viewModel.workours[it].getDuration() + viewModel.lastCurrentTime)) {
+                        if (it < viewModel.workours.size - 1) {
                             mediaPlayerNotifi.start()
                         }
                         viewModel.lastCurrentTime += viewModel.workours[it].getDuration()
                         viewModel.updateIndex()
                     }
-                    if(it >= viewModel.workours.size && !isFinishFirstTime){
+                    if (it >= viewModel.workours.size && !isFinishFirstTime) {
                         isFinishFirstTime = true
                         showLoadingDialog()
                         sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
@@ -489,28 +549,29 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 }
             })
 
-            if(viewModel.currentTimeInMillies > 0L){
+            if (viewModel.currentTimeInMillies > 0L) {
                 binding.buttonStopExerciseRun.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.buttonStopExerciseRun.visibility = View.GONE
             }
         })
         TrackingService.timeLeft.observe(viewLifecycleOwner, Observer {
             Log.d("times", it.toString())
-            binding.textViewTimeLeftExerciseRun.text = "Time left - ${TrackingUtil.getFormattedTimer3(it)}"
+            binding.textViewTimeLeftExerciseRun.text =
+                "Time left - ${TrackingUtil.getFormattedTimer3(it)}"
         })
     }
 
-    private fun updateTracking(isTracking:Boolean){
+    private fun updateTracking(isTracking: Boolean) {
         viewModel.isTracking = isTracking
-        if(!isTracking){
+        if (!isTracking) {
             binding.buttonStartExerciseRun.setImageResource(R.drawable.ic_play)
-        }else if(isTracking){
+        } else if (isTracking) {
             binding.buttonStartExerciseRun.setImageResource(R.drawable.ic_pause_2)
         }
     }
 
-    private fun sendCommandToService(action:String){
+    private fun sendCommandToService(action: String) {
         TrackingService.isRunOnly = false
         Intent(requireContext(), TrackingService::class.java).also {
             it.action = action
@@ -518,27 +579,31 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun requestGPS(){
+    private fun requestGPS() {
         // nếu đã xin quyền rồi thì ko xin nữa
-        if(TrackingUtil.hasLocationPermissions(requireContext())){
+        if (TrackingUtil.hasLocationPermissions(requireContext())) {
             return
         }
         //nếu chưa thì check version điện thoại, nếu nhỏ hơn android 10
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             //yêu cầu xin quyền
-            EasyPermissions.requestPermissions(this,
+            EasyPermissions.requestPermissions(
+                this,
                 "Please accept location permissions to use this app.",
                 Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-        }else{
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
             //yêu cầu xin quyền
-            EasyPermissions.requestPermissions(this,
+            EasyPermissions.requestPermissions(
+                this,
                 "Please accept location permissions to use this app.",
                 Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
         }
     }
 
@@ -547,10 +612,10 @@ class ExerciseRunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         //nếu yêu cầu xin quyền bị từ chối vĩnh viễn
-        if(EasyPermissions.somePermissionPermanentlyDenied(this, perms)){
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             //show 1 dialog cảnh báo bắt buộc yêu cầu quyền
             AppSettingsDialog.Builder(this).build().show()
-        }else{
+        } else {
             //nếu ko thì yêu cầu quyền tiếp
             requestGPS()
         }
