@@ -17,7 +17,7 @@ object TrackingUtil {
 
     //ACCESS COARSE LOCATION sẽ trả cho bạn địa chỉ dựa trên các thông tin về 3G hoặc Wifi.
     //Không cần bật GPS.
-    //Còn FINE thi bạn phải bật GPS. Nếu bạn không cần tracking hoặc không cần địa chỉ chính xác
+    //Còn FINE thì bạn phải bật GPS. Nếu bạn không cần tracking hoặc không cần địa chỉ chính xác
     //thì không cần dùng đến FINE LOCATION.
 
     fun hasLocationPermissions(context: Context): Boolean {

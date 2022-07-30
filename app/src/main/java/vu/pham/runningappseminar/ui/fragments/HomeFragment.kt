@@ -31,31 +31,38 @@ import vu.pham.runningappseminar.utils.TrackingUtil
 import vu.pham.runningappseminar.databinding.FragmentHomeBinding
 import vu.pham.runningappseminar.viewmodels.HomePageViewModel
 import vu.pham.runningappseminar.viewmodels.viewmodelfactories.HomePageViewModelFactory
+import kotlin.math.round
 
 
 class HomeFragment : Fragment() {
-    private lateinit var adapterTodayTraining:RecyclerViewActivityAdapter
-    private lateinit var adapterRecentActivities:RecyclerViewRecentActivitiesAdapter
-    private lateinit var binding:FragmentHomeBinding
-    private var user:User?=null
-    private val viewModel : HomePageViewModel by viewModels{
-        HomePageViewModelFactory((activity?.application as RunApplication).repository,
+    private lateinit var adapterTodayTraining: RecyclerViewActivityAdapter
+    private lateinit var adapterRecentActivities: RecyclerViewRecentActivitiesAdapter
+    private lateinit var binding: FragmentHomeBinding
+    private var user: User? = null
+    private val viewModel: HomePageViewModel by viewModels {
+        HomePageViewModelFactory(
+            (activity?.application as RunApplication).repository,
             activity?.application as RunApplication
         )
     }
 
-    private var resultLauncher =registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data = result.data
-            val goalValue = data?.getIntExtra(Constants.INTENT_SET_MYGOAL, 1000)
-            goalValue?.let {
-                val user = viewModel.getUserFromSharedPref()
-                user?.setdistanceGoal(it.toLong())
-                showCongratulationDistanceGoal(binding.progressBar.progress, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0)
-                viewModel.updateUser(user!!)
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                val goalValue = data?.getIntExtra(Constants.INTENT_SET_MYGOAL, 1000)
+                goalValue?.let {
+                    val user = viewModel.getUserFromSharedPref()
+                    user?.setdistanceGoal(it.toLong())
+                    showCongratulationDistanceGoal(
+                        binding.progressBar.progress,
+                        ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0
+                    )
+                    viewModel.updateUser(user!!)
+                }
             }
         }
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,24 +82,27 @@ class HomeFragment : Fragment() {
         getListToTraining()
         getListRecentExercise()
         binding.imageViewSetMyGoal.setOnClickListener {
-            if(CheckConnection.haveNetworkConnection(requireContext())){
+            if (CheckConnection.haveNetworkConnection(requireContext())) {
                 clickGoToSetMyGoal()
-            }else{
-                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG)
+                    .show()
             }
         }
         binding.textViewMoreTodayTraining.setOnClickListener {
-            if(CheckConnection.haveNetworkConnection(requireContext())){
+            if (CheckConnection.haveNetworkConnection(requireContext())) {
                 goToListExercisePage("Running for today training", 1)
-            }else{
-                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG)
+                    .show()
             }
         }
         binding.textViewMoreRecentTraining.setOnClickListener {
-            if(CheckConnection.haveNetworkConnection(requireContext())){
+            if (CheckConnection.haveNetworkConnection(requireContext())) {
                 goToListRecentTraining()
-            }else{
-                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
@@ -100,14 +110,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showCongratulationDistanceGoal(progress : Int, max : Int){
-        if(progress==0 && max==0){
+    private fun showCongratulationDistanceGoal(progress: Int, max: Int) {
+        if (progress == 0 && max == 0) {
             binding.linearLayoutCongratulation.visibility = View.GONE
         }
-        if(progress >= max && progress > 0){
+        if (progress >= max && progress > 0) {
             binding.linearLayoutCongratulation.visibility = View.VISIBLE
             binding.textViewCongratulation.text = "Congratulation you passed your distance goal !!"
-        }else{
+        } else {
             binding.linearLayoutCongratulation.visibility = View.GONE
         }
     }
@@ -118,7 +128,7 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_listRecentExerciseFragment, bundle)
     }
 
-    private fun goToListExercisePage(titleName:String, typeExercise:Int){
+    private fun goToListExercisePage(titleName: String, typeExercise: Int) {
         viewModel.clearToast()
         val bundle = Bundle()
         bundle.putString(Constants.TITLE_NAME, titleName)
@@ -130,31 +140,38 @@ class HomeFragment : Fragment() {
         user = viewModel.getUserFromSharedPref()
         viewModel.getUserLiveData(user!!.getUsername(), user!!.getPassword())
     }
-    private fun bindDataToView(user: User?){
+
+    private fun bindDataToView(user: User?) {
         binding.textViewWeeklyGoal.text = "Weekly goal ${user?.getdistanceGoal()} km"
-        binding.progressBar.max = if(user?.getdistanceGoal()==0L) 0 else (user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)!!
+        binding.progressBar.max = if (user?.getdistanceGoal() == 0L) 0 else (user?.getdistanceGoal()
+            ?.times(1000f))?.toInt()?.div(100)!!
         val nameUser = "Let's go "
         val text = user.getFullname()
-        val text2 = nameUser+text
+        val text2 = nameUser + text
         val spannable: Spannable = SpannableString(text2)
 
-        spannable.setSpan(ForegroundColorSpan(resources.getColor(R.color.grey_200)), nameUser.length, (text + nameUser).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannable.setSpan(
+            ForegroundColorSpan(resources.getColor(R.color.grey_200)),
+            nameUser.length,
+            (text + nameUser).length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
         binding.textViewWellcome.setText(spannable, TextView.BufferType.SPANNABLE)
-        if(user.getdistanceGoal() ==0L){
+        if (user.getdistanceGoal() == 0L) {
             showCongratulationDistanceGoal(0, binding.progressBar.max)
         }
     }
 
-    private fun getListToTraining(){
+    private fun getListToTraining() {
         viewModel.getListActivityRun(user?.getId()!!)
     }
 
-    private fun getListRecentExercise(){
+    private fun getListRecentExercise() {
         viewModel.getListUserExercise(user?.getId()!!)
     }
 
-    private fun subscribeToObservers(){
+    private fun subscribeToObservers() {
         viewModel.recentExercise.observe(viewLifecycleOwner, Observer {
             adapterRecentActivities.submitList(it)
         })
@@ -170,16 +187,19 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.toastEvent.observe(viewLifecycleOwner, Observer {
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         })
 
         viewModel.totalDistanceWeekly.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.textViewNumberDistance.text = (it/ 1000f).toString()
-                binding.progressBar.progress = (it/100)
-                showCongratulationDistanceGoal(it/100, ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0)
+                binding.textViewNumberDistance.text = (it / 1000f).toString()
+                binding.progressBar.progress = (it / 100)
+                showCongratulationDistanceGoal(
+                    it / 100,
+                    ((user?.getdistanceGoal()?.times(1000f))?.toInt()?.div(100)) ?: 0
+                )
             }
         })
 
@@ -191,13 +211,13 @@ class HomeFragment : Fragment() {
 
         viewModel.totalTimeInMilliesToday.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.textViewRunInTimeMilliesHomeFragment.text = it.toString()
+                binding.textViewRunInTimeMilliesHomeFragment.text = (it / 1000.0).toString()
             }
         })
 
         viewModel.totalAvgSpeedToday.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.textViewAvgSpeedHomeFragment.text = it.toString()
+                binding.textViewAvgSpeedHomeFragment.text = (round(it * 10) / 10).toString()
             }
         })
 
@@ -208,7 +228,7 @@ class HomeFragment : Fragment() {
         })
         viewModel.maxDistance.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.textViewMaxDistance.text = "${(it/1000f)} km"
+                binding.textViewMaxDistance.text = "${(it / 1000f)} km"
             }
         })
         viewModel.maxTimeInMillies.observe(viewLifecycleOwner, Observer {
@@ -232,7 +252,7 @@ class HomeFragment : Fragment() {
         resultLauncher.launch(intent)
     }
 
-    private fun goToActivityDetailPage(id:Long){
+    private fun goToActivityDetailPage(id: Long) {
         viewModel.clearToast()
         val bundle = Bundle()
         bundle.putLong(Constants.DETAIL_EXERCISE_ID, id)
@@ -240,35 +260,56 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpRecyclerViewRecentActivities() {
-        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(false, object : RecyclerViewRecentActivitiesAdapter.ClickUserActivity{
-            override fun clickItem(userActivityDetail: UserActivityDetail) {
-                if (CheckConnection.haveNetworkConnection(requireContext())){
-                    viewModel.clearToast()
-                    val bundle = Bundle()
-                    bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivityDetail.getId())
-                    findNavController().navigate(R.id.action_homeFragment_to_resultExerciseRunFragment, bundle)
-                }else {
-                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+        adapterRecentActivities = RecyclerViewRecentActivitiesAdapter(
+            false,
+            object : RecyclerViewRecentActivitiesAdapter.ClickUserActivity {
+                override fun clickItem(userActivityDetail: UserActivityDetail) {
+                    if (CheckConnection.haveNetworkConnection(requireContext())) {
+                        viewModel.clearToast()
+                        val bundle = Bundle()
+                        bundle.putLong(Constants.ID_RECENT_EXERCISE, userActivityDetail.getId())
+                        findNavController().navigate(
+                            R.id.action_homeFragment_to_resultExerciseRunFragment,
+                            bundle
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Your device does not have internet !",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        })
-        binding.recyclerViewRecentActiviesHomeFragment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            })
+        binding.recyclerViewRecentActiviesHomeFragment.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewRecentActiviesHomeFragment.adapter = adapterRecentActivities
         binding.recyclerViewRecentActiviesHomeFragment.isNestedScrollingEnabled = false
     }
 
     private fun setUpRecyclerViewActivity() {
-        adapterTodayTraining = RecyclerViewActivityAdapter(R.layout.activity_item_row, object : RecyclerViewActivityAdapter.ClickItem{
-            override fun clickItem(activity: vu.pham.runningappseminar.models.Activity) {
-                if(CheckConnection.haveNetworkConnection(requireContext())){
-                    goToActivityDetailPage(activity.getId())
-                }else{
-                    Toast.makeText(context, "Your device does not have internet !", Toast.LENGTH_LONG).show()
+        adapterTodayTraining = RecyclerViewActivityAdapter(
+            R.layout.activity_item_row,
+            object : RecyclerViewActivityAdapter.ClickItem {
+                override fun clickItem(activity: vu.pham.runningappseminar.models.Activity) {
+                    if (CheckConnection.haveNetworkConnection(requireContext())) {
+                        goToActivityDetailPage(activity.getId())
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Your device does not have internet !",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-        }, false, true, true)
+            },
+            false,
+            true,
+            true
+        )
         binding.recyclerViewActivityHomeFragment.adapter = adapterTodayTraining
-        binding.recyclerViewActivityHomeFragment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewActivityHomeFragment.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun onPause() {
